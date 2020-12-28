@@ -11,7 +11,7 @@ services:
       - /usr/src/app/node_modules
     ports:
       - 3000:3000
-    command: npm run start:dev
+    command: npm run start:dev --watch
     env_file:
       - .env
     depends_on:
@@ -22,4 +22,3 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: user
       MONGO_INITDB_ROOT_PASSWORD: password
-      MONGO_INITDB_DATABASE: be_international
