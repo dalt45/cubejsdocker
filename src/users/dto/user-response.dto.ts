@@ -1,4 +1,6 @@
+import { HttpStatus } from '@nestjs/common';
+
 export class ResponseUserDto {
-  statusCode: string;
+  statusCode: HttpStatus;
   message: string;
 }

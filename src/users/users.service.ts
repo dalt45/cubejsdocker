@@ -1,4 +1,4 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -22,14 +22,14 @@ export class UsersService {
     const repeatedUsers = await this.userExists(createUserDto);
     if (repeatedUsers) {
       response.message = "User already exists";
-      response.statusCode = "403"
+      response.statusCode = HttpStatus.FORBIDDEN
       return response
     }
     bcrypt.hash(createUserDto.password, saltRounds, async (err, hash) => {
       console.log(err);
       if(err){
           response.message = "Error creating user";
-          response.statusCode = "500"
+          response.statusCode = HttpStatus.FORBIDDEN
           return response;
       }
       const user = new User();
@@ -38,7 +38,7 @@ export class UsersService {
       console.log(user);
       await this.usersRepository.save(user);
       response.message = "User created";
-      response.statusCode = "201"
+      response.statusCode = HttpStatus.CREATED
       return response
     });
   }

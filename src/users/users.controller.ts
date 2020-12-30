@@ -10,12 +10,11 @@ export class UserController {
   @Post()
   async registerUser(@Body() createUserDto: CreateUserDto): Promise<any> {
     const response = await this.userService.register(createUserDto);
-    if(response.statusCode !== "201"){
-      const statusCode: number = (response.statusCode as unknown) as number;
+    if(response.statusCode !== HttpStatus.CREATED){
       throw new HttpException({
         status: response.statusCode,
         error: response.message,
-      }, statusCode);
+      }, response.statusCode);
     }
     else return response
   }
