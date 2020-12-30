@@ -4,7 +4,11 @@ import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { CountUserDto } from './dto/count-user.dto';
 import { FindUserDto } from './dto/find-user.dto';
+import { ResponseUserDto } from './dto/user-response.dto';
 import { User } from './user.entity';
+const bcrypt = require('bcrypt');
+
+const saltRounds = 10;
 
 @Injectable()
 export class UsersService {
@@ -13,54 +17,47 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
-  async register(createUserDto: CreateUserDto): Promise<any> {
+  async register(createUserDto: CreateUserDto): Promise<ResponseUserDto> {
+    const response = new ResponseUserDto;
     const repeatedUsers = await this.checkForRepeatedUser(createUserDto);
-    if (repeatedUsers.count > 0) {
-      throw new HttpException('User already exists', HttpStatus.FORBIDDEN);
+    if (repeatedUsers) {
+      response.message = "User already exists";
+      response.statusCode = "403"
+      return response
     }
-    const user = new User();
-    user.email = createUserDto.email;
-    user.password = createUserDto.password;
-    console.log(user);
-    await this.save(user);
+    bcrypt.hash(createUserDto.password, saltRounds, async (err, hash) => {
+      console.log(err);
+      if(err){
+          response.message = "Error creating user";
+          response.statusCode = "500"
+          return response;
+      }
+      const user = new User();
+      user.email = createUserDto.email;
+      user.password = hash;
+      console.log(user);
+      await this.usersRepository.save(user);
+      response.message = "User created";
+      response.statusCode = "201"
+      return response
+    });
   }
 
   async checkForRepeatedUser(
     createUserDto: CreateUserDto,
-  ): Promise<CountUserDto> {
-    const response = await this.findAndCount({
+  ): Promise<Boolean> {
+    const response = await this.usersRepository.findAndCount({
       email: createUserDto.email,
     });
     console.log(response);
     const countUser = new CountUserDto();
     countUser.users = response[0];
     countUser.count = response[1];
-    console.log(countUser);
-    return countUser;
+    if( countUser.count > 0){
+      return true
+    }else{
+      return false
+    }
   }
 
-  async findAndCount(findUserDto: FindUserDto): Promise<[User[], number]> {
-    const users = await this.usersRepository.findAndCount({
-      email: findUserDto.email,
-    });
-    return users;
-  }
-
-  async findOne(createUserDto: CreateUserDto): Promise<User> {
-    const user = await this.usersRepository.findOne(createUserDto);
-    return user;
-  }
-
-  async find(createUserDto: CreateUserDto): Promise<User[]> {
-    const users = await this.usersRepository.find(createUserDto);
-    return users;
-  }
-
-  async save(user: User): Promise<any> {
-    await this.usersRepository.save(user);
-  }
-
-  test(): string {
-    return 'User Services';
-  }
 }

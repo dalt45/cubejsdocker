@@ -1,6 +1,6 @@
 import { User } from '../user.entity';
 
 export class CountUserDto {
-    users: User[]
-    count: number
+  users: User[];
+  count: number;
 }
