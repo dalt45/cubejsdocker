@@ -19,7 +19,7 @@ export class UsersService {
 
   async register(createUserDto: CreateUserDto): Promise<ResponseUserDto> {
     const response = new ResponseUserDto;
-    const repeatedUsers = await this.checkForRepeatedUser(createUserDto);
+    const repeatedUsers = await this.userExists(createUserDto);
     if (repeatedUsers) {
       response.message = "User already exists";
       response.statusCode = "403"
@@ -43,7 +43,7 @@ export class UsersService {
     });
   }
 
-  async checkForRepeatedUser(
+  async userExists(
     createUserDto: CreateUserDto,
   ): Promise<Boolean> {
     const response = await this.usersRepository.findAndCount({
