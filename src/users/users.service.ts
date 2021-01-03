@@ -26,7 +26,7 @@ export class UsersService {
       return response
     }
     bcrypt.hash(createUserDto.password, saltRounds, async (err, hash) => {
-      console.log(err);
+      console.log(HttpStatus);
       if(err){
           response.message = "Error creating user";
           response.statusCode = HttpStatus.FORBIDDEN
