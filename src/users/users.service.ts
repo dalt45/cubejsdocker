@@ -32,7 +32,6 @@ export class UsersService {
           user.email = createUserDto.email;
           user.password = hash;
           await this.usersRepository.save(user);
-          console.log('here');
         },
       );
       return ServiceMessages.RESPONSE_DEFAULT;
