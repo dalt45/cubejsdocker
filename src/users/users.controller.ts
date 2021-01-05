@@ -11,12 +11,9 @@ export class UserController {
   @Post()
   async registerUser(@Body() createUserDto: CreateUserDto): Promise<any> {
     const response = await this.userService.register(createUserDto);
-    console.log(response);
     const serviceResponse = new ServiceResponse(response);
-    console.log(serviceResponse);
     if (serviceResponse.isError()) {
       const errorResponse = serviceResponse.getResponse();
-      console.log(errorResponse, "error");
       throw new HttpException(
         {
           status: errorResponse.statusCode,
