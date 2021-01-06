@@ -1,7 +1,8 @@
 import { Controller, Get, Post, Body } from '@nestjs/common';
-import {HttpException, HttpStatus } from '@nestjs/common';
+import { HttpException, HttpStatus } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
+import ServiceResponse from '../utils/serviceResponse/ServiceResponse';
 
 @Controller('users')
 export class UserController {
@@ -10,13 +11,19 @@ export class UserController {
   @Post()
   async registerUser(@Body() createUserDto: CreateUserDto): Promise<any> {
     const response = await this.userService.register(createUserDto);
-    if(response.statusCode !== HttpStatus.CREATED){
-      throw new HttpException({
-        status: response.statusCode,
-        error: response.message,
-      }, response.statusCode);
+    const serviceResponse = new ServiceResponse(response);
+    if (serviceResponse.isError()) {
+      const errorResponse = serviceResponse.getResponse();
+      throw new HttpException(
+        {
+          status: errorResponse.statusCode,
+          error: errorResponse.message,
+        },
+        errorResponse.statusCode,
+      );
+    } else {
+      const sucessResponse = serviceResponse.getResponse();
+      return sucessResponse;
     }
-    else return response
   }
-
 }
