@@ -8,6 +8,12 @@ export default class ServiceResponse {
     this.serviceMessage = serviceMessage;
     this.serviceResponse = Dictionary[this.serviceMessage];
   }
+  
+  setBody(body: { [key: string]: any }) {
+    if (this.serviceResponse.hasBody) {
+      this.serviceResponse.body = body;
+    }
+  }
 
   getResponse() {
     const responseObject: { [key: string]: any } = {};
