@@ -56,22 +56,13 @@ export class UsersService {
   async get(findUserDto: FindUserDto): Promise<any> {
     let users;
     if (findUserDto.id) {
-      console.log(findUserDto)
       users = await this.usersRepository.findByIds([findUserDto.id]);
-      console.log(users);
     } else {
       users = await this.usersRepository.find(findUserDto);
     }
-    if (users) {
-      return {
-        serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
-        body: users,
-      };
-    } else {
-      return {
-        serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
-        body: [],
-      };
-    }
+    return {
+      serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
+      body: users ? users : [],
+    };
   }
 }
