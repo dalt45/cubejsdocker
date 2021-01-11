@@ -5,6 +5,7 @@ export const enum httpStatusCode {
   CREATED = 201,
   INTERNAL = 500,
   OK = 200,
+  BAD_REQUEST = 400,
 }
 
 export interface response {
@@ -19,6 +20,7 @@ export const enum ServiceMessages {
   RESPONSE_DEFAULT = 'RESPONSE_DEFAULT',
   ERROR_DEFAULT = 'ERROR_DEFAULT',
   USER_IS_REPEATED = 'USER_IS_REPEATED',
+  BAD_REQUEST = 'BAD_REQUEST',
 }
 
 export const Dictionary: { [value in ServiceMessages]: response } = {
@@ -39,6 +41,13 @@ export const Dictionary: { [value in ServiceMessages]: response } = {
   USER_IS_REPEATED: {
     statusCode: httpStatusCode.FORBIDDEN,
     message: 'User is Repeated',
+    isError: true,
+    hasBody: false,
+    body: {},
+  },
+  BAD_REQUEST: {
+    statusCode: httpStatusCode.BAD_REQUEST,
+    message: 'Bad Request',
     isError: true,
     hasBody: false,
     body: {},

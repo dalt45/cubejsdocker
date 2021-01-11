@@ -5,6 +5,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { CountUserDto } from './dto/count-user.dto';
 import { User } from './user.entity';
 import { ServiceMessages } from '../utils/serviceResponse/ResponseDictionary';
+import { FindUserDto } from './dto/find-user.dto';
 const bcrypt = require('bcrypt');
 
 const saltRounds = 10;
@@ -49,6 +50,28 @@ export class UsersService {
       return true;
     } else {
       return false;
+    }
+  }
+
+  async get(findUserDto: FindUserDto): Promise<any> {
+    let users;
+    if (findUserDto.id) {
+      console.log(findUserDto)
+      users = await this.usersRepository.findByIds([findUserDto.id]);
+      console.log(users);
+    } else {
+      users = await this.usersRepository.find(findUserDto);
+    }
+    if (users) {
+      return {
+        serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
+        body: users,
+      };
+    } else {
+      return {
+        serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
+        body: [],
+      };
     }
   }
 }
