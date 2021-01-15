@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/user.entity';
+import { AuthModule } from './auth/auth.module';
 
 //'mongodb://user:password@mongo:27017'
 const dbHost: string = process.env.DB_HOST;
@@ -21,6 +22,7 @@ const dbPassword: string = process.env.DB_PASSWORD;
       entities: [User],
       synchronize: true,
     }),
+    AuthModule,
   ],
   controllers: [],
   providers: [],

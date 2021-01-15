@@ -5,6 +5,7 @@ export const enum httpStatusCode {
   CREATED = 201,
   INTERNAL = 500,
   OK = 200,
+  UNAUTHORIZED = 401,
 }
 
 export interface response {
@@ -19,6 +20,7 @@ export const enum ServiceMessages {
   RESPONSE_DEFAULT = 'RESPONSE_DEFAULT',
   ERROR_DEFAULT = 'ERROR_DEFAULT',
   USER_IS_REPEATED = 'USER_IS_REPEATED',
+  UNAUTHORIZED = 'UNAUTHORIZED',
 }
 
 export const Dictionary: { [value in ServiceMessages]: response } = {
@@ -43,4 +45,11 @@ export const Dictionary: { [value in ServiceMessages]: response } = {
     hasBody: false,
     body: {},
   },
+  UNAUTHORIZED: {
+    statusCode: httpStatusCode.UNAUTHORIZED,
+    message: 'Unauthorized',
+    isError: true,
+    hasBody: false,
+    body: {},
+  }
 };
