@@ -1,17 +1,8 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Query,
-  UsePipes,
-  ValidationPipe,
-  Param,
-} from '@nestjs/common';
-import { HttpException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import ServiceResponse from '../utils/serviceResponse/ServiceResponse';
+import ControllerResponse from '../utils/serviceResponse/ControllerResponse';
 import { FindParams } from './validations/FindParams';
 import { FindUserDto } from './dto/find-user.dto';
 import { ObjectID } from 'mongodb';
@@ -26,16 +17,12 @@ export class UserController {
     const serviceResponse = new ServiceResponse(response);
     if (serviceResponse.isError()) {
       const errorResponse = serviceResponse.getResponse();
-      throw new HttpException(
-        {
-          status: errorResponse.statusCode,
-          error: errorResponse.message,
-        },
-        errorResponse.statusCode,
-      );
+      const controllerResponse = new ControllerResponse(errorResponse);
+      controllerResponse.httpError();
     } else {
       const sucessResponse = serviceResponse.getResponse();
-      return sucessResponse;
+      const controllerResponse = new ControllerResponse(sucessResponse);
+      return controllerResponse.httpSuccess();
     }
   }
 
@@ -45,13 +32,8 @@ export class UserController {
     if (params.id && params.email) {
       const serviceResponse = new ServiceResponse('BAD_REQUEST');
       const errorResponse = serviceResponse.getResponse();
-      throw new HttpException(
-        {
-          status: errorResponse.statusCode,
-          error: errorResponse.message,
-        },
-        errorResponse.statusCode,
-      );
+      const controllerResponse = new ControllerResponse(errorResponse);
+      controllerResponse.httpError();
     } else {
       serviceRequest.email = params.email;
       serviceRequest.id = new ObjectID(params.id);
@@ -60,7 +42,8 @@ export class UserController {
       serviceResponse.serviceResponse.hasBody = true;
       serviceResponse.serviceResponse.body = response.body;
       const successResponse = serviceResponse.getResponse();
-      return successResponse;
+      const controllerResponse = new ControllerResponse(successResponse);
+      return controllerResponse.httpSuccess();
     }
   }
 }
