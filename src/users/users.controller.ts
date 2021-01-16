@@ -35,8 +35,8 @@ export class UserController {
       const controllerResponse = new ControllerResponse(errorResponse);
       controllerResponse.httpError();
     } else {
-      serviceRequest.email = params.email;
-      serviceRequest.id = new ObjectID(params.id);
+      if (params.email) serviceRequest.email = params.email;
+      if (params.id) serviceRequest.id = new ObjectID(params.id);
       const response = await this.userService.get(serviceRequest);
       const serviceResponse = new ServiceResponse(response.serviceMessage);
       serviceResponse.serviceResponse.hasBody = true;
