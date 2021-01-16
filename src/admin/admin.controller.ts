@@ -1,19 +1,19 @@
 import { Controller, Get, Post, Body, Query } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { AdminService } from './admin.service';
+import { CreateAdminDto } from './dto/create-admin.dto';
 import ServiceResponse from '../utils/serviceResponse/ServiceResponse';
 import ControllerResponse from '../utils/serviceResponse/ControllerResponse';
 import { FindParams } from './validations/FindParams';
-import { FindUserDto } from './dto/find-user.dto';
+import { FindAdminDto } from './dto/find-admin.dto';
 import { ObjectID } from 'mongodb';
 
-@Controller('users')
-export class UserController {
-  constructor(private readonly userService: UsersService) {}
+@Controller('admin')
+export class AdminController {
+  constructor(private readonly adminService: AdminService) {}
 
   @Post('register')
-  async registerUser(@Body() createUserDto: CreateUserDto): Promise<any> {
-    const response = await this.userService.register(createUserDto);
+  async registerUser(@Body() createAdminDto: CreateAdminDto): Promise<any> {
+    const response = await this.adminService.register(createAdminDto);
     const serviceResponse = new ServiceResponse(response);
     if (serviceResponse.isError()) {
       const errorResponse = serviceResponse.getResponse();
@@ -27,17 +27,17 @@ export class UserController {
   }
 
   @Get()
-  async getUser(@Query() params: FindParams): Promise<any> {
-    const serviceRequest = new FindUserDto();
+  async getAdmin(@Query() params: FindParams): Promise<any> {
+    const serviceRequest = new FindAdminDto();
     if (params.id && params.email) {
       const serviceResponse = new ServiceResponse('BAD_REQUEST');
       const errorResponse = serviceResponse.getResponse();
       const controllerResponse = new ControllerResponse(errorResponse);
       controllerResponse.httpError();
     } else {
-      serviceRequest.email = params.email;
-      serviceRequest.id = new ObjectID(params.id);
-      const response = await this.userService.get(serviceRequest);
+      if (params.email) serviceRequest.email = params.email;
+      if (params.id) serviceRequest.id = new ObjectID(params.id);
+      const response = await this.adminService.get(serviceRequest);
       const serviceResponse = new ServiceResponse(response.serviceMessage);
       serviceResponse.serviceResponse.hasBody = true;
       serviceResponse.serviceResponse.body = response.body;
