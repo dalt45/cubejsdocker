@@ -6,7 +6,7 @@ import { ValidateUserDto } from './dto/validate-user.dto';
 import ServiceResponse from '../utils/serviceResponse/ServiceResponse';
 
 @Injectable()
-export class LocalStrategy extends PassportStrategy(Strategy) {
+export class LocalStrategy extends PassportStrategy(Strategy, 'localUser') {
   constructor(private authService: AuthService) {
     super({ usernameField: 'email', passwordField: 'password' });
   }
@@ -31,7 +31,6 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     serviceResponse.serviceResponse.hasBody = true;
     serviceResponse.serviceResponse.body = response.body;
     const successResponse = serviceResponse.getResponse();
-    console.log(successResponse)
     return successResponse;
   }
 }
