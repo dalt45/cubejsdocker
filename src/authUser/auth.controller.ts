@@ -1,14 +1,15 @@
 import { Controller, Request, Post, UseGuards, Get } from '@nestjs/common';
-import { LocalAuthGuard } from './local-auth.guard';
+import { UserLocalAuthGuard } from './local-auth.guard';
 import { AuthService } from './auth.service';
-import { JwtAuthGuard } from './jwt-auth.guard';
+import { UserJwtAuthGuard } from './jwt-auth.guard';
 import ServiceResponse from 'src/utils/serviceResponse/ServiceResponse';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller()
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(AuthGuard('localUser'))
   @Post('auth/login')
   async login(@Request() req) {
     const response = await this.authService.login(req.user);
@@ -19,7 +20,7 @@ export class AuthController {
     return successResponse;
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AuthGuard('jwtUser'))
   @Get('profile')
   getProfile(@Request() req) {
     return req.user;
