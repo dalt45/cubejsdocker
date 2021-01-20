@@ -6,13 +6,13 @@ import { OAuth2Strategy, VerifyCallback } from 'passport-google-oauth';
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(
   OAuth2Strategy.Strategy,
-  'googleUser',
+  'googleAdmin',
 ) {
   constructor() {
     super({
       clientID: googleContants.client,
       clientSecret: googleContants.secret,
-      callbackURL: 'http://localhost:3000/auth/google/redirect',
+      callbackURL: 'http://localhost:3000/authAdmin/google/redirect',
       scope: ['email', 'profile'],
     });
   }
