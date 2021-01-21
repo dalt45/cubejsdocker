@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ValidateUserDto } from './dto/validate-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -19,7 +19,11 @@ export class AuthService {
     const user = await this.usersRepository.findOne({
       email: validateUserDto.email,
     });
-    if (!user) return null;
+    if (!user)
+      return {
+        serviceMessage: ServiceMessages.UNAUTHORIZED,
+        body: {},
+      };
     return await bcrypt
       .compare(validateUserDto.password, user?.password)
       .then((result) => {
@@ -43,6 +47,7 @@ export class AuthService {
   }
 
   async login(user: any) {
+    console.log(user, 'user');
     const payload = { username: user.username, sub: user.userId };
     return {
       serviceMessage: ServiceMessages.RESPONSE_DEFAULT,

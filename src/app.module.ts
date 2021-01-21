@@ -1,8 +1,11 @@
 import { Module } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
+import { AdminModule } from './admin/admin.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/user.entity';
-import { AuthModule } from './auth/auth.module';
+import { Admin } from './admin/admin.entity';
+import { AuthModule } from './authUser/auth.module';
+import { AuthAdminModule } from './authAdmin/auth.module';
 
 //'mongodb://user:password@mongo:27017'
 const dbHost: string = process.env.DB_HOST;
@@ -13,16 +16,18 @@ const dbPassword: string = process.env.DB_PASSWORD;
 @Module({
   imports: [
     UsersModule,
+    AdminModule,
     TypeOrmModule.forRoot({
       type: 'mongodb',
       host: dbHost,
       port: dbPort,
       username: dbUsername,
       password: dbPassword,
-      entities: [User],
+      entities: [User, Admin],
       synchronize: true,
     }),
     AuthModule,
+    AuthAdminModule,
   ],
   controllers: [],
   providers: [],
