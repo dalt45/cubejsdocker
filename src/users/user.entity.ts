@@ -1,4 +1,5 @@
 import { Column, Entity, ObjectIdColumn, ObjectID } from 'typeorm';
+import { UserType } from './enums/userType.enum';
 
 @Entity()
 export class User {
@@ -13,4 +14,7 @@ export class User {
 
   @Column()
   googleAccessToken: string;
+
+  @Column()
+  type: UserType;
 }

@@ -3,6 +3,9 @@ import { AuthService } from './auth.service';
 import ServiceResponse from 'src/utils/serviceResponse/ServiceResponse';
 import { AuthGuard } from '@nestjs/passport';
 import ControllerResponse from '../utils/serviceResponse/ControllerResponse';
+import { Roles } from 'src/authorization/role.decorator';
+import { Role } from 'src/authorization/role.enum';
+import { IdMatch } from 'src/authorization/id.decorator';
 
 @Controller()
 export class AuthController {
@@ -43,7 +46,8 @@ export class AuthController {
 
   @UseGuards(AuthGuard('jwtUser'))
   @Get('profile')
+  @IdMatch(true)
   getProfile(@Request() req) {
-    return req.user;
+    return req.body;
   }
 }

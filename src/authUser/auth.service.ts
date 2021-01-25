@@ -50,7 +50,11 @@ export class AuthService {
   }
 
   async login(user: any) {
-    const payload = { username: user.username, sub: user.userId };
+    const payload = {
+      email: user.body.email,
+      id: user.body.id,
+      type: user.body.type,
+    };
     return {
       serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
       body: { access_token: this.jwtService.sign(payload) },
@@ -66,15 +70,15 @@ export class AuthService {
     const user = await this.usersRepository.findOne({
       email: req.user.email,
     });
-    console.log(user)
     if (!user) {
       const createUserDto = new CreateUserGoogleDto();
       createUserDto.email = req.user.email;
       createUserDto.accessToken = req.user.accessToken;
       const response = await this.userService.registerWithGoogle(createUserDto);
-      if (response === ServiceMessages.RESPONSE_DEFAULT) {
+      if (response.serviceMessage === ServiceMessages.RESPONSE_DEFAULT) {
         const payload = {
-          username: createUserDto.email,
+          email: createUserDto.email,
+          id: response.body.id,
         };
         return {
           serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
@@ -83,7 +87,8 @@ export class AuthService {
       }
     } else {
       const payload = {
-        username: user.email,
+        email: user.email,
+        type: user.type,
       };
       return {
         serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
