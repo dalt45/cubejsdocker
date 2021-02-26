@@ -6,6 +6,7 @@ import ControllerResponse from '../utils/serviceResponse/ControllerResponse';
 import { Roles } from 'src/authorization/role.decorator';
 import { Role } from 'src/authorization/role.enum';
 import { IdMatch } from 'src/authorization/id.decorator';
+import { Id } from 'src/authorization/id.enum';
 
 @Controller()
 export class AuthController {
@@ -46,7 +47,8 @@ export class AuthController {
 
   @UseGuards(AuthGuard('jwtUser'))
   @Get('profile')
-  @IdMatch(true)
+  @IdMatch(Id.Email)
+  @Roles(Role.User)
   getProfile(@Request() req) {
     return req.body;
   }
