@@ -5,6 +5,8 @@ import { Repository } from 'typeorm';
 import { Admin } from '../admin/admin.entity';
 import { JwtService } from '@nestjs/jwt';
 import { ServiceMessages } from '../utils/serviceResponse/ResponseDictionary';
+import { CreateAdminGoogleDto } from 'src/admin/dto/create-admin-google';
+import { AdminService } from 'src/admin/admin.service';
 const bcrypt = require('bcrypt');
 
 @Injectable()
@@ -13,6 +15,7 @@ export class AuthService {
     @InjectRepository(Admin)
     private adminRepository: Repository<Admin>,
     private jwtService: JwtService,
+    private readonly adminService: AdminService,
   ) {}
 
   async validateUser(validateUserDto: ValidateUserDto): Promise<any> {
@@ -52,5 +55,41 @@ export class AuthService {
       serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
       body: { access_token: this.jwtService.sign(payload) },
     };
+  }
+
+  async googleCallback(req) {
+    if (!req.user) {
+      return {
+        serviceMessage: ServiceMessages.UNAUTHORIZED,
+      };
+    }
+    const user = await this.adminRepository.findOne({
+      email: req.user.email,
+    });
+    if (!user) {
+      const createAdminDto = new CreateAdminGoogleDto();
+      createAdminDto.email = req.user.email;
+      createAdminDto.accessToken = req.user.accessToken;
+      const response = await this.adminService.registerWithGoogle(
+        createAdminDto,
+      );
+      if (response === ServiceMessages.RESPONSE_DEFAULT) {
+        const payload = {
+          username: createAdminDto.email,
+        };
+        return {
+          serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
+          body: { access_token: this.jwtService.sign(payload) },
+        };
+      }
+    } else {
+      const payload = {
+        username: user.email,
+      };
+      return {
+        serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
+        body: { access_token: this.jwtService.sign(payload) },
+      };
+    }
   }
 }
