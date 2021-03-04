@@ -1,3 +1,4 @@
+import { UserType } from 'src/users/enums/userType.enum';
 import { Column, Entity, ObjectIdColumn, ObjectID } from 'typeorm';
 
 @Entity()

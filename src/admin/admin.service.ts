@@ -19,7 +19,7 @@ export class AdminService {
   ) {}
 
   async register(createAdminDto: CreateAdminDto): Promise<string> {
-    const repeatedAdmins = await this.userExists(createAdminDto);
+    const repeatedAdmins = await this.userExists(createAdminDto.email);
     if (repeatedAdmins) {
       return ServiceMessages.USER_IS_REPEATED;
     } else {
@@ -40,9 +40,9 @@ export class AdminService {
     }
   }
 
-  async userExists(createAdminDto: CreateAdminDto): Promise<boolean> {
+  async userExists(email: string): Promise<boolean> {
     const response = await this.adminRepository.findAndCount({
-      email: createAdminDto.email,
+      email: email,
     });
     const countAdmin = new CountAdminDto();
     countAdmin.users = response[0];
