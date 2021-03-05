@@ -20,7 +20,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "prepare": "husky install",
     "prettier": "prettier --write .",
-    "lint": "npm-run-all -l lint:ts",
+    "lint": "npm-run-all -l lint:ts:*",
     "lint:ts": "tslint --project .",
     "lint:ts:fix": "npm run lint:ts -- --fix"
   },
@@ -49,7 +49,8 @@
   "husky": {
     "hooks": {
       "commit-msg": "git-jira-hook ${HUSKY_GIT_PARAMS} --projectId BI",
-      "pre-commit": "lint-staged"
+      "pre-commit": "lint-staged",
+      "pre-push": "npm-run-all -l lint test:once check:ts"
     }
   },
   "lint-staged": {
