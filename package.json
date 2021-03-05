@@ -50,7 +50,7 @@
     "hooks": {
       "commit-msg": "git-jira-hook ${HUSKY_GIT_PARAMS} --projectId BI",
       "pre-commit": "lint-staged",
-      "pre-push": "npm-run-all -l lint test:once check:ts"
+      "pre-push": "npm run test"
     }
   },
   "lint-staged": {
