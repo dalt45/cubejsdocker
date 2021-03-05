@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { User } from '../users/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { ServiceMessages } from '../utils/serviceResponse/ResponseDictionary';
-const bcrypt = require('bcrypt');
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -47,7 +47,6 @@ export class AuthService {
   }
 
   async login(user: any) {
-    console.log(user, 'user');
     const payload = { username: user.username, sub: user.userId };
     return {
       serviceMessage: ServiceMessages.RESPONSE_DEFAULT,

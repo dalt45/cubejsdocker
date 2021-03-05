@@ -6,7 +6,7 @@ import { CountUserDto } from './dto/count-user.dto';
 import { User } from './user.entity';
 import { ServiceMessages } from '../utils/serviceResponse/ResponseDictionary';
 import { FindUserDto } from './dto/find-user.dto';
-const bcrypt = require('bcrypt');
+import * as bcrypt from 'bcrypt';
 
 const saltRounds = 10;
 

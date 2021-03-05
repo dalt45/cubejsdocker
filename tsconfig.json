@@ -12,12 +12,8 @@
     "baseUrl": "./",
     "incremental": true,
     "paths": {
-      "@app/users": [
-        "libs/users/src"
-      ],
-      "@app/users/*": [
-        "libs/users/src/*"
-      ]
+      "@app/users": ["libs/users/src"],
+      "@app/users/*": ["libs/users/src/*"]
     }
   }
 }

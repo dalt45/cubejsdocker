@@ -6,8 +6,7 @@ import { CountAdminDto } from './dto/count-admin.dto';
 import { Admin } from './admin.entity';
 import { ServiceMessages } from '../utils/serviceResponse/ResponseDictionary';
 import { FindAdminDto } from './dto/find-admin.dto';
-const bcrypt = require('bcrypt');
-
+import * as bcrypt from 'bcrypt';
 const saltRounds = 10;
 
 @Injectable()
