@@ -29,6 +29,9 @@ export class RolesGuard implements CanActivate {
     const jwt = ExtractJwt.fromAuthHeaderAsBearerToken()(
       context.switchToHttp().getRequest(),
     );
+    if (!jwt) {
+      return false;
+    }
     const decoded = this.jwtService.decode(jwt);
     const email = decoded['email'];
     const isAdmin = await this.adminService.userExists(email);

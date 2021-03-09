@@ -4,13 +4,15 @@ import { AdminModule } from './admin/admin.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/user.entity';
 import { Admin } from './admin/admin.entity';
-import { Landing } from './landing/landing.entity'
+import { Landing } from './landing/landing.entity';
 import { AuthModule } from './authUser/auth.module';
 import { AuthAdminModule } from './authAdmin/auth.module';
-import { LandingModule } from './landing/landing.module'
+import { LandingModule } from './landing/landing.module';
+import { UniversityModule } from './university/university.module'
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './authorization/roles.guard';
 import { IdGuard } from './authorization/id.guard';
+import { University } from './university/university.entity';
 
 //'mongodb://user:password@mongo:27017'
 const dbHost: string = process.env.DB_HOST;
@@ -28,12 +30,13 @@ const dbPassword: string = process.env.DB_PASSWORD;
       port: dbPort,
       username: dbUsername,
       password: dbPassword,
-      entities: [User, Admin,Landing],
+      entities: [User, Admin, Landing, University],
       synchronize: true,
     }),
     AuthModule,
     AuthAdminModule,
-    LandingModule
+    LandingModule,
+    UniversityModule,
   ],
   controllers: [],
   providers: [
