@@ -1,4 +1,5 @@
-import { Column, Entity, ObjectIdColumn, ObjectID } from 'typeorm';
+import { Column, Entity, ObjectIdColumn } from 'typeorm';
+import { ObjectID } from 'mongodb';
 
 @Entity()
 export class User {
