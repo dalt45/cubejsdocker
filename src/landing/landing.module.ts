@@ -7,11 +7,7 @@ import { UniversityModule } from '../university/university.module';
 import { University } from '../university/university.entity';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Landing]),
-    UniversityModule,
-    TypeOrmModule.forFeature([University]),
-  ],
+  imports: [UniversityModule, TypeOrmModule.forFeature([University])],
   controllers: [LandingController],
   providers: [LandingService],
   exports: [LandingService],

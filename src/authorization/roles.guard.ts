@@ -34,17 +34,24 @@ export class RolesGuard implements CanActivate {
     }
     const decoded = this.jwtService.decode(jwt);
     const email = decoded['email'];
+    const findUserDto = new FindUserDto();
+    findUserDto.email = email;
+    const response = await this.usersService.get(findUserDto);
+    const responseUser: User = response.body[0];
     const isAdmin = await this.adminService.userExists(email);
-    if (isAdmin && requiredRoles.some((role) => role === 'admin')) {
-      return true;
-    } else {
-      const findUserDto = new FindUserDto();
-      findUserDto.email = email;
-      const response = await this.usersService.get(findUserDto);
-      const responseUser: User = response.body[0];
+    if (
+      responseUser &&
+      requiredRoles.some(
+        (role) => (responseUser && (responseUser.type as string)) === role,
+      )
+    ) {
       return requiredRoles.some(
         (role) => (responseUser && (responseUser.type as string)) === role,
       );
+    } else if (isAdmin && requiredRoles.some((role) => role === 'admin')) {
+      return true;
+    } else {
+      return false;
     }
   }
 }

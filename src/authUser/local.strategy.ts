@@ -16,6 +16,7 @@ export class LocalStrategy extends PassportStrategy(Strategy, 'localUser') {
       email: username,
       password: password,
     };
+    console.log(userToValidate)
     const response = await this.authService.validateUser(userToValidate);
     const serviceResponse = new ServiceResponse(response.serviceMessage);
     if (serviceResponse.isError()) {

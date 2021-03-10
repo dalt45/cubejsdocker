@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -8,6 +8,7 @@ import { ServiceMessages } from '../utils/serviceResponse/ResponseDictionary';
 import { FindUserDto } from './dto/find-user.dto';
 import { CreateUserGoogleDto } from './dto/create-user-google';
 import { UserType } from './enums/userType.enum';
+import { AdminService } from 'src/admin/admin.service';
 const bcrypt = require('bcrypt');
 
 const saltRounds = 10;
@@ -17,11 +18,16 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    @Inject(forwardRef(() => AdminService))
+    private adminService: AdminService,
   ) {}
 
   async register(createUserDto: CreateUserDto): Promise<string> {
     const repeatedUsers = await this.userExists(createUserDto);
-    if (repeatedUsers) {
+    const repeatedAdmins = await this.adminService.userExists(
+      createUserDto.email,
+    );
+    if (repeatedUsers || repeatedAdmins) {
       return ServiceMessages.USER_IS_REPEATED;
     } else {
       await bcrypt.hash(

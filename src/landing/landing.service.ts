@@ -11,18 +11,16 @@ import { University } from 'src/university/university.entity';
 @Injectable()
 export class LandingService {
   constructor(
-    @InjectRepository(Landing)
-    private landingRepository: Repository<Landing>,
     private readonly universityService: UniversityService,
     @InjectRepository(University)
-    private universityRepostory: Repository<University>,
+    private universityRepository: Repository<University>,
   ) {}
 
   async create(landing: CreateLandingDto): Promise<string> {
     try {
       const university = await this.universityService.get({ id: landing.id });
-      this.universityRepostory.update(university, {
-        landings: [...landing.landing, university.landings],
+      this.universityRepository.update(university, {
+        landings: [...landing.landing, ...university.landings],
       });
     } catch {
       return ServiceMessages.ERROR_DEFAULT;
@@ -31,6 +29,12 @@ export class LandingService {
   }
 
   async get(Params: any): Promise<any> {
-    return await this.landingRepository.findOne(Params.id);
+    console.log(Params.id);
+    const university = await this.universityRepository.find({
+      where: {
+        'landings.id': Params.id,
+      },
+    });
+    return university;
   }
 }

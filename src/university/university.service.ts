@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { University } from './university.entity';
 import { ServiceMessages } from '../utils/serviceResponse/ResponseDictionary';
 import { UniversityValidation } from './dto/university-validation.dto';
+import { Landing } from 'src/landing/landing.entity';
 
 @Injectable()
 export class UniversityService {
@@ -14,14 +15,20 @@ export class UniversityService {
 
   async create(university: UniversityValidation): Promise<any> {
     try {
+      const landingsArray = [];
+      university.landings.forEach((landing) => {
+        const newLanding: Landing = new Landing(landing);
+        landingsArray.push(newLanding);
+      });
+      university.landings = landingsArray;
       const universityObject = await this.universityRepostory.save(university);
       return {
         serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
         body: { id: universityObject.id },
       };
-    } catch {
+    } catch (e) {
       return {
-        serviceMessage: ServiceMessages.ERROR_DEFAULT,
+        serviceMessage: ServiceMessages.BAD_REQUEST,
       };
     }
   }
