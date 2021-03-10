@@ -12,8 +12,8 @@ import { CourseInformation } from './documents/course-information.dto';
 import { ObjectID } from 'mongodb';
 
 export class Landing {
-  @ObjectIdColumn()
-  id: ObjectID;
+  @Column()
+  _id: ObjectID;
 
   @Column()
   contentProfileUniversity: UniversityProfile;
@@ -90,6 +90,6 @@ export class Landing {
     this.reasonsToChooseThisProgram =
       constructorObject.reasonsToChooseThisProgram;
     this.courseContentInformation = constructorObject.courseContentInformation;
-    this.id = new ObjectID();
+    this._id = new ObjectID();
   }
 }

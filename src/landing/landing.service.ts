@@ -1,12 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ObjectID, Repository } from 'typeorm';
+import {
+  Repository,
+  getMongoRepository,
+  FindManyOptions,
+  MongoEntityManager,
+  getManager,
+} from 'typeorm';
 import { Landing } from './landing.entity';
 import { ServiceMessages } from '../utils/serviceResponse/ResponseDictionary';
 import { LandingValidation } from './dto/landing-validation.dto';
 import { CreateLandingDto } from './dto/create-landing.dto';
 import { UniversityService } from 'src/university/university.service';
 import { University } from 'src/university/university.entity';
+import { ObjectID } from 'mongodb';
 
 @Injectable()
 export class LandingService {
@@ -29,12 +36,13 @@ export class LandingService {
   }
 
   async get(Params: any): Promise<any> {
-    console.log(Params.id);
     const university = await this.universityRepository.find({
       where: {
-        'landings.id': Params.id,
+        'landings._id': { $eq: new ObjectID(Params.id) },
       },
     });
-    return university;
+    return university[0].landings.map((landing) => {
+      if (landing._id.equals(Params.id)) return landing;
+    })[0];
   }
 }

@@ -16,7 +16,6 @@ export class UniversityController {
   async registerUser(@Body() university: any): Promise<any> {
     const response = await this.universityService.create(university);
     const serviceResponse = new ServiceResponse(response.serviceMessage);
-    console.log(serviceResponse);
     if (serviceResponse.isError()) {
       const errorResponse = serviceResponse.getResponse();
       const controllerResponse = new ControllerResponse(errorResponse);
