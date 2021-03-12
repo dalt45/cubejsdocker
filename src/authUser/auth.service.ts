@@ -5,6 +5,8 @@ import { Repository } from 'typeorm';
 import { User } from '../users/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { ServiceMessages } from '../utils/serviceResponse/ResponseDictionary';
+import { UsersService } from '../users/users.service';
+import { CreateUserGoogleDto } from 'src/users/dto/create-user-google';
 const bcrypt = require('bcrypt');
 
 @Injectable()
@@ -13,6 +15,7 @@ export class AuthService {
     @InjectRepository(User)
     private usersRepository: Repository<User>,
     private jwtService: JwtService,
+    private readonly userService: UsersService,
   ) {}
 
   async validateUser(validateUserDto: ValidateUserDto): Promise<any> {
@@ -47,11 +50,45 @@ export class AuthService {
   }
 
   async login(user: any) {
-    console.log(user, 'user');
     const payload = { username: user.username, sub: user.userId };
     return {
       serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
       body: { access_token: this.jwtService.sign(payload) },
     };
+  }
+
+  async googleCallback(req) {
+    if (!req.user) {
+      return {
+        serviceMessage: ServiceMessages.UNAUTHORIZED,
+      };
+    }
+    const user = await this.usersRepository.findOne({
+      email: req.user.email,
+    });
+    console.log(user)
+    if (!user) {
+      const createUserDto = new CreateUserGoogleDto();
+      createUserDto.email = req.user.email;
+      createUserDto.accessToken = req.user.accessToken;
+      const response = await this.userService.registerWithGoogle(createUserDto);
+      if (response === ServiceMessages.RESPONSE_DEFAULT) {
+        const payload = {
+          username: createUserDto.email,
+        };
+        return {
+          serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
+          body: { access_token: this.jwtService.sign(payload) },
+        };
+      }
+    } else {
+      const payload = {
+        username: user.email,
+      };
+      return {
+        serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
+        body: { access_token: this.jwtService.sign(payload) },
+      };
+    }
   }
 }
