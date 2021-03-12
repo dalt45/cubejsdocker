@@ -9,6 +9,10 @@ import { FindUserDto } from './dto/find-user.dto';
 import { CreateUserGoogleDto } from './dto/create-user-google';
 import { UserType } from './enums/userType.enum';
 import { AdminService } from 'src/admin/admin.service';
+import { ObjectID } from 'mongodb';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { response } from 'express';
+import { Expose } from 'class-transformer';
 const bcrypt = require('bcrypt');
 
 const saltRounds = 10;
@@ -41,6 +45,7 @@ export class UsersService {
           user.email = createUserDto.email;
           user.password = hash;
           user.type = UserType.USER;
+          user.university = null;
           await this.usersRepository.save(user);
         },
       );
@@ -79,15 +84,54 @@ export class UsersService {
   }
 
   async get(findUserDto: FindUserDto): Promise<any> {
-    let users;
+    let user;
     if (findUserDto.id) {
-      users = await this.usersRepository.findByIds([findUserDto.id]);
+      user = await await this.usersRepository.findByIds([findUserDto.id], {
+        take: 1,
+      });
+      user = user[0];
     } else {
-      users = await this.usersRepository.find(findUserDto);
+      user = await this.usersRepository.findOne({ email: findUserDto.email });
     }
     return {
       serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
-      body: users ? users : [],
+      body: user ? user : {},
     };
+  }
+
+  async update(request: {
+    [key: string]: FindUserDto | UpdateUserDto;
+  }): Promise<any> {
+    let user;
+    if (
+      request.serviceRequest instanceof FindUserDto &&
+      request.serviceRequest.id
+    ) {
+      user = await await this.usersRepository.findByIds(
+        [request.serviceRequest.id],
+        {
+          take: 1,
+        },
+      );
+      user = user[0];
+    } else {
+      user = await this.usersRepository.findOne({
+        email: request.serviceRequest.email,
+      });
+    }
+    try {
+      await this.usersRepository.update(user, {
+        ...request.body,
+      });
+      return {
+        serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
+        body: user,
+      };
+    } catch (e) {
+      return {
+        serviceMessage: ServiceMessages.ERROR_DEFAULT,
+        body: e,
+      };
+    }
   }
 }

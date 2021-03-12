@@ -1,4 +1,12 @@
-import { Controller, Post, Body, Get, Query, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Query,
+  UseGuards,
+  ContextType,
+} from '@nestjs/common';
 import ServiceResponse from '../utils/serviceResponse/ServiceResponse';
 import ControllerResponse from '../utils/serviceResponse/ControllerResponse';
 import { LandingService } from './landing.service';
@@ -11,11 +19,11 @@ import { CreateLandingDto } from './dto/create-landing.dto';
 @Controller('landing')
 export class LandingController {
   constructor(private readonly landingService: LandingService) {}
-
   @UseGuards(AuthGuard(['jwtAdmin', 'jwtUser']))
   @Roles(Role.University, Role.Admin)
   @Post()
-  async registerUser(@Body() landing: CreateLandingDto): Promise<any> {
+  async createLanding(@Body() landing: CreateLandingDto): Promise<any> {
+    console.log(landing);
     const response = await this.landingService.create(landing);
     const serviceResponse = new ServiceResponse(response);
     if (serviceResponse.isError()) {

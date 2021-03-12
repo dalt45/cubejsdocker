@@ -37,7 +37,7 @@ export class RolesGuard implements CanActivate {
     const findUserDto = new FindUserDto();
     findUserDto.email = email;
     const response = await this.usersService.get(findUserDto);
-    const responseUser: User = response.body[0];
+    const responseUser: User = response.body;
     const isAdmin = await this.adminService.userExists(email);
     if (
       responseUser &&

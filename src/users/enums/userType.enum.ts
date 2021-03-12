@@ -1,4 +1,4 @@
-export const enum UserType {
+export enum UserType {
   USER = 'user',
   UNIVERSITY = 'university',
 }

@@ -29,10 +29,11 @@ export class LandingService {
       this.universityRepository.update(university, {
         landings: [...landing.landing, ...university.landings],
       });
-    } catch {
+      return ServiceMessages.RESPONSE_DEFAULT;
+    } catch (e) {
+      console.log(e);
       return ServiceMessages.ERROR_DEFAULT;
     }
-    return ServiceMessages.RESPONSE_DEFAULT;
   }
 
   async get(Params: any): Promise<any> {

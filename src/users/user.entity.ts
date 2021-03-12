@@ -17,5 +17,7 @@ export class User {
 
   @Column()
   type: UserType;
+
+  @Column()
+  university: ObjectID;
 }
-                                          

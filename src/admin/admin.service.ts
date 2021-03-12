@@ -59,15 +59,18 @@ export class AdminService {
   }
 
   async get(findAdminDto: FindAdminDto): Promise<any> {
-    let admins;
+    let admin;
     if (findAdminDto.id) {
-      admins = await this.adminRepository.findByIds([findAdminDto.id]);
+      admin = await this.adminRepository.findByIds([findAdminDto.id], {
+        take: 1,
+      });
+      admin = admin[0];
     } else {
-      admins = await this.adminRepository.find(findAdminDto);
+      admin = await this.adminRepository.findOne({ email: findAdminDto.email });
     }
     return {
       serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
-      body: admins ? admins : [],
+      body: admin ? admin : undefined,
     };
   }
 

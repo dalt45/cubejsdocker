@@ -13,7 +13,7 @@ export class UniversityController {
   @UseGuards(AuthGuard(['jwtAdmin', 'jwtUser']))
   @Roles(Role.University, Role.Admin)
   @Post()
-  async registerUser(@Body() university: any): Promise<any> {
+  async createUniversity(@Body() university: any): Promise<any> {
     const response = await this.universityService.create(university);
     const serviceResponse = new ServiceResponse(response.serviceMessage);
     if (serviceResponse.isError()) {
