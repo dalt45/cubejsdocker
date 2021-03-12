@@ -14,3 +14,4 @@ export class User {
   @Column()
   googleAccessToken: string;
 }
+                                          
