@@ -1,15 +1,16 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get, Query } from '@nestjs/common';
 import ServiceResponse from '../utils/serviceResponse/ServiceResponse';
 import ControllerResponse from '../utils/serviceResponse/ControllerResponse';
 import { Landing } from './landing.entity'
 import { LandingService } from './landing.service'
+import { LandingValidation } from './dto/landing-validation.dto'
 
 @Controller('landing')
 export class LandingController {
   constructor(private readonly landingService: LandingService) {}
 
-  @Post('create')
-  async registerUser(@Body() landing: Landing): Promise<any> {
+  @Post()
+  async registerUser(@Body() landing: LandingValidation): Promise<any> {
     const response = await this.landingService.create(landing)
     const serviceResponse = new ServiceResponse(response);
     if(serviceResponse.isError()){
@@ -19,5 +20,11 @@ export class LandingController {
     }
     const successResponse = serviceResponse.getResponse();
     return successResponse;
+  }
+
+  @Get()
+  async getLanding(@Query() Params: any): Promise<any>{
+    const response = await this.landingService.get(Params)
+    return response
   }
   }

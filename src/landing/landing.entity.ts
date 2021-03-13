@@ -8,6 +8,7 @@ import { ContentParagraph } from './documents/content-paragraph.dto'
 import { GalleryCourse } from './documents/gallery-course.dto'
 import { CourseButton } from './documents/course-button.dto';
 import { Reason } from './documents/reasons.dto'
+import { CourseInformation } from './documents/course-information.dto';
 
 @Entity()
 export class Landing {
@@ -51,5 +52,5 @@ export class Landing {
   reasonsToChooseThisProgram: Reason[];
 
   @Column()
-  courseContentInformation: CourseContent;
+  courseContentInformation: CourseInformation;
 }
