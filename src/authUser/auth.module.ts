@@ -21,6 +21,12 @@ import { GoogleStrategy } from './google.strategy';
       signOptions: { expiresIn: '3600s' },
     }),
   ],
+  exports: [
+    JwtModule.register({
+      secret: jwtConstants.secret,
+      signOptions: { expiresIn: '3600s' },
+    }),
+  ],
   providers: [AuthService, LocalStrategy, JwtStrategy, GoogleStrategy],
   controllers: [AuthController],
 })

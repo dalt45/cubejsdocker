@@ -66,7 +66,6 @@ export class AuthService {
     const user = await this.adminRepository.findOne({
       email: req.user.email,
     });
-    console.log(user);
     if (!user) {
       const createAdminDto = new CreateAdminGoogleDto();
       createAdminDto.email = req.user.email;

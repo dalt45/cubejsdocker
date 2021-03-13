@@ -8,6 +8,9 @@ import { Landing } from './landing/landing.entity'
 import { AuthModule } from './authUser/auth.module';
 import { AuthAdminModule } from './authAdmin/auth.module';
 import { LandingModule } from './landing/landing.module'
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from './authorization/roles.guard';
+import { IdGuard } from './authorization/id.guard';
 
 //'mongodb://user:password@mongo:27017'
 const dbHost: string = process.env.DB_HOST;
@@ -33,6 +36,15 @@ const dbPassword: string = process.env.DB_PASSWORD;
     LandingModule
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: IdGuard,
+    },
+  ],
 })
 export class AppModule {}

@@ -2,12 +2,12 @@ import { Column, Entity, ObjectIdColumn, ObjectID } from 'typeorm';
 import { CourseContent } from './documents/course-content.dto';
 import { DegreeInformation } from './documents/degree-information.dto';
 import { FeaturedInformation } from './documents/featured-information.dto';
-import { UniversityProfile } from './documents/university-profile.dto'
-import { UniversityVideos } from './documents/university-videos.dto'
-import { ContentParagraph } from './documents/content-paragraph.dto'
-import { GalleryCourse } from './documents/gallery-course.dto'
+import { UniversityProfile } from './documents/university-profile.dto';
+import { UniversityVideos } from './documents/university-videos.dto';
+import { ContentParagraph } from './documents/content-paragraph.dto';
+import { GalleryCourse } from './documents/gallery-course.dto';
 import { CourseButton } from './documents/course-button.dto';
-import { Reason } from './documents/reasons.dto'
+import { Reason } from './documents/reasons.dto';
 import { CourseInformation } from './documents/course-information.dto';
 
 @Entity()
@@ -28,22 +28,22 @@ export class Landing {
   contentAboutCourse: CourseContent;
 
   @Column()
-  contentFeaturedInformation: FeaturedInformation[]
+  contentFeaturedInformation: FeaturedInformation[];
 
   @Column()
-  contentParagraphUniversity: ContentParagraph
+  contentParagraphUniversity: ContentParagraph;
 
   @Column()
-  contentParagraphMoreInformation: ContentParagraph
+  contentParagraphMoreInformation: ContentParagraph;
 
   @Column()
-  universityLocation: String
+  universityLocation: String;
 
   @Column()
-  contentGalleryCourse: GalleryCourse[]
+  contentGalleryCourse: GalleryCourse[];
 
   @Column()
-  textButtonOtherCourses: CourseButton[]
+  textButtonOtherCourses: CourseButton[];
 
   @Column()
   contentDesciptionCourse: CourseContent;
