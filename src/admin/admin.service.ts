@@ -6,8 +6,8 @@ import { CountAdminDto } from './dto/count-admin.dto';
 import { Admin } from './admin.entity';
 import { ServiceMessages } from '../utils/serviceResponse/ResponseDictionary';
 import { FindAdminDto } from './dto/find-admin.dto';
+import * as bcrypt from 'bcrypt';
 import { CreateAdminGoogleDto } from './dto/create-admin-google';
-const bcrypt = require('bcrypt');
 
 const saltRounds = 10;
 
