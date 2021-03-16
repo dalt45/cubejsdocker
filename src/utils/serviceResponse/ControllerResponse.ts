@@ -17,6 +17,13 @@ export default class ControllerResponse {
     );
   }
 
+  mockError() {
+    return {
+      status: this.serviceResponse.statusCode,
+      error: this.serviceResponse.message,
+    };
+  }
+
   httpSuccess() {
     return this.serviceResponse;
   }
