@@ -1,5 +1,6 @@
-import { Column, Entity, ObjectIdColumn } from 'typeorm';
 import { ObjectID } from 'mongodb';
+import { Column, Entity, ObjectIdColumn } from 'typeorm';
+import { UserType } from './enums/userType.enum';
 
 @Entity()
 export class User {
@@ -11,4 +12,11 @@ export class User {
 
   @Column()
   password: string;
+
+  @Column()
+  googleAccessToken: string;
+
+  @Column()
+  type: UserType;
 }
+                                          

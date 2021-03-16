@@ -7,6 +7,8 @@ import { Admin } from './admin.entity';
 import { ServiceMessages } from '../utils/serviceResponse/ResponseDictionary';
 import { FindAdminDto } from './dto/find-admin.dto';
 import * as bcrypt from 'bcrypt';
+import { CreateAdminGoogleDto } from './dto/create-admin-google';
+
 const saltRounds = 10;
 
 @Injectable()
@@ -17,7 +19,7 @@ export class AdminService {
   ) {}
 
   async register(createAdminDto: CreateAdminDto): Promise<string> {
-    const repeatedAdmins = await this.userExists(createAdminDto);
+    const repeatedAdmins = await this.userExists(createAdminDto.email);
     if (repeatedAdmins) {
       return ServiceMessages.USER_IS_REPEATED;
     } else {
@@ -38,9 +40,9 @@ export class AdminService {
     }
   }
 
-  async userExists(createAdminDto: CreateAdminDto): Promise<boolean> {
+  async userExists(email: string): Promise<boolean> {
     const response = await this.adminRepository.findAndCount({
-      email: createAdminDto.email,
+      email: email,
     });
     const countAdmin = new CountAdminDto();
     countAdmin.users = response[0];
@@ -63,5 +65,17 @@ export class AdminService {
       serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
       body: admins ? admins : [],
     };
+  }
+
+  async registerWithGoogle(
+    createAdminGoogleDto: CreateAdminGoogleDto,
+  ): Promise<string> {
+    const createAdminDto = new CreateAdminDto();
+    createAdminDto.email = createAdminGoogleDto.email;
+    const user = new Admin();
+    user.email = createAdminGoogleDto.email;
+    user.googleAccessToken = createAdminGoogleDto.accessToken;
+    await this.adminRepository.save(user);
+    return ServiceMessages.RESPONSE_DEFAULT;
   }
 }

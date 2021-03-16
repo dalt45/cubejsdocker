@@ -11,4 +11,7 @@ export class Admin {
 
   @Column()
   password: string;
+
+  @Column()
+  googleAccessToken: string;
 }
