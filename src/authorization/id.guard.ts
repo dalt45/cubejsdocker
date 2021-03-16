@@ -3,7 +3,7 @@ import { ExtractJwt } from 'passport-jwt';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { ID_KEY } from './id.decorator';
-import { Id } from './id.enum'
+import { Id } from './id.enum';
 
 @Injectable()
 export class IdGuard implements CanActivate {
@@ -14,7 +14,7 @@ export class IdGuard implements CanActivate {
       context.getHandler(),
       context.getClass(),
     ]);
-    switch(idRequired){
+    switch (idRequired) {
       case Id.Email:
         const {
           body: { email },
@@ -23,15 +23,15 @@ export class IdGuard implements CanActivate {
           context.switchToHttp().getRequest(),
         );
         const decoded = this.jwtService.decode(jwt);
-        const jwtEmail = decoded['email'];
+        const jwtEmail = decoded.email;
         if (email === jwtEmail) {
           return true;
         }
-        return false
-        case undefined:
-          return true
+        return false;
+      case undefined:
+        return true;
       default:
-        return false
+        return false;
     }
   }
 }

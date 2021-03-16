@@ -30,7 +30,7 @@ export class RolesGuard implements CanActivate {
       context.switchToHttp().getRequest(),
     );
     const decoded = this.jwtService.decode(jwt);
-    const email = decoded['email'];
+    const email = decoded.email;
     const isAdmin = await this.adminService.userExists(email);
     if (isAdmin && requiredRoles.some((role) => role === 'admin')) {
       return true;

@@ -1,18 +1,18 @@
-import {Column} from "typeorm";
+import { Column } from 'typeorm';
 
 export class DegreeInformation {
-    @Column()
-    academicDegree: String;
+  @Column()
+  academicDegree: string;
 
-    @Column()
-    years: Number;
+  @Column()
+  years: number;
 
-    @Column()
-    modality: String;
+  @Column()
+  modality: string;
 
-    @Column()
-    startDate: String;
+  @Column()
+  startDate: string;
 
-    @Column()
-    cost: String;
+  @Column()
+  cost: string;
 }

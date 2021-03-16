@@ -1,6 +1,6 @@
-import {Column} from "typeorm";
+import { Column } from 'typeorm';
 
 export class Reason {
-    @Column()
-    reason: String;
+  @Column()
+  reason: string;
 }

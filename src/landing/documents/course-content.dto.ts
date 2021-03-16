@@ -1,9 +1,9 @@
-import {Column} from "typeorm";
+import { Column } from 'typeorm';
 
 export class CourseContent {
-    @Column()
-    title: String;
+  @Column()
+  title: string;
 
-    @Column()
-    informationCourse: String;
+  @Column()
+  informationCourse: string;
 }

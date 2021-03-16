@@ -1,5 +1,4 @@
 export enum Id {
-    Email = 'email',
-    Id = 'id',
-  }
-  
+  Email = 'email',
+  Id = 'id',
+}

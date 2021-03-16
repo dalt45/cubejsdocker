@@ -1,9 +1,9 @@
-import {Column} from "typeorm";
+import { Column } from 'typeorm';
 
 export class Employment {
-    @Column()
-    percentage: String;
+  @Column()
+  percentage: string;
 
-    @Column()
-    text: String;
+  @Column()
+  text: string;
 }

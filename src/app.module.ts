@@ -4,10 +4,10 @@ import { AdminModule } from './admin/admin.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/user.entity';
 import { Admin } from './admin/admin.entity';
-import { Landing } from './landing/landing.entity'
+import { Landing } from './landing/landing.entity';
 import { AuthModule } from './authUser/auth.module';
 import { AuthAdminModule } from './authAdmin/auth.module';
-import { LandingModule } from './landing/landing.module'
+import { LandingModule } from './landing/landing.module';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './authorization/roles.guard';
 import { IdGuard } from './authorization/id.guard';
@@ -28,12 +28,12 @@ const dbPassword: string = process.env.DB_PASSWORD;
       port: dbPort,
       username: dbUsername,
       password: dbPassword,
-      entities: [User, Admin,Landing],
+      entities: [User, Admin, Landing],
       synchronize: true,
     }),
     AuthModule,
     AuthAdminModule,
-    LandingModule
+    LandingModule,
   ],
   controllers: [],
   providers: [

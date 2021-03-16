@@ -1,6 +1,6 @@
-import {Column} from "typeorm";
+import { Column } from 'typeorm';
 
 export class UniversityVideos {
-    @Column()
-    urlVideo: String;
+  @Column()
+  urlVideo: string;
 }

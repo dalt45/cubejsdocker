@@ -1,6 +1,6 @@
-import {Column} from "typeorm";
+import { Column } from 'typeorm';
 
 export class GalleryCourse {
-    @Column()
-    url: String;
+  @Column()
+  url: string;
 }
