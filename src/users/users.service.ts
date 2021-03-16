@@ -6,6 +6,8 @@ import { CountUserDto } from './dto/count-user.dto';
 import { User } from './user.entity';
 import { ServiceMessages } from '../utils/serviceResponse/ResponseDictionary';
 import { FindUserDto } from './dto/find-user.dto';
+import { CreateUserGoogleDto } from './dto/create-user-google';
+import { UserType } from './enums/userType.enum';
 const bcrypt = require('bcrypt');
 
 const saltRounds = 10;
@@ -32,11 +34,28 @@ export class UsersService {
           const user = new User();
           user.email = createUserDto.email;
           user.password = hash;
+          user.type = UserType.USER;
           await this.usersRepository.save(user);
         },
       );
       return ServiceMessages.RESPONSE_DEFAULT;
     }
+  }
+
+  async registerWithGoogle(
+    createUserGoogleDto: CreateUserGoogleDto,
+  ): Promise<any> {
+    const createUserDto = new CreateUserDto();
+    createUserDto.email = createUserGoogleDto.email;
+    const user = new User();
+    user.email = createUserGoogleDto.email;
+    user.googleAccessToken = createUserGoogleDto.accessToken;
+    user.type = UserType.USER;
+    const createdUser: User = await this.usersRepository.save(user);
+    return {
+      serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
+      body: createdUser,
+    };
   }
 
   async userExists(createUserDto: CreateUserDto): Promise<boolean> {

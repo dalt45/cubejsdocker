@@ -1,3 +1,4 @@
+import { UserType } from 'src/users/enums/userType.enum';
 import { Column, Entity, ObjectIdColumn, ObjectID } from 'typeorm';
 
 @Entity()
@@ -10,4 +11,7 @@ export class Admin {
 
   @Column()
   password: string;
+
+  @Column()
+  googleAccessToken: string;
 }

@@ -4,6 +4,7 @@ import { AuthService } from './auth.service';
 import { JwtAuthAdminGuard } from './jwt-auth.guard';
 import ServiceResponse from 'src/utils/serviceResponse/ServiceResponse';
 import { AuthGuard } from '@nestjs/passport';
+import ControllerResponse from '../utils/serviceResponse/ControllerResponse';
 
 @Controller()
 export class AuthController {
@@ -18,6 +19,28 @@ export class AuthController {
     serviceResponse.serviceResponse.body = response.body;
     const successResponse = serviceResponse.getResponse();
     return successResponse;
+  }
+
+  @UseGuards(AuthGuard('googleAdmin'))
+  @Get('authAdmin/login/google')
+  async googleAuth(@Request() req) {}
+
+  @UseGuards(AuthGuard('googleAdmin'))
+  @Get('authAdmin/google/redirect')
+  async googleAuthRedirect(@Request() req) {
+    const response = await this.authService.googleCallback(req);
+    const serviceResponse = new ServiceResponse(response.serviceMessage);
+    serviceResponse.serviceResponse.hasBody = true;
+    serviceResponse.serviceResponse.body = response.body;
+    if (serviceResponse.isError()) {
+      const errorResponse = serviceResponse.getResponse();
+      const controllerResponse = new ControllerResponse(errorResponse);
+      controllerResponse.httpError();
+    } else {
+      const successResponse = serviceResponse.getResponse();
+      const controllerResponse = new ControllerResponse(successResponse);
+      return controllerResponse.httpSuccess();
+    }
   }
 
   @UseGuards(AuthGuard('jwtAdmin'))
