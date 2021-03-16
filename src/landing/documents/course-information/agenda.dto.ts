@@ -1,6 +1,6 @@
-import {Column} from "typeorm";
+import { Column } from 'typeorm';
 
 export class Agenda {
-    @Column()
-    lesson: String;
+  @Column()
+  lesson: string;
 }

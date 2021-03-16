@@ -1,21 +1,21 @@
-import {Column} from "typeorm";
+import { Column } from 'typeorm';
 
 export class UniversityProfile {
-    @Column()
-    urlImageLogo: String;
+  @Column()
+  urlImageLogo: string;
 
-    @Column()
-    titleCourse: String;
+  @Column()
+  titleCourse: string;
 
-    @Column()
-    nameUniversity: String;
+  @Column()
+  nameUniversity: string;
 
-    @Column()
-    countryFlag: String;
+  @Column()
+  countryFlag: string;
 
-    @Column()
-    nameCity: String;
-    
-    @Column()
-    nameCountry: String
+  @Column()
+  nameCity: string;
+
+  @Column()
+  nameCountry: string;
 }

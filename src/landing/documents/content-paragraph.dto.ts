@@ -1,9 +1,9 @@
-import {Column} from "typeorm";
+import { Column } from 'typeorm';
 
 export class ContentParagraph {
-    @Column()
-    title: String;
+  @Column()
+  title: string;
 
-    @Column()
-    descriptionParagraph: String;
+  @Column()
+  descriptionParagraph: string;
 }

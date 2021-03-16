@@ -1,128 +1,146 @@
-import { Type } from "class-transformer";
-import { ArrayNotEmpty, IsDefined, IsNotEmpty, IsNotEmptyObject, IsNumber, IsObject, IsOptional, IsString, IsUrl, ValidateNested } from "class-validator";
+import { Type } from 'class-transformer';
+import {
+  ArrayNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUrl,
+  ValidateNested,
+} from 'class-validator';
 
 export class UniversityProfile {
-    @IsOptional()
-    @IsUrl()
-    urlImageLogo: String;
+  @IsOptional()
+  @IsUrl()
+  urlImageLogo: string;
 
-    @IsString()
-    @IsOptional()
-    titleCourse: String;
+  @IsString()
+  @IsOptional()
+  titleCourse: string;
 
-    @IsString()
-    @IsOptional()
-    nameUniversity: String;
+  @IsString()
+  @IsOptional()
+  nameUniversity: string;
 
-    @IsUrl()
-    @IsOptional()
-    countryFlag: String;
+  @IsUrl()
+  @IsOptional()
+  countryFlag: string;
 
-    @IsString()
-    @IsOptional()
-    nameCity: String;
-    
-    @IsString()
-    @IsOptional()
-    nameCountry: String
+  @IsString()
+  @IsOptional()
+  nameCity: string;
+
+  @IsString()
+  @IsOptional()
+  nameCountry: string;
 }
 
+// tslint:disable-next-line: max-classes-per-file
 export class DegreeInformation {
-    @IsString()
-    @IsOptional()
-    academicDegree: String;
+  @IsString()
+  @IsOptional()
+  academicDegree: string;
 
-    @IsNumber()
-    @IsOptional()
-    years: Number;
+  @IsNumber()
+  @IsOptional()
+  years: number;
 
-    @IsString()
-    @IsOptional()
-    modality: String;
+  @IsString()
+  @IsOptional()
+  modality: string;
 
-    @IsString()
-    @IsOptional()
-    startDate: String;
+  @IsString()
+  @IsOptional()
+  startDate: string;
 
-    @IsString()
-    @IsOptional()
-    cost: String;
+  @IsString()
+  @IsOptional()
+  cost: string;
 }
 
+// tslint:disable-next-line: max-classes-per-file
 export class UniversityVideos {
-    @IsUrl()
-    @IsOptional()
-    urlVideo: String;
+  @IsUrl()
+  @IsOptional()
+  urlVideo: string;
 }
 
+// tslint:disable-next-line: max-classes-per-file
 export class CourseContent {
-    @IsString()
-    @IsOptional()
-    title: String;
+  @IsString()
+  @IsOptional()
+  title: string;
 
-    @IsString()
-    @IsOptional()
-    informationCourse: String;
+  @IsString()
+  @IsOptional()
+  informationCourse: string;
 }
 
+// tslint:disable-next-line: max-classes-per-file
 export class FeaturedInformation {
-    @IsUrl()
-    urlImage: String;
+  @IsUrl()
+  urlImage: string;
 
-    @IsString()
-    textParagraph: String;
+  @IsString()
+  textParagraph: string;
 }
 
+// tslint:disable-next-line: max-classes-per-file
 export class ContentParagraph {
-    @IsString()
-    @IsOptional()
-    title: String;
+  @IsString()
+  @IsOptional()
+  title: string;
 
-    @IsString()
-    @IsOptional()
-    descriptionParagraph: String;
+  @IsString()
+  @IsOptional()
+  descriptionParagraph: string;
 }
 
+// tslint:disable-next-line: max-classes-per-file
 export class GalleryCourse {
-    @IsUrl()
-    url: String;
+  @IsUrl()
+  url: string;
 }
 
+// tslint:disable-next-line: max-classes-per-file
 export class CourseButton {
-    @IsString()
-    @IsOptional()
-    textCourse: String;
+  @IsString()
+  @IsOptional()
+  textCourse: string;
 }
 
+// tslint:disable-next-line: max-classes-per-file
 export class Reason {
-    @IsString()
-    @IsOptional()
-    reason: String;
+  @IsString()
+  @IsOptional()
+  reason: string;
 }
 
+// tslint:disable-next-line: max-classes-per-file
 export class CourseInformation {
-    @ValidateNested()
-    @ArrayNotEmpty()
-    @IsOptional()
-    @Type(()=> Agenda)
-    courseAgenda: Agenda[];
+  @ValidateNested()
+  @ArrayNotEmpty()
+  @IsOptional()
+  @Type(() => Agenda)
+  courseAgenda: Agenda[];
 
-    @ValidateNested()
-    @ArrayNotEmpty()
-    @IsOptional()
-    @Type(()=> Employment)
-    employmentStatistics: Employment[];
+  @ValidateNested()
+  @ArrayNotEmpty()
+  @IsOptional()
+  @Type(() => Employment)
+  employmentStatistics: Employment[];
 }
 
+// tslint:disable-next-line: max-classes-per-file
 class Agenda {
-    @IsString()
-    lesson: String;
+  @IsString()
+  lesson: string;
 }
 
+// tslint:disable-next-line: max-classes-per-file
 class Employment {
-    @IsString()
-    percentage: String;
+  @IsString()
+  percentage: string;
 
-    @IsString()
-    text: String;
+  @IsString()
+  text: string;
 }

@@ -42,7 +42,7 @@ export class AdminService {
 
   async userExists(email: string): Promise<boolean> {
     const response = await this.adminRepository.findAndCount({
-      email: email,
+      email,
     });
     const countAdmin = new CountAdminDto();
     countAdmin.users = response[0];

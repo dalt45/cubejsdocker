@@ -37,7 +37,7 @@ export class Landing {
   contentParagraphMoreInformation: ContentParagraph;
 
   @Column()
-  universityLocation: String;
+  universityLocation: string;
 
   @Column()
   contentGalleryCourse: GalleryCourse[];

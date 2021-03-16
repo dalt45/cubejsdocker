@@ -18,11 +18,11 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "prepare": "husky install",
     "prettier": "prettier --write .",
     "lint": "npm-run-all -l lint:ts:*",
     "lint:ts": "tslint --project .",
-    "lint:ts:fix": "npm run lint:ts -- --fix"
+    "lint:ts:fix": "npm run lint:ts -- --fix",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@nestjs/common": "^7.5.1",
