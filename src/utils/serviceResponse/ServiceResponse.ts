@@ -1,8 +1,8 @@
 import { Any } from 'typeorm';
-import { Dictionary, response } from './ResponseDictionary';
+import { Dictionary, Response } from './ResponseDictionary';
 
 export default class ServiceResponse {
-  serviceResponse: response;
+  serviceResponse: Response;
   serviceMessage: string;
   constructor(serviceMessage = 'DEFAULT') {
     this.serviceMessage = serviceMessage;

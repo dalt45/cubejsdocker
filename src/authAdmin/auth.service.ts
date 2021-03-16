@@ -5,9 +5,9 @@ import { Repository } from 'typeorm';
 import { Admin } from '../admin/admin.entity';
 import { JwtService } from '@nestjs/jwt';
 import { ServiceMessages } from '../utils/serviceResponse/ResponseDictionary';
+import * as bcrypt from 'bcrypt';
 import { CreateAdminGoogleDto } from 'src/admin/dto/create-admin-google';
 import { AdminService } from 'src/admin/admin.service';
-const bcrypt = require('bcrypt');
 
 @Injectable()
 export class AuthService {

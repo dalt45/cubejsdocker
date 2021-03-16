@@ -1,8 +1,8 @@
-import { response } from './ResponseDictionary';
+import { Response } from './ResponseDictionary';
 import { HttpException } from '@nestjs/common';
 
 export default class ControllerResponse {
-  serviceResponse: response;
+  serviceResponse: Response;
   constructor(serviceResponse) {
     this.serviceResponse = serviceResponse;
   }
@@ -15,6 +15,13 @@ export default class ControllerResponse {
       },
       this.serviceResponse.statusCode,
     );
+  }
+
+  mockError() {
+    return {
+      status: this.serviceResponse.statusCode,
+      error: this.serviceResponse.message,
+    };
   }
 
   httpSuccess() {

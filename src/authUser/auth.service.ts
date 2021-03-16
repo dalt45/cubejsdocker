@@ -5,9 +5,9 @@ import { Repository } from 'typeorm';
 import { User } from '../users/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { ServiceMessages } from '../utils/serviceResponse/ResponseDictionary';
+import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
 import { CreateUserGoogleDto } from 'src/users/dto/create-user-google';
-const bcrypt = require('bcrypt');
 
 @Injectable()
 export class AuthService {
