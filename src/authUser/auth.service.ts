@@ -54,6 +54,7 @@ export class AuthService {
       email: user.body.email,
       id: user.body.id,
       type: user.body.type,
+      university: user.body.university,
     };
     return {
       serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
