@@ -29,12 +29,12 @@ export class UserController {
     const serviceResponse = new ServiceResponse(response);
     if (serviceResponse.isError()) {
       const errorResponse = serviceResponse.getResponse();
-      const controllerResponse = new ControllerResponse(errorResponse);
-      controllerResponse.httpError();
+      const controllerErrorResponse = new ControllerResponse(errorResponse);
+      controllerErrorResponse.httpError();
     } else {
       const sucessResponse = serviceResponse.getResponse();
-      const controllerResponse = new ControllerResponse(sucessResponse);
-      return controllerResponse.httpSuccess();
+      const controllerSuccessResponse = new ControllerResponse(sucessResponse);
+      return controllerSuccessResponse.httpSuccess();
     }
   }
 
@@ -70,8 +70,8 @@ export class UserController {
     if (params.id && params.email) {
       const serviceResponse = new ServiceResponse('BAD_REQUEST');
       const errorResponse = serviceResponse.getResponse();
-      const controllerResponse = new ControllerResponse(errorResponse);
-      controllerResponse.httpError();
+      const controllerErrorResponse = new ControllerResponse(errorResponse);
+      controllerErrorResponse.httpError();
     } else {
       if (params.email) serviceRequest.email = params.email;
       if (params.id) serviceRequest.id = new ObjectID(params.id);
@@ -80,8 +80,8 @@ export class UserController {
       serviceResponse.serviceResponse.hasBody = true;
       serviceResponse.serviceResponse.body = response.body;
       const successResponse = serviceResponse.getResponse();
-      const controllerResponse = new ControllerResponse(successResponse);
-      return controllerResponse.httpSuccess();
+      const controllerSuccessResponse = new ControllerResponse(successResponse);
+      return controllerSuccessResponse.httpSuccess();
     }
   }
 }
