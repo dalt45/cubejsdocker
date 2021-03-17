@@ -18,14 +18,14 @@ export class UniversityController {
     const serviceResponse = new ServiceResponse(response.serviceMessage);
     if (serviceResponse.isError()) {
       const errorResponse = serviceResponse.getResponse();
-      const controllerResponse = new ControllerResponse(errorResponse);
-      controllerResponse.httpError();
+      const controllerErrorResponse = new ControllerResponse(errorResponse);
+      controllerErrorResponse.httpError();
     }
     serviceResponse.serviceResponse.hasBody = true;
     serviceResponse.serviceResponse.body = response.body;
     const successResponse = serviceResponse.getResponse();
-    const controllerResponse = new ControllerResponse(successResponse);
-    return controllerResponse.httpSuccess();
+    const controllerSuccessResponse = new ControllerResponse(successResponse);
+    return controllerSuccessResponse.httpSuccess();
   }
 
   @UseGuards(AuthGuard(['jwtAdmin', 'jwtUser']))
