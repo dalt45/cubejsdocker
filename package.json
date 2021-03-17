@@ -21,8 +21,7 @@
     "prettier": "prettier --write .",
     "lint": "npm-run-all -l lint:ts:*",
     "lint:ts": "tslint --project .",
-    "lint:ts:fix": "npm run lint:ts -- --fix",
-    "prepare": "husky install"
+    "lint:ts:fix": "npm run lint:ts -- --fix"
   },
   "dependencies": {
     "@nestjs/common": "^7.5.1",
