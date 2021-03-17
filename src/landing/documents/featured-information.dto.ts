@@ -1,9 +1,9 @@
-import {Column} from "typeorm";
+import { Column } from 'typeorm';
 
 export class FeaturedInformation {
-    @Column()
-    urlImage: String;
+  @Column()
+  urlImage: string;
 
-    @Column()
-    textParagraph: String;
+  @Column()
+  textParagraph: string;
 }

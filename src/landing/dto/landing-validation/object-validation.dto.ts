@@ -1,11 +1,7 @@
 import { Type } from 'class-transformer';
 import {
   ArrayNotEmpty,
-  IsDefined,
-  IsNotEmpty,
-  IsNotEmptyObject,
   IsNumber,
-  IsObject,
   IsOptional,
   IsString,
   IsUrl,
@@ -15,102 +11,111 @@ import {
 export class UniversityProfile {
   @IsOptional()
   @IsUrl()
-  urlImageLogo: String;
+  urlImageLogo: string;
 
   @IsString()
   @IsOptional()
-  titleCourse: String;
+  titleCourse: string;
 
   @IsString()
   @IsOptional()
-  nameUniversity: String;
+  nameUniversity: string;
 
   @IsUrl()
   @IsOptional()
-  countryFlag: String;
+  countryFlag: string;
 
   @IsString()
   @IsOptional()
-  nameCity: String;
+  nameCity: string;
 
   @IsString()
   @IsOptional()
-  nameCountry: String;
+  nameCountry: string;
 }
 
+// tslint:disable-next-line: max-classes-per-file
 export class DegreeInformation {
   @IsString()
   @IsOptional()
-  academicDegree: String;
+  academicDegree: string;
 
   @IsNumber()
   @IsOptional()
-  years: Number;
+  years: number;
 
   @IsString()
   @IsOptional()
-  modality: String;
+  modality: string;
 
   @IsString()
   @IsOptional()
-  startDate: String;
+  startDate: string;
 
   @IsString()
   @IsOptional()
-  cost: String;
+  cost: string;
 }
 
+// tslint:disable-next-line: max-classes-per-file
 export class UniversityVideos {
   @IsUrl()
   @IsOptional()
-  urlVideo: String;
+  urlVideo: string;
 }
 
+// tslint:disable-next-line: max-classes-per-file
 export class CourseContent {
   @IsString()
   @IsOptional()
-  title: String;
+  title: string;
 
   @IsString()
   @IsOptional()
-  informationCourse: String;
+  informationCourse: string;
 }
 
+// tslint:disable-next-line: max-classes-per-file
 export class FeaturedInformation {
   @IsUrl()
-  urlImage: String;
+  urlImage: string;
 
   @IsString()
-  textParagraph: String;
+  textParagraph: string;
 }
 
+// tslint:disable-next-line: max-classes-per-file
 export class ContentParagraph {
   @IsString()
   @IsOptional()
-  title: String;
+  title: string;
 
   @IsString()
   @IsOptional()
-  descriptionParagraph: String;
+  descriptionParagraph: string;
 }
 
+// tslint:disable-next-line: max-classes-per-file
 export class GalleryCourse {
   @IsUrl()
-  url: String;
+  url: string;
 }
 
+// tslint:disable-next-line: max-classes-per-file
 export class CourseButton {
   @IsString()
   @IsOptional()
-  textCourse: String;
+  textCourse: string;
 }
 
+// tslint:disable-next-line: max-classes-per-file
 export class Reason {
   @IsString()
   @IsOptional()
-  reason: String;
+  reason: string;
 }
 
+// tslint:disable-next-line: max-classes-per-file
 export class CourseInformation {
   @ValidateNested()
   @ArrayNotEmpty()
@@ -125,15 +130,17 @@ export class CourseInformation {
   employmentStatistics: Employment[];
 }
 
+// tslint:disable-next-line: max-classes-per-file
 class Agenda {
   @IsString()
-  lesson: String;
+  lesson: string;
 }
 
+// tslint:disable-next-line: max-classes-per-file
 class Employment {
   @IsString()
-  percentage: String;
+  percentage: string;
 
   @IsString()
-  text: String;
+  text: string;
 }

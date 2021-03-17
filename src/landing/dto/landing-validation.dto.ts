@@ -23,8 +23,8 @@ import { UniversityVideos } from '../documents/university-videos.dto';
 import { CourseInformation } from '../documents/course-information.dto';
 
 export class LandingValidation {
-  //For strict validation
-  //@IsDefined()
+  // For strict validation
+  // @IsDefined()
   @IsNotEmptyObject()
   @IsOptional()
   @ValidateNested()

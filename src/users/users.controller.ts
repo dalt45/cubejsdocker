@@ -16,8 +16,8 @@ import { FindParams } from './validations/FindParams';
 import { FindUserDto } from './dto/find-user.dto';
 import { ObjectID } from 'mongodb';
 import { AuthGuard } from '@nestjs/passport';
-import { Roles } from 'src/authorization/role.decorator';
-import { Role } from 'src/authorization/role.enum';
+import { Roles } from '../authorization/role.decorator';
+import { Role } from '../authorization/role.enum';
 
 @Controller('users')
 export class UserController {

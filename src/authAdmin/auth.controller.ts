@@ -23,7 +23,9 @@ export class AuthController {
 
   @UseGuards(AuthGuard('googleAdmin'))
   @Get('authAdmin/login/google')
-  async googleAuth(@Request() req) {}
+  async googleAuth(@Request() req) {
+    return req;
+  }
 
   @UseGuards(AuthGuard('googleAdmin'))
   @Get('authAdmin/google/redirect')

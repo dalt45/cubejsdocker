@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import ServiceResponse from '../utils/serviceResponse/ServiceResponse';
 import ControllerResponse from '../utils/serviceResponse/ControllerResponse';
+import { Landing } from './landing.entity';
 import { LandingService } from './landing.service';
 import { LandingValidation } from './dto/landing-validation.dto';
 import { AuthGuard } from '@nestjs/passport';
@@ -23,7 +24,6 @@ export class LandingController {
   @Roles(Role.University, Role.Admin)
   @Post()
   async createLanding(@Body() landing: CreateLandingDto): Promise<any> {
-    console.log(landing);
     const response = await this.landingService.create(landing);
     const serviceResponse = new ServiceResponse(response);
     if (serviceResponse.isError()) {

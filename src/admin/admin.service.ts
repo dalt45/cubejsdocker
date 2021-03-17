@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateAdminDto } from './dto/create-admin.dto';
@@ -6,9 +6,9 @@ import { CountAdminDto } from './dto/count-admin.dto';
 import { Admin } from './admin.entity';
 import { ServiceMessages } from '../utils/serviceResponse/ResponseDictionary';
 import { FindAdminDto } from './dto/find-admin.dto';
+import * as bcrypt from 'bcrypt';
 import { CreateAdminGoogleDto } from './dto/create-admin-google';
-import { UsersService } from 'src/users/users.service';
-const bcrypt = require('bcrypt');
+import { response } from 'express';
 
 const saltRounds = 10;
 
@@ -17,14 +17,11 @@ export class AdminService {
   constructor(
     @InjectRepository(Admin)
     private adminRepository: Repository<Admin>,
-    @Inject(forwardRef(() => UsersService))
-    private userServices: UsersService,
   ) {}
 
   async register(createAdminDto: CreateAdminDto): Promise<string> {
     const repeatedAdmins = await this.userExists(createAdminDto.email);
-    const repeatedUser = await this.userServices.userExists(createAdminDto);
-    if (repeatedAdmins || repeatedUser) {
+    if (repeatedAdmins) {
       return ServiceMessages.USER_IS_REPEATED;
     } else {
       await bcrypt.hash(
@@ -45,12 +42,12 @@ export class AdminService {
   }
 
   async userExists(email: string): Promise<boolean> {
-    const response = await this.adminRepository.findAndCount({
-      email: email,
+    const countUser = await this.adminRepository.findAndCount({
+      email,
     });
     const countAdmin = new CountAdminDto();
-    countAdmin.users = response[0];
-    countAdmin.count = response[1];
+    countAdmin.users = countUser[0];
+    countAdmin.count = countUser[1];
     if (countAdmin.count > 0) {
       return true;
     } else {
@@ -68,10 +65,20 @@ export class AdminService {
     } else {
       admin = await this.adminRepository.findOne({ email: findAdminDto.email });
     }
-    return {
-      serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
-      body: admin ? admin : undefined,
-    };
+    if (admin) {
+      const responseAdmin = new Admin();
+      responseAdmin.email = admin.email;
+      responseAdmin.id = admin.id;
+      return {
+        serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
+        body: responseAdmin,
+      };
+    } else {
+      return {
+        serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
+        body: {},
+      };
+    }
   }
 
   async registerWithGoogle(

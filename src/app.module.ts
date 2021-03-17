@@ -8,13 +8,13 @@ import { Landing } from './landing/landing.entity';
 import { AuthModule } from './authUser/auth.module';
 import { AuthAdminModule } from './authAdmin/auth.module';
 import { LandingModule } from './landing/landing.module';
-import { UniversityModule } from './university/university.module'
+import { UniversityModule } from './university/university.module';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './authorization/roles.guard';
 import { IdGuard } from './authorization/id.guard';
 import { University } from './university/university.entity';
 
-//'mongodb://user:password@mongo:27017'
+// 'mongodb://user:password@mongo:27017'
 const dbHost: string = process.env.DB_HOST;
 const dbPort: number = (process.env.DB_PORT as unknown) as number;
 const dbUsername: string = process.env.DB_USERNAME;

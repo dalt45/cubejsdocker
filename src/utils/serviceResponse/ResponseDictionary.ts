@@ -1,5 +1,3 @@
-import { response } from 'express';
-
 export const enum httpStatusCode {
   FORBIDDEN = 403,
   CREATED = 201,
@@ -9,7 +7,7 @@ export const enum httpStatusCode {
   BAD_REQUEST = 400,
 }
 
-export interface response {
+export interface Response {
   statusCode: httpStatusCode;
   message: string;
   isError: boolean;
@@ -25,7 +23,7 @@ export const enum ServiceMessages {
   BAD_REQUEST = 'BAD_REQUEST',
 }
 
-export const Dictionary: { [value in ServiceMessages]: response } = {
+export const Dictionary: { [value in ServiceMessages]: Response } = {
   RESPONSE_DEFAULT: {
     statusCode: httpStatusCode.OK,
     message: 'Success',

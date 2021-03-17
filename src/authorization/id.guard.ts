@@ -14,6 +14,7 @@ export class IdGuard implements CanActivate {
       context.getHandler(),
       context.getClass(),
     ]);
+    let jwtEmail: string;
     switch (idRequired) {
       case Id.Email:
         const {
@@ -23,7 +24,11 @@ export class IdGuard implements CanActivate {
           context.switchToHttp().getRequest(),
         );
         const decoded = this.jwtService.decode(jwt);
-        const jwtEmail = decoded['email'];
+        if (typeof decoded === 'object') {
+          jwtEmail = decoded.email;
+        } else {
+          jwtEmail = null;
+        }
         if (email === jwtEmail) {
           return true;
         }

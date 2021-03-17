@@ -1,5 +1,5 @@
-import { UserType } from 'src/users/enums/userType.enum';
-import { Column, Entity, ObjectIdColumn, ObjectID } from 'typeorm';
+import { Column, Entity, ObjectIdColumn } from 'typeorm';
+import { ObjectID } from 'mongodb';
 
 @Entity()
 export class Admin {

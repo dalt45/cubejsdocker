@@ -1,12 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import {
-  Repository,
-  getMongoRepository,
-  FindManyOptions,
-  MongoEntityManager,
-  getManager,
-} from 'typeorm';
+import { Repository } from 'typeorm';
 import { Landing } from './landing.entity';
 import { ServiceMessages } from '../utils/serviceResponse/ResponseDictionary';
 import { LandingValidation } from './dto/landing-validation.dto';
@@ -31,7 +25,6 @@ export class LandingService {
       });
       return ServiceMessages.RESPONSE_DEFAULT;
     } catch (e) {
-      console.log(e);
       return ServiceMessages.ERROR_DEFAULT;
     }
   }

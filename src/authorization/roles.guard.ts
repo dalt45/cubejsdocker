@@ -23,6 +23,7 @@ export class RolesGuard implements CanActivate {
       context.getHandler(),
       context.getClass(),
     ]);
+    let email: string;
     if (!requiredRoles) {
       return true;
     }
@@ -33,11 +34,17 @@ export class RolesGuard implements CanActivate {
       return false;
     }
     const decoded = this.jwtService.decode(jwt);
-    const email = decoded['email'];
+
+    if (typeof decoded === 'object') {
+      email = decoded.email;
+    } else {
+      email = null;
+    }
     const findUserDto = new FindUserDto();
     findUserDto.email = email;
     const response = await this.usersService.get(findUserDto);
     const responseUser: User = response.body;
+
     const isAdmin = await this.adminService.userExists(email);
     if (
       responseUser &&
