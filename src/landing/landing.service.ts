@@ -6,7 +6,7 @@ import { ServiceMessages } from '../utils/serviceResponse/ResponseDictionary';
 import { LandingValidation } from './dto/landing-validation.dto';
 import { CreateLandingDto } from './dto/create-landing.dto';
 import { UniversityService } from 'src/university/university.service';
-import { University } from 'src/university/university.entity';
+import { University } from '../university/university.entity';
 import { ObjectID } from 'mongodb';
 
 @Injectable()
@@ -20,8 +20,11 @@ export class LandingService {
   async create(landing: CreateLandingDto): Promise<string> {
     try {
       const university = await this.universityService.get({ id: landing.id });
-      this.universityRepository.update(university, {
-        landings: [...landing.landing, ...university.landings],
+      const newLandingArray = landing.landing.map((item) => {
+        return new Landing(item);
+      });
+      await this.universityRepository.update(university, {
+        landings: [...newLandingArray, ...university.landings],
       });
       return ServiceMessages.RESPONSE_DEFAULT;
     } catch (e) {
@@ -35,8 +38,51 @@ export class LandingService {
         'landings._id': { $eq: new ObjectID(Params.id) },
       },
     });
-    return university[0].landings.map((landing) => {
-      if (landing._id.equals(Params.id)) return landing;
-    })[0];
+    let resultLanding: Landing;
+    university[0].landings.forEach((landing) => {
+      if (landing._id.equals(Params.id)) resultLanding = landing;
+    });
+    if (resultLanding) {
+      return {
+        serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
+        body: resultLanding,
+      };
+    }
+  }
+
+  async edit(id: string, landing: LandingValidation): Promise<any> {
+    const university = await this.universityRepository.findOne({
+      where: {
+        'landings._id': { $eq: new ObjectID(id) },
+      },
+    });
+    if (!university) {
+      return ServiceMessages.ERROR_DEFAULT;
+    }
+    const landingArray = university.landings;
+    for (const element in landingArray) {
+      if (landingArray[element]._id.equals(id)) {
+        const toModify = landingArray[element];
+        for (const values in landing) {
+          if (landing.hasOwnProperty(values))
+            toModify[values] = landing[values];
+        }
+        // tslint:disable-next-line: radix
+        landingArray.splice((element as unknown) as number, 1, toModify);
+      }
+    }
+    try {
+      const universityToModify = await this.universityRepository.findOne({
+        where: {
+          'landings._id': { $eq: new ObjectID(id) },
+        },
+      });
+      await this.universityRepository.update(universityToModify, {
+        landings: [...landingArray],
+      });
+      return ServiceMessages.RESPONSE_DEFAULT;
+    } catch (e) {
+      return ServiceMessages.ERROR_DEFAULT;
+    }
   }
 }
