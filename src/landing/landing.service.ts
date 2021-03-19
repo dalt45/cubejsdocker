@@ -64,7 +64,7 @@ export class LandingService {
       if (landingArray[element]._id.equals(id)) {
         const toModify = landingArray[element];
         for (const values in landing) {
-          if (landing.hasOwnProperty(values))
+          if (toModify.hasOwnProperty(values))
             toModify[values] = landing[values];
         }
         // tslint:disable-next-line: radix
@@ -80,7 +80,9 @@ export class LandingService {
       await this.universityRepository.update(universityToModify, {
         landings: [...landingArray],
       });
-      return ServiceMessages.RESPONSE_DEFAULT;
+      return {
+        serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
+      };
     } catch (e) {
       return ServiceMessages.ERROR_DEFAULT;
     }

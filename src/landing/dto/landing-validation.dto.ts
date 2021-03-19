@@ -68,6 +68,7 @@ export class LandingValidation {
   contentParagraphMoreInformation: ContentParagraph;
 
   @IsUrl()
+  @IsOptional()
   universityLocation: string;
 
   @ValidateNested()
