@@ -4,6 +4,8 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { ID_KEY } from './id.decorator';
 import { Id } from './id.enum';
+import { User } from 'src/users/user.entity';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class IdGuard implements CanActivate {
@@ -15,21 +17,41 @@ export class IdGuard implements CanActivate {
       context.getClass(),
     ]);
     let jwtEmail: string;
+    let jwtUniversity: ObjectId;
+    let jwt: string;
+    let decoded: { [key: string]: any } | string;
     switch (idRequired) {
       case Id.Email:
         const {
           body: { email },
         } = context.switchToHttp().getRequest();
-        const jwt = ExtractJwt.fromAuthHeaderAsBearerToken()(
+        jwt = ExtractJwt.fromAuthHeaderAsBearerToken()(
           context.switchToHttp().getRequest(),
         );
-        const decoded = this.jwtService.decode(jwt);
+        decoded = this.jwtService.decode(jwt);
         if (typeof decoded === 'object') {
           jwtEmail = decoded.email;
         } else {
           jwtEmail = null;
         }
         if (email === jwtEmail) {
+          return true;
+        }
+        return false;
+      case Id.University:
+        const {
+          body: { id: university },
+        } = context.switchToHttp().getRequest();
+        jwt = ExtractJwt.fromAuthHeaderAsBearerToken()(
+          context.switchToHttp().getRequest(),
+        );
+        decoded = this.jwtService.decode(jwt);
+        if (typeof decoded === 'object') {
+          jwtUniversity = decoded.university;
+        } else {
+          jwtUniversity = null;
+        }
+        if (university === jwtUniversity) {
           return true;
         }
         return false;
