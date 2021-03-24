@@ -16,6 +16,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { Roles } from 'src/authorization/role.decorator';
 import { Role } from 'src/authorization/role.enum';
 import { CreateLandingDto } from './dto/create-landing.dto';
+import { IdMatch } from '../authorization/id.decorator';
+import { Id } from '../authorization/id.enum';
 
 @Controller('landing')
 export class LandingController {
@@ -23,6 +25,7 @@ export class LandingController {
   @UseGuards(AuthGuard(['jwtAdmin', 'jwtUser']))
   @Roles(Role.University, Role.Admin)
   @Post()
+  @IdMatch(Id.University)
   async createLanding(@Body() landing: CreateLandingDto): Promise<any> {
     const response = await this.landingService.create(landing);
     const serviceResponse = new ServiceResponse(response);
