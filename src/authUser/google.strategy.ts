@@ -3,6 +3,8 @@ import { Injectable } from '@nestjs/common';
 import { googleContants } from './constants';
 import { OAuth2Strategy, VerifyCallback } from 'passport-google-oauth';
 
+const urlDomain = process.env.URL_DOMAIN;
+
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(
   OAuth2Strategy.Strategy,
@@ -12,7 +14,7 @@ export class GoogleStrategy extends PassportStrategy(
     super({
       clientID: googleContants.client,
       clientSecret: googleContants.secret,
-      callbackURL: 'http://localhost:3000/auth/google/redirect',
+      callbackURL: urlDomain + '/auth/google/redirect',
       scope: ['email', 'profile'],
     });
   }
