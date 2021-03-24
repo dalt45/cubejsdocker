@@ -1,4 +1,4 @@
-import { Column, Entity, ObjectIdColumn, ObjectID } from 'typeorm';
+import { Column, Entity, ObjectIdColumn} from 'typeorm';
 import { CourseContent } from './documents/course-content.dto';
 import { DegreeInformation } from './documents/degree-information.dto';
 import { FeaturedInformation } from './documents/featured-information.dto';
@@ -9,11 +9,11 @@ import { GalleryCourse } from './documents/gallery-course.dto';
 import { CourseButton } from './documents/course-button.dto';
 import { Reason } from './documents/reasons.dto';
 import { CourseInformation } from './documents/course-information.dto';
+import { ObjectID } from 'mongodb';
 
-@Entity()
 export class Landing {
-  @ObjectIdColumn()
-  id: ObjectID;
+  @Column()
+  _id: ObjectID;
 
   @Column()
   contentProfileUniversity: UniversityProfile;
@@ -53,4 +53,43 @@ export class Landing {
 
   @Column()
   courseContentInformation: CourseInformation;
+
+  constructor(
+    /* contentProfileUniversity: UniversityProfile,
+    informationUniversity: DegreeInformation,
+    contentVideosUniversities: UniversityVideos,
+    contentAboutCourse: CourseContent,
+    contentFeaturedInformation: FeaturedInformation[],
+    contentParagraphUniversity: ContentParagraph,
+    contentParagraphMoreInformation: ContentParagraph,
+    universityLocation: string,
+    contentGalleryCourse: GalleryCourse[],
+    textButtonOtherCourses: CourseButton[],
+    contentDesciptionCourse: CourseContent,
+    reasonsToChooseThisProgram: Reason[],
+    courseContentInformation: CourseInformation, */
+    constructorObject,
+  ) {
+    this.contentProfileUniversity = constructorObject.contentProfileUniversity;
+    this.informationUniversity = constructorObject.informationUniversity;
+    this.contentVideosUniversities =
+      constructorObject.contentVideosUniversities;
+    this.contentAboutCourse = constructorObject.contentAboutCourse;
+    this.contentFeaturedInformation =
+      constructorObject.contentFeaturedInformation;
+    this.contentParagraphUniversity =
+      constructorObject.contentParagraphUniversity;
+    this.contentParagraphUniversity =
+      constructorObject.contentParagraphUniversity;
+    this.contentParagraphMoreInformation =
+      constructorObject.contentParagraphMoreInformation;
+    this.universityLocation = constructorObject.universityLocation;
+    this.contentGalleryCourse = constructorObject.contentGalleryCourse;
+    this.textButtonOtherCourses = constructorObject.textButtonOtherCourses;
+    this.contentDesciptionCourse = constructorObject.contentDesciptionCourse;
+    this.reasonsToChooseThisProgram =
+      constructorObject.reasonsToChooseThisProgram;
+    this.courseContentInformation = constructorObject.courseContentInformation;
+    this._id = new ObjectID();
+  }
 }

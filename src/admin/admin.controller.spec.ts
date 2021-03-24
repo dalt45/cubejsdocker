@@ -98,8 +98,8 @@ describe('UserController', () => {
       const mockedAdmin = new Admin();
       mockedAdmin.email = testQuery.email;
       mockedAdmin.id = new ObjectID();
-      repositoryMock.find = jest.fn().mockReturnValueOnce(mockedAdmin);
-      const findAdminReturn = new FindAdminDto();
+      repositoryMock.findOne = jest.fn().mockReturnValueOnce(mockedAdmin);
+      const findAdminReturn = new Admin();
       findAdminReturn.email = testQuery.email;
       findAdminReturn.id = mockedAdmin.id;
       expect(await adminController.getAdmin(testQuery)).toEqual({
@@ -107,7 +107,7 @@ describe('UserController', () => {
         message: 'Success',
         statusCode: 200,
       });
-      expect(repositoryMock.find).toReturnWith({
+      expect(repositoryMock.findOne).toReturnWith({
         email: testQuery.email,
         id: findAdminReturn.id,
       });
@@ -122,7 +122,7 @@ describe('UserController', () => {
         email: undefined,
         id: (mockedAdmin.id as unknown) as string,
       };
-      repositoryMock.findByIds = jest.fn().mockReturnValueOnce(mockedAdmin);
+      repositoryMock.findByIds = jest.fn().mockReturnValueOnce([mockedAdmin]);
       const findAdminReturn = new FindAdminDto();
       findAdminReturn.email = mockedAdmin.email;
       findAdminReturn.id = mockedAdmin.id;
@@ -131,10 +131,9 @@ describe('UserController', () => {
         message: 'Success',
         statusCode: 200,
       });
-      expect(repositoryMock.findByIds).toReturnWith({
-        email: mockedAdmin.email,
-        id: findAdminReturn.id,
-      });
+      expect(repositoryMock.findByIds).toReturnWith([
+        { email: mockedAdmin.email, id: findAdminReturn.id },
+      ]);
     });
   });
 

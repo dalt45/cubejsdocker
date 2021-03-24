@@ -1,11 +1,23 @@
-import { Controller, Get, Post, Body, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Query,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import ServiceResponse from '../utils/serviceResponse/ServiceResponse';
 import ControllerResponse from '../utils/serviceResponse/ControllerResponse';
 import { FindParams } from './validations/FindParams';
 import { FindUserDto } from './dto/find-user.dto';
 import { ObjectID } from 'mongodb';
+import { AuthGuard } from '@nestjs/passport';
+import { Roles } from '../authorization/role.decorator';
+import { Role } from '../authorization/role.enum';
 
 @Controller('users')
 export class UserController {
@@ -17,12 +29,12 @@ export class UserController {
     const serviceResponse = new ServiceResponse(response);
     if (serviceResponse.isError()) {
       const errorResponse = serviceResponse.getResponse();
-      const controllerResponse = new ControllerResponse(errorResponse);
-      controllerResponse.httpError();
+      const controllerErrorResponse = new ControllerResponse(errorResponse);
+      controllerErrorResponse.httpError();
     } else {
       const sucessResponse = serviceResponse.getResponse();
-      const controllerResponse = new ControllerResponse(sucessResponse);
-      return controllerResponse.httpSuccess();
+      const controllerSuccessResponse = new ControllerResponse(sucessResponse);
+      return controllerSuccessResponse.httpSuccess();
     }
   }
 
@@ -32,8 +44,8 @@ export class UserController {
     if (params.id && params.email) {
       const serviceResponse = new ServiceResponse('BAD_REQUEST');
       const errorResponse = serviceResponse.getResponse();
-      const controllerResponse = new ControllerResponse(errorResponse);
-      controllerResponse.httpError();
+      const controllerErrorResponse = new ControllerResponse(errorResponse);
+      controllerErrorResponse.httpError();
     } else {
       if (params.email) serviceRequest.email = params.email;
       if (params.id) serviceRequest.id = new ObjectID(params.id);
@@ -42,8 +54,34 @@ export class UserController {
       serviceResponse.serviceResponse.hasBody = true;
       serviceResponse.serviceResponse.body = response.body;
       const successResponse = serviceResponse.getResponse();
-      const controllerResponse = new ControllerResponse(successResponse);
-      return controllerResponse.httpSuccess();
+      const controllerSuccessResponse = new ControllerResponse(successResponse);
+      return controllerSuccessResponse.httpSuccess();
+    }
+  }
+
+  @UseGuards(AuthGuard(['jwtAdmin']))
+  @Roles(Role.Admin)
+  @Put()
+  async putUserAdmin(
+    @Query() params: FindParams,
+    @Body() body: UpdateUserDto,
+  ): Promise<any> {
+    const serviceRequest = new FindUserDto();
+    if (params.id && params.email) {
+      const serviceResponse = new ServiceResponse('BAD_REQUEST');
+      const errorResponse = serviceResponse.getResponse();
+      const controllerErrorResponse = new ControllerResponse(errorResponse);
+      controllerErrorResponse.httpError();
+    } else {
+      if (params.email) serviceRequest.email = params.email;
+      if (params.id) serviceRequest.id = new ObjectID(params.id);
+      const response = await this.userService.update({ serviceRequest, body });
+      const serviceResponse = new ServiceResponse(response.serviceMessage);
+      serviceResponse.serviceResponse.hasBody = true;
+      serviceResponse.serviceResponse.body = response.body;
+      const successResponse = serviceResponse.getResponse();
+      const controllerSuccessResponse = new ControllerResponse(successResponse);
+      return controllerSuccessResponse.httpSuccess();
     }
   }
 }
