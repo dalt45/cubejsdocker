@@ -21,6 +21,7 @@ export const enum ServiceMessages {
   USER_IS_REPEATED = 'USER_IS_REPEATED',
   UNAUTHORIZED = 'UNAUTHORIZED',
   BAD_REQUEST = 'BAD_REQUEST',
+  RESPONSE_BODY = 'RESPONSE_BODY',
 }
 
 export const Dictionary: { [value in ServiceMessages]: Response } = {
@@ -39,11 +40,11 @@ export const Dictionary: { [value in ServiceMessages]: Response } = {
     body: {},
   },
   USER_IS_REPEATED: {
-    statusCode: httpStatusCode.FORBIDDEN,
-    message: 'User is Repeated',
+    statusCode: httpStatusCode.BAD_REQUEST,
+    message: 'Bad Request',
     isError: true,
-    hasBody: false,
-    body: {},
+    hasBody: true,
+    body: { message: 'User is repeated' },
   },
   UNAUTHORIZED: {
     statusCode: httpStatusCode.UNAUTHORIZED,
@@ -56,7 +57,14 @@ export const Dictionary: { [value in ServiceMessages]: Response } = {
     statusCode: httpStatusCode.BAD_REQUEST,
     message: 'Bad Request',
     isError: true,
-    hasBody: false,
+    hasBody: true,
+    body: {},
+  },
+  RESPONSE_BODY: {
+    statusCode: httpStatusCode.OK,
+    message: 'Success',
+    isError: false,
+    hasBody: true,
     body: {},
   },
 };

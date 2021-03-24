@@ -35,8 +35,11 @@ export class LandingService {
         'landings._id': { $eq: new ObjectID(Params.id) },
       },
     });
-    return university[0].landings.map((landing) => {
-      if (landing._id.equals(Params.id)) return landing;
-    })[0];
+    return {
+      serviceMessage: ServiceMessages.RESPONSE_BODY,
+      body: university[0].landings.map((landing) => {
+        if (landing._id.equals(Params.id)) return landing;
+      })[0],
+    };
   }
 }

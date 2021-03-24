@@ -81,7 +81,7 @@ export class AuthService {
           id: response.body.id,
         };
         return {
-          serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
+          serviceMessage: ServiceMessages.RESPONSE_BODY,
           body: { access_token: this.jwtService.sign(payload) },
         };
       }
@@ -91,7 +91,7 @@ export class AuthService {
         type: user.type,
       };
       return {
-        serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
+        serviceMessage: ServiceMessages.RESPONSE_BODY,
         body: { access_token: this.jwtService.sign(payload) },
       };
     }

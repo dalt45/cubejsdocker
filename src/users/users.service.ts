@@ -85,7 +85,7 @@ export class UsersService {
       user = await this.usersRepository.findOne({ email: findUserDto.email });
     }
     return {
-      serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
+      serviceMessage: ServiceMessages.RESPONSE_BODY,
       body: user ? user : {},
     };
   }

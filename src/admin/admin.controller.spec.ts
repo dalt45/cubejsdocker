@@ -18,9 +18,6 @@ describe('UserController', () => {
   let adminController: AdminController;
   let adminService: AdminService;
   let repositoryMock: MockType<Repository<Admin>>;
-  let serviceResponse: ServiceResponse;
-  let controllerResponse: ControllerResponse;
-  let finalResponse: any;
 
   beforeEach(async () => {
     const repositoryMockFactory: () => MockType<Repository<any>> = jest.fn(
@@ -70,11 +67,9 @@ describe('UserController', () => {
         email: 'a@a.com',
         password: '12345',
       };
-      serviceResponse = new ServiceResponse('USER_IS_REPEATED');
-      controllerResponse = new ControllerResponse(
-        serviceResponse.getResponse(),
-      );
-      finalResponse = controllerResponse.mockError();
+      const testResponse = new ServiceResponse('USER_IS_REPEATED')
+        .getJSON()
+        .mockError();
       adminService.userExists = jest.fn().mockReturnValueOnce(true);
       try {
         expect(await adminController.registerUser(adminTest)).toThrow();
@@ -87,7 +82,7 @@ describe('UserController', () => {
           'USER_IS_REPEATED',
         );
       } catch (e) {
-        expect(e.response).toEqual(finalResponse);
+        expect(e.response).toEqual(testResponse);
       }
     });
   });
@@ -147,12 +142,10 @@ describe('UserController', () => {
       try {
         expect(await adminController.getAdmin(testQuery)).toThrowError();
       } catch (e) {
-        serviceResponse = new ServiceResponse('BAD_REQUEST');
-        controllerResponse = new ControllerResponse(
-          serviceResponse.getResponse(),
-        );
-        finalResponse = controllerResponse.mockError();
-        expect(e.response).toEqual(finalResponse);
+        const testResult = new ServiceResponse('BAD_REQUEST')
+          .getJSON()
+          .mockError();
+        expect(e.response).toEqual(testResult);
       }
     });
   });

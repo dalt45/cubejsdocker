@@ -1,18 +1,18 @@
-import { Any } from 'typeorm';
+import { HttpException } from '@nestjs/common';
 import { Dictionary, Response } from './ResponseDictionary';
 
 export default class ServiceResponse {
   serviceResponse: Response;
-  serviceMessage: string;
+  responseJSON: { [key: string]: any };
   constructor(serviceMessage = 'DEFAULT') {
-    this.serviceMessage = serviceMessage;
-    this.serviceResponse = Dictionary[this.serviceMessage];
+    this.serviceResponse = Dictionary[serviceMessage];
   }
 
   setBody(body: { [key: string]: any }) {
     if (this.serviceResponse.hasBody) {
       this.serviceResponse.body = body;
     }
+    return this;
   }
 
   getResponse() {
@@ -25,7 +25,46 @@ export default class ServiceResponse {
     return responseObject;
   }
 
+  getJSON() {
+    const responseJSON: { [key: string]: any } = {};
+    if (this.serviceResponse.hasBody) {
+      responseJSON.body = this.serviceResponse.body;
+    }
+    responseJSON.statusCode = this.serviceResponse.statusCode;
+    responseJSON.message = this.serviceResponse.message;
+    this.responseJSON = responseJSON;
+    return this;
+  }
+
   isError() {
     return this.serviceResponse.isError;
+  }
+
+  httpError() {
+    throw new HttpException(
+      {
+        status: this.responseJSON.statusCode,
+        error: this.responseJSON.message,
+        ...this.responseJSON.body,
+      },
+      this.responseJSON.statusCode,
+    );
+  }
+
+  mockError() {
+    return {
+      status: this.responseJSON.statusCode,
+      error: this.responseJSON.message,
+      ...this.responseJSON.body,
+    };
+  }
+
+  httpSuccess() {
+    return this.responseJSON;
+  }
+
+  getControllerResponse() {
+    if (this.isError()) return this.httpError();
+    return this.httpSuccess();
   }
 }

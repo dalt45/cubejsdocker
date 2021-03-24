@@ -25,14 +25,7 @@ export class LandingController {
   @Post()
   async createLanding(@Body() landing: CreateLandingDto): Promise<any> {
     const response = await this.landingService.create(landing);
-    const serviceResponse = new ServiceResponse(response);
-    if (serviceResponse.isError()) {
-      const errorResponse = serviceResponse.getResponse();
-      const controllerResponse = new ControllerResponse(errorResponse);
-      controllerResponse.httpError();
-    }
-    const successResponse = serviceResponse.getResponse();
-    return successResponse;
+    return new ServiceResponse(response).getJSON().getControllerResponse();
   }
 
   @UseGuards(AuthGuard(['jwtAdmin', 'jwtUser']))
@@ -40,6 +33,9 @@ export class LandingController {
   @Get()
   async getLanding(@Query() Params: any): Promise<any> {
     const response = await this.landingService.get(Params);
-    return response;
+    return new ServiceResponse(response.serviceMessage)
+      .setBody(response.body)
+      .getJSON()
+      .getControllerResponse();
   }
 }

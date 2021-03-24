@@ -34,6 +34,10 @@ export class UniversityService {
   }
 
   async get(Params: any): Promise<any> {
-    return await this.universityRepostory.findOne(Params.id);
+    const university = this.universityRepostory.findOne(Params.id);
+    return {
+      serviceMessage: ServiceMessages.RESPONSE_BODY,
+      body: university,
+    };
   }
 }

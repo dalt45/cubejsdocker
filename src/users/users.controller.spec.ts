@@ -70,11 +70,9 @@ describe('UserController', () => {
         email: 'a@a.com',
         password: '12345',
       };
-      serviceResponse = new ServiceResponse('USER_IS_REPEATED');
-      controllerResponse = new ControllerResponse(
-        serviceResponse.getResponse(),
-      );
-      finalResponse = controllerResponse.mockError();
+      const testResponse = new ServiceResponse('USER_IS_REPEATED')
+        .getJSON()
+        .mockError();
       userService.userExists = jest.fn().mockReturnValueOnce(true);
       try {
         expect(await userController.registerUser(userTest)).toThrow();
@@ -87,7 +85,7 @@ describe('UserController', () => {
           'USER_IS_REPEATED',
         );
       } catch (e) {
-        expect(e.response).toEqual(finalResponse);
+        expect(e.response).toEqual(testResponse);
       }
     });
   });
