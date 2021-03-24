@@ -53,4 +53,31 @@ export class UniversityService {
   async get(Params: any): Promise<any> {
     return await this.universityRepostory.findOne(Params.id);
   }
+
+  async edit(university, params, userInfo): Promise<any> {
+    const manager = this.connection.getMongoRepository(User);
+    const dbUser = await manager.findOne({
+      where: { _id: { $eq: new ObjectID(userInfo.id) } },
+    });
+    const universityToEdit = dbUser.university ? dbUser.university : params.id;
+    if (!universityToEdit) {
+      return {
+        serviceMessage: ServiceMessages.BAD_REQUEST,
+      };
+    }
+    const universityQuery = await this.universityRepostory.findOne(
+      universityToEdit,
+    );
+    try {
+      delete university.landings;
+      this.universityRepostory.update(universityQuery, { ...university });
+      return {
+        serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
+      };
+    } catch (e) {
+      return {
+        serviceMessage: ServiceMessages.ERROR_DEFAULT,
+      };
+    }
+  }
 }

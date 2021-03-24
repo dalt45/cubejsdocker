@@ -8,6 +8,7 @@ import {
   ContextType,
   SetMetadata,
   Req,
+  Put,
 } from '@nestjs/common';
 import ServiceResponse from '../utils/serviceResponse/ServiceResponse';
 import ControllerResponse from '../utils/serviceResponse/ControllerResponse';
@@ -51,5 +52,31 @@ export class UniversityController {
   async getLanding(@Query() Params: any): Promise<any> {
     const response = await this.universityService.get(Params);
     return response;
+  }
+
+  @UseGuards(AuthGuard(['jwtAdmin', 'jwtUser']))
+  @Roles(Role.University, Role.Admin)
+  @Put()
+  async editLanding(
+    @UserInfo() userInfo: User,
+    @Query() params: any,
+    @Body() university: any,
+  ): Promise<any> {
+    const response = await this.universityService.edit(
+      university,
+      params,
+      userInfo,
+    );
+    const serviceResponse = new ServiceResponse(response.serviceMessage);
+    if (serviceResponse.isError()) {
+      const errorResponse = serviceResponse.getResponse();
+      const controllerErrorResponse = new ControllerResponse(errorResponse);
+      controllerErrorResponse.httpError();
+    }
+    serviceResponse.serviceResponse.hasBody = true;
+    serviceResponse.serviceResponse.body = response.body;
+    const successResponse = serviceResponse.getResponse();
+    const controllerSuccessResponse = new ControllerResponse(successResponse);
+    return controllerSuccessResponse.httpSuccess();
   }
 }
