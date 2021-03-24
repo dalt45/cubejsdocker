@@ -5,7 +5,8 @@
   "rules": {
     "arrow-parens": false,
     "quotemark": [true, "single", "jsx-double"],
-    "semicolon": [true, "always", "ignore-bound-class-methods"]
+    "semicolon": [true, "always", "ignore-bound-class-methods"],
+    "no-unused-variable": true
   },
   "rulesDirectory": []
 }
