@@ -1,24 +1,12 @@
-import {
-  Controller,
-  Post,
-  Body,
-  Get,
-  Query,
-  UseGuards,
-  Put,
-} from '@nestjs/common';
+import { Controller, Post, Body, Get, Query, UseGuards } from '@nestjs/common';
 import ServiceResponse from '../utils/serviceResponse/ServiceResponse';
-import ControllerResponse from '../utils/serviceResponse/ControllerResponse';
-import { Landing } from './landing.entity';
 import { LandingService } from './landing.service';
-import { LandingValidation } from './dto/landing-validation.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { Roles } from 'src/authorization/role.decorator';
 import { Role } from 'src/authorization/role.enum';
 import { CreateLandingDto } from './dto/create-landing.dto';
 import { IdMatch } from '../authorization/id.decorator';
 import { Id } from '../authorization/id.enum';
-import { ObjectId } from 'mongodb';
 
 @Controller('landing')
 export class LandingController {

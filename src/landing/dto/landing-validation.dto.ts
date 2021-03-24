@@ -7,13 +7,9 @@ import { CourseButton } from '../documents/course-button.dto';
 import { Reason } from '../documents/reasons.dto';
 import {
   ArrayNotEmpty,
-  IsDefined,
-  IsNotEmpty,
   IsNotEmptyObject,
-  IsObject,
   IsOptional,
   IsUrl,
-  MinLength,
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';

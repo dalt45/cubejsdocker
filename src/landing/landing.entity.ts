@@ -1,4 +1,4 @@
-import { Column, Entity, ObjectIdColumn} from 'typeorm';
+import { Column } from 'typeorm';
 import { CourseContent } from './documents/course-content.dto';
 import { DegreeInformation } from './documents/degree-information.dto';
 import { FeaturedInformation } from './documents/featured-information.dto';

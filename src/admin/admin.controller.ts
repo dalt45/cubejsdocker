@@ -2,7 +2,6 @@ import { Controller, Get, Post, Body, Query } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import ServiceResponse from '../utils/serviceResponse/ServiceResponse';
-import ControllerResponse from '../utils/serviceResponse/ControllerResponse';
 import { FindParams } from './validations/FindParams';
 import { FindAdminDto } from './dto/find-admin.dto';
 import { ObjectID } from 'mongodb';
