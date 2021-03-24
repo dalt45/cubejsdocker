@@ -11,7 +11,6 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import ServiceResponse from '../utils/serviceResponse/ServiceResponse';
-import ControllerResponse from '../utils/serviceResponse/ControllerResponse';
 import { FindParams } from './validations/FindParams';
 import { FindUserDto } from './dto/find-user.dto';
 import { ObjectID } from 'mongodb';

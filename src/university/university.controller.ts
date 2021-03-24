@@ -5,9 +5,6 @@ import {
   Get,
   Query,
   UseGuards,
-  ContextType,
-  SetMetadata,
-  Req,
   Put,
 } from '@nestjs/common';
 import ServiceResponse from '../utils/serviceResponse/ServiceResponse';
@@ -16,8 +13,6 @@ import { AuthGuard } from '@nestjs/passport';
 import { Roles } from 'src/authorization/role.decorator';
 import { Role } from 'src/authorization/role.enum';
 import { UniversityService } from './university.service';
-import { ExtractJwt } from 'passport-jwt';
-import { Request } from 'express';
 import { UserInfo } from 'src/utils/serviceResponse/user-info.decorator';
 import { User } from '../users/user.entity';
 

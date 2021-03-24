@@ -1,6 +1,5 @@
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import ControllerResponse from '../utils/serviceResponse/ControllerResponse';
 import ServiceResponse from '../utils/serviceResponse/ServiceResponse';
 import { Repository } from 'typeorm';
 import { Admin } from './admin.entity';

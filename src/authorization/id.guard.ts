@@ -4,7 +4,6 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { ID_KEY } from './id.decorator';
 import { Id } from './id.enum';
-import { User } from 'src/users/user.entity';
 import { ObjectId } from 'mongodb';
 
 @Injectable()

@@ -1,4 +1,4 @@
-import { Column, Entity, Index, ObjectIdColumn, Unique } from 'typeorm';
+import { Column, Entity, ObjectIdColumn, Unique } from 'typeorm';
 import { ObjectID } from 'mongodb';
 import { Landing } from '../landing/landing.entity';
 
