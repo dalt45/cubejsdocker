@@ -14,11 +14,10 @@ export class AuthController {
   @Post('authAdmin/login')
   async login(@Request() req) {
     const response = await this.authService.login(req.user);
-    const serviceResponse = new ServiceResponse(response.serviceMessage);
-    serviceResponse.serviceResponse.hasBody = true;
-    serviceResponse.serviceResponse.body = response.body;
-    const successResponse = serviceResponse.getResponse();
-    return successResponse;
+    return new ServiceResponse(response.serviceMessage)
+      .setBody(response.body)
+      .getJSON()
+      .getControllerResponse();
   }
 
   @UseGuards(AuthGuard('googleAdmin'))
@@ -31,18 +30,10 @@ export class AuthController {
   @Get('authAdmin/google/redirect')
   async googleAuthRedirect(@Request() req) {
     const response = await this.authService.googleCallback(req);
-    const serviceResponse = new ServiceResponse(response.serviceMessage);
-    serviceResponse.serviceResponse.hasBody = true;
-    serviceResponse.serviceResponse.body = response.body;
-    if (serviceResponse.isError()) {
-      const errorResponse = serviceResponse.getResponse();
-      const controllerResponse = new ControllerResponse(errorResponse);
-      controllerResponse.httpError();
-    } else {
-      const successResponse = serviceResponse.getResponse();
-      const controllerResponse = new ControllerResponse(successResponse);
-      return controllerResponse.httpSuccess();
-    }
+    return new ServiceResponse(response.serviceMessage)
+      .setBody(response.body)
+      .getJSON()
+      .getControllerResponse();
   }
 
   @UseGuards(AuthGuard('jwtAdmin'))

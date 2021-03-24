@@ -81,7 +81,7 @@ export class AuthService {
           username: createAdminDto.email,
         };
         return {
-          serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
+          serviceMessage: ServiceMessages.RESPONSE_BODY,
           body: { access_token: this.jwtService.sign(payload) },
         };
       }
@@ -90,7 +90,7 @@ export class AuthService {
         username: user.email,
       };
       return {
-        serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
+        serviceMessage: ServiceMessages.RESPONSE_BODY,
         body: { access_token: this.jwtService.sign(payload) },
       };
     }

@@ -29,14 +29,7 @@ export class LandingController {
   @IdMatch(Id.University)
   async createLanding(@Body() landing: CreateLandingDto): Promise<any> {
     const response = await this.landingService.create(landing);
-    const serviceResponse = new ServiceResponse(response);
-    if (serviceResponse.isError()) {
-      const errorResponse = serviceResponse.getResponse();
-      const controllerResponse = new ControllerResponse(errorResponse);
-      controllerResponse.httpError();
-    }
-    const successResponse = serviceResponse.getResponse();
-    return successResponse;
+    return new ServiceResponse(response).getJSON().getControllerResponse();
   }
 
   @UseGuards(AuthGuard(['jwtAdmin', 'jwtUser']))
@@ -44,27 +37,9 @@ export class LandingController {
   @Get()
   async getLanding(@Query() Params: any): Promise<any> {
     const response = await this.landingService.get(Params);
-    const serviceResponse = new ServiceResponse(response.serviceMessage);
-    serviceResponse.serviceResponse.hasBody = true;
-    serviceResponse.serviceResponse.body = response.body;
-    const successResponse = serviceResponse.getResponse();
-    const controllerResponse = new ControllerResponse(successResponse);
-    return controllerResponse.httpSuccess();
-  }
-
-  @UseGuards(AuthGuard(['jwtAdmin', 'jwtUser']))
-  @Roles(Role.University, Role.Admin)
-  @Put()
-  async editLanding(
-    @Query() Params: any,
-    @Body() landing: LandingValidation,
-  ): Promise<any> {
-    const response = await this.landingService.edit(Params.id, landing);
-    const serviceResponse = new ServiceResponse(response.serviceMessage);
-    serviceResponse.serviceResponse.hasBody = true;
-    serviceResponse.serviceResponse.body = response.body;
-    const successResponse = serviceResponse.getResponse();
-    const controllerResponse = new ControllerResponse(successResponse);
-    return controllerResponse.httpSuccess();
+    return new ServiceResponse(response.serviceMessage)
+      .setBody(response.body)
+      .getJSON()
+      .getControllerResponse();
   }
 }

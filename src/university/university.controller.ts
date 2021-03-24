@@ -33,25 +33,21 @@ export class UniversityController {
     @Body() university: any,
   ): Promise<any> {
     const response = await this.universityService.create(university, userinfo);
-    const serviceResponse = new ServiceResponse(response.serviceMessage);
-    if (serviceResponse.isError()) {
-      const errorResponse = serviceResponse.getResponse();
-      const controllerErrorResponse = new ControllerResponse(errorResponse);
-      controllerErrorResponse.httpError();
-    }
-    serviceResponse.serviceResponse.hasBody = true;
-    serviceResponse.serviceResponse.body = response.body;
-    const successResponse = serviceResponse.getResponse();
-    const controllerSuccessResponse = new ControllerResponse(successResponse);
-    return controllerSuccessResponse.httpSuccess();
+    return new ServiceResponse(response.serviceMessage)
+      .setBody(response.body)
+      .getJSON()
+      .getControllerResponse();
   }
 
   @UseGuards(AuthGuard(['jwtAdmin', 'jwtUser']))
   @Roles(Role.University, Role.Admin)
   @Get()
-  async getLanding(@Query() Params: any): Promise<any> {
+  async getUniversity(@Query() Params: any): Promise<any> {
     const response = await this.universityService.get(Params);
-    return response;
+    return new ServiceResponse(response.serviceMessage)
+      .setBody(response.body)
+      .getJSON()
+      .getControllerResponse();
   }
 
   @UseGuards(AuthGuard(['jwtAdmin', 'jwtUser']))

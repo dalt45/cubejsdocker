@@ -26,36 +26,24 @@ export class UserController {
   @Post('register')
   async registerUser(@Body() createUserDto: CreateUserDto): Promise<any> {
     const response = await this.userService.register(createUserDto);
-    const serviceResponse = new ServiceResponse(response);
-    if (serviceResponse.isError()) {
-      const errorResponse = serviceResponse.getResponse();
-      const controllerErrorResponse = new ControllerResponse(errorResponse);
-      controllerErrorResponse.httpError();
-    } else {
-      const sucessResponse = serviceResponse.getResponse();
-      const controllerSuccessResponse = new ControllerResponse(sucessResponse);
-      return controllerSuccessResponse.httpSuccess();
-    }
+    return new ServiceResponse(response).getJSON().getControllerResponse();
   }
 
   @Get()
   async getUser(@Query() params: FindParams): Promise<any> {
     const serviceRequest = new FindUserDto();
     if (params.id && params.email) {
-      const serviceResponse = new ServiceResponse('BAD_REQUEST');
-      const errorResponse = serviceResponse.getResponse();
-      const controllerErrorResponse = new ControllerResponse(errorResponse);
-      controllerErrorResponse.httpError();
+      return new ServiceResponse('BAD_REQUEST')
+        .getJSON()
+        .getControllerResponse();
     } else {
       if (params.email) serviceRequest.email = params.email;
       if (params.id) serviceRequest.id = new ObjectID(params.id);
       const response = await this.userService.get(serviceRequest);
-      const serviceResponse = new ServiceResponse(response.serviceMessage);
-      serviceResponse.serviceResponse.hasBody = true;
-      serviceResponse.serviceResponse.body = response.body;
-      const successResponse = serviceResponse.getResponse();
-      const controllerSuccessResponse = new ControllerResponse(successResponse);
-      return controllerSuccessResponse.httpSuccess();
+      return new ServiceResponse(response.serviceMessage)
+        .setBody(response.body)
+        .getJSON()
+        .getControllerResponse();
     }
   }
 
@@ -68,20 +56,17 @@ export class UserController {
   ): Promise<any> {
     const serviceRequest = new FindUserDto();
     if (params.id && params.email) {
-      const serviceResponse = new ServiceResponse('BAD_REQUEST');
-      const errorResponse = serviceResponse.getResponse();
-      const controllerErrorResponse = new ControllerResponse(errorResponse);
-      controllerErrorResponse.httpError();
+      return new ServiceResponse('BAD_REQUEST')
+        .getJSON()
+        .getControllerResponse();
     } else {
       if (params.email) serviceRequest.email = params.email;
       if (params.id) serviceRequest.id = new ObjectID(params.id);
       const response = await this.userService.update({ serviceRequest, body });
-      const serviceResponse = new ServiceResponse(response.serviceMessage);
-      serviceResponse.serviceResponse.hasBody = true;
-      serviceResponse.serviceResponse.body = response.body;
-      const successResponse = serviceResponse.getResponse();
-      const controllerSuccessResponse = new ControllerResponse(successResponse);
-      return controllerSuccessResponse.httpSuccess();
+      return new ServiceResponse(response.serviceMessage)
+        .setBody(response.body)
+        .getJSON()
+        .getControllerResponse();
     }
   }
 }

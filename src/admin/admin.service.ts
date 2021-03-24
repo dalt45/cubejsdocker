@@ -70,12 +70,12 @@ export class AdminService {
       responseAdmin.email = admin.email;
       responseAdmin.id = admin.id;
       return {
-        serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
+        serviceMessage: ServiceMessages.RESPONSE_BODY,
         body: responseAdmin,
       };
     } else {
       return {
-        serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
+        serviceMessage: ServiceMessages.RESPONSE_BODY,
         body: {},
       };
     }
