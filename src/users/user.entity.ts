@@ -21,4 +21,7 @@ export class User {
 
   @Column()
   university: ObjectID;
+
+  @Column()
+  applications: ObjectID[];
 }

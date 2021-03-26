@@ -34,7 +34,6 @@ export class RolesGuard implements CanActivate {
       return false;
     }
     const decoded = this.jwtService.decode(jwt);
-
     if (typeof decoded === 'object') {
       email = decoded.email;
     } else {

@@ -16,6 +16,7 @@ export class AuthController {
   async login(@Request() req) {
     const response = await this.authService.login(req.user);
     return new ServiceResponse(response.serviceMessage)
+      .setBody(response.body)
       .getJSON()
       .getControllerResponse();
   }
