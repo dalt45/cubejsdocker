@@ -1,4 +1,4 @@
-import { IsEmpty, IsOptional, IsPostalCode } from 'class-validator';
+import { IsEmpty } from 'class-validator';
 import { ApplicationValidation } from './validation-application.dto';
 import { ObjectID } from 'mongodb';
 

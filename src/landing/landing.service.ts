@@ -19,7 +19,9 @@ export class LandingService {
 
   async create(landing: CreateLandingDto): Promise<string> {
     try {
-      const university = await this.universityService.get({ id: landing.id });
+      const university = await this.universityRepository.findOne(
+        (landing.id as unknown) as string,
+      );
       const newLandingArray = landing.landing.map((item) => {
         return new Landing(item);
       });
