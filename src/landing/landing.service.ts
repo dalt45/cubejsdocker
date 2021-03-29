@@ -12,7 +12,6 @@ import { ObjectID } from 'mongodb';
 @Injectable()
 export class LandingService {
   constructor(
-    private readonly universityService: UniversityService,
     @InjectRepository(University)
     private universityRepository: Repository<University>,
   ) {}
