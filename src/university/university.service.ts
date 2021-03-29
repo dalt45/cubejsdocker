@@ -51,11 +51,17 @@ export class UniversityService {
   }
 
   async get(Params: any): Promise<any> {
-    const university = await this.universityRepostory.findOne(Params.id);
-    return {
-      serviceMessage: ServiceMessages.RESPONSE_BODY,
-      body: university,
-    };
+    try {
+      const university = await this.universityRepostory.findOne(Params.id);
+      return {
+        serviceMessage: ServiceMessages.RESPONSE_BODY,
+        body: university,
+      };
+    } catch (e) {
+      return {
+        serviceMessage: ServiceMessages.ERROR_DEFAULT,
+      };
+    }
   }
 
   async edit(university, params, userInfo): Promise<any> {
