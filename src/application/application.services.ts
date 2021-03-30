@@ -8,6 +8,11 @@ import { ApplicationValidation } from './documents/validation-application.dto';
 import { ObjectID } from 'mongodb';
 import { EditApplicationValidation } from './documents/validation-application-edit.dto';
 import { University } from 'src/university/university.entity';
+import { UserStatus } from './documents/userStatus.enum';
+import { ApplicationStatus } from './documents/applicationStatus.enum';
+import { Landing } from 'src/landing/landing.entity';
+import { LandingService } from 'src/landing/landing.service';
+import { stat } from 'node:fs';
 
 @Injectable()
 export class ApplicationService {
@@ -16,16 +21,30 @@ export class ApplicationService {
     private applicationRepository: Repository<StudentApplication>,
     @InjectConnection()
     private connection: Connection,
+    private readonly landingService: LandingService,
   ) {}
 
   async create(application: ApplicationValidation, user: User): Promise<any> {
     try {
+      const defaultObject = {
+        date: Date.now(),
+        userStatus: UserStatus.BOOKING,
+        dateUserStatus: Date.now(),
+        applicationStatus: ApplicationStatus.DEPOSIT,
+        dateApplicationStatus: Date.now(),
+        startDate: Date.now(),
+      };
+      const landing = await this.landingService.get({
+        id: application.programId,
+      });
+      delete application.programId;
       const newApplication = await this.applicationRepository.save({
         ...application,
+        ...defaultObject,
         userId: user.id,
+        program: landing.body,
       });
       this.updateUserWithApplication(user, newApplication.id);
-      // this.updateUserWithApplication(application.programId, newApplication.id);
       return ServiceMessages.RESPONSE_DEFAULT;
     } catch (e) {
       return ServiceMessages.ERROR_DEFAULT;
@@ -54,8 +73,9 @@ export class ApplicationService {
         serviceMessage: ServiceMessages.BAD_REQUEST,
       };
     }
+    const manager = this.connection.getMongoRepository(StudentApplication);
     try {
-      await this.applicationRepository.update(dbApplication, {
+      await manager.update(dbApplication, {
         ...application,
       });
       return {
@@ -94,18 +114,88 @@ export class ApplicationService {
           return landing._id.toHexString();
         });
         applicationQuery = await this.applicationRepository.find({
-          where: { programId: { $in: arrayQuery } },
+          where: { 'program._id': { $in: arrayQuery } },
         });
         return {
           serviceMessage: ServiceMessages.RESPONSE_BODY,
           body: applicationQuery,
         };
       default:
-        applicationQuery = await this.applicationRepository.find({});
+        applicationQuery = await this.applicationRepository.find({
+          where: {
+            ...this.countryQuery(params.country),
+            ...this.dateQuery(params.start, params.end),
+            ...this.universityQuery(params.university),
+            ...this.userStatusQuery(params.userStatus),
+            ...this.applicationStatusQuery(params.applicationStatus),
+          },
+        });
         return {
           serviceMessage: ServiceMessages.RESPONSE_BODY,
           body: applicationQuery,
         };
     }
   }
+
+  private countryQuery = (country): any => {
+    if (country) {
+      return {
+        'program.contentProfileUniversity.nameCountry': { $eq: country },
+      };
+    } else {
+      return {};
+    }
+  };
+
+  private universityQuery = (university): any => {
+    if (university) {
+      return {
+        'program.contentProfileUniversity.nameUniversity': { $eq: university },
+      };
+    } else {
+      return {};
+    }
+  };
+
+  private userStatusQuery = (status: UserStatus): any => {
+    if (status) {
+      return {
+        userStatus: { $eq: status },
+      };
+    } else {
+      return {};
+    }
+  };
+
+  private applicationStatusQuery = (status: ApplicationStatus): any => {
+    if (status) {
+      return {
+        applicationStatus: { $eq: status },
+      };
+    } else {
+      return {};
+    }
+  };
+
+  private dateQuery = (start, end): any => {
+    // tslint:disable-next-line: radix
+    const parsedStart = parseInt(start);
+    // tslint:disable-next-line: radix
+    const parsedEnd = parseInt(end);
+    if (start && end) {
+      return {
+        startDate: { $gte: parsedStart, $lte: parsedEnd },
+      };
+    } else if (start) {
+      return {
+        startDate: { $gte: parsedStart },
+      };
+    } else if (end) {
+      return {
+        startDate: { $lte: parsedEnd },
+      };
+    } else {
+      return {};
+    }
+  };
 }

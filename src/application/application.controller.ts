@@ -54,7 +54,7 @@ export class ApplicationController {
     @UserInfo() user: User,
     @Query() params: any,
   ): Promise<any> {
-    const response = await this.applicationService.get(params.id, user);
+    const response = await this.applicationService.get(params, user);
     return new ServiceResponse(response.serviceMessage)
       .setBody(response.body)
       .getJSON()
