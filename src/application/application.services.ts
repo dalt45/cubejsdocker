@@ -10,9 +10,7 @@ import { EditApplicationValidation } from './documents/validation-application-ed
 import { University } from 'src/university/university.entity';
 import { UserStatus } from './documents/userStatus.enum';
 import { ApplicationStatus } from './documents/applicationStatus.enum';
-import { Landing } from 'src/landing/landing.entity';
 import { LandingService } from 'src/landing/landing.service';
-import { stat } from 'node:fs';
 
 @Injectable()
 export class ApplicationService {
@@ -198,4 +196,16 @@ export class ApplicationService {
       return {};
     }
   };
+
+  async delete(id: any): Promise<any> {
+    try {
+      const applicationManager = this.connection.getMongoRepository(
+        StudentApplication,
+      );
+      await applicationManager.findOneAndDelete({ _id: new ObjectID(id) });
+      return ServiceMessages.RESPONSE_DEFAULT;
+    } catch (e) {
+      return ServiceMessages.ERROR_DEFAULT;
+    }
+  }
 }

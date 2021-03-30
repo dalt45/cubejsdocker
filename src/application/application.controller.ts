@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Post,
   Put,
@@ -59,5 +60,16 @@ export class ApplicationController {
       .setBody(response.body)
       .getJSON()
       .getControllerResponse();
+  }
+
+  @UseGuards(AuthGuard(['jwtAdmin']))
+  @Roles(Role.Admin)
+  @Delete()
+  async deleteApplication(
+    @UserInfo() user: User,
+    @Query() params: any,
+  ): Promise<any> {
+    const response = await this.applicationService.delete(params.id);
+    return new ServiceResponse(response).getJSON().getControllerResponse();
   }
 }
