@@ -5,6 +5,7 @@ export const enum httpStatusCode {
   OK = 200,
   UNAUTHORIZED = 401,
   BAD_REQUEST = 400,
+  NOT_FOUND = 404,
 }
 
 export interface Response {
@@ -22,6 +23,7 @@ export const enum ServiceMessages {
   UNAUTHORIZED = 'UNAUTHORIZED',
   BAD_REQUEST = 'BAD_REQUEST',
   RESPONSE_BODY = 'RESPONSE_BODY',
+  NOT_FOUND = 'NOT_FOUND',
 }
 
 export const Dictionary: { [value in ServiceMessages]: Response } = {
@@ -65,6 +67,13 @@ export const Dictionary: { [value in ServiceMessages]: Response } = {
     message: 'Success',
     isError: false,
     hasBody: true,
+    body: {},
+  },
+  NOT_FOUND: {
+    statusCode: httpStatusCode.NOT_FOUND,
+    message: 'Not Found',
+    isError: true,
+    hasBody: false,
     body: {},
   },
 };

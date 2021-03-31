@@ -11,6 +11,8 @@ import { University } from 'src/university/university.entity';
 import { UserStatus } from './documents/userStatus.enum';
 import { ApplicationStatus } from './documents/applicationStatus.enum';
 import { LandingService } from 'src/landing/landing.service';
+import { DateStatus } from './documents/dateStatus.enum';
+import { UpdateStatusValidation } from './documents/validation-application-updateStatus.dto';
 
 @Injectable()
 export class ApplicationService {
@@ -30,6 +32,8 @@ export class ApplicationService {
         dateUserStatus: Date.now(),
         applicationStatus: ApplicationStatus.DEPOSIT,
         dateApplicationStatus: Date.now(),
+        dateStatus: DateStatus.DOCUMENTS,
+        dateDateStatus: Date.now(),
         startDate: Date.now(),
       };
       const landing = await this.landingService.get({
@@ -42,10 +46,15 @@ export class ApplicationService {
         userId: user.id,
         program: landing.body,
       });
-      this.updateUserWithApplication(user, newApplication.id);
-      return ServiceMessages.RESPONSE_DEFAULT;
+      return {
+        serviceMessage: ServiceMessages.RESPONSE_BODY,
+        body: { id: newApplication.id },
+      };
     } catch (e) {
-      return ServiceMessages.ERROR_DEFAULT;
+      return {
+        serviceMessage: ServiceMessages.ERROR_DEFAULT,
+        body: {},
+      };
     }
   }
 
@@ -68,13 +77,51 @@ export class ApplicationService {
     });
     if (!dbApplication) {
       return {
-        serviceMessage: ServiceMessages.BAD_REQUEST,
+        serviceMessage: ServiceMessages.NOT_FOUND,
       };
     }
     const manager = this.connection.getMongoRepository(StudentApplication);
     try {
       await manager.update(dbApplication, {
         ...application,
+      });
+      return {
+        serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
+      };
+    } catch (e) {
+      return {
+        serviceMessage: ServiceMessages.ERROR_DEFAULT,
+      };
+    }
+  }
+
+  async updateStatus(
+    application: UpdateStatusValidation,
+    id: string,
+  ): Promise<any> {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const datesToBeUpdated: {
+      [key: string]: number;
+    } = {};
+    const dbApplication = await this.applicationRepository.findOne({
+      where: { _id: { $eq: new ObjectID(id) } },
+    });
+    if (!dbApplication) {
+      return {
+        serviceMessage: ServiceMessages.NOT_FOUND,
+      };
+    }
+    const manager = this.connection.getMongoRepository(StudentApplication);
+    for (const prop in application) {
+      if (application.hasOwnProperty(prop)) {
+        const propUpper = prop[0].toUpperCase() + prop.slice(1);
+        datesToBeUpdated[`date${propUpper}`] = Date.now();
+      }
+    }
+    try {
+      await manager.update(dbApplication, {
+        ...application,
+        ...datesToBeUpdated,
       });
       return {
         serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
