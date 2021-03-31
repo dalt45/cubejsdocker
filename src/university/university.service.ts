@@ -30,10 +30,12 @@ export class UniversityService {
     try {
       const landingsArray = [];
       university.landings.forEach((landing) => {
+        landing.createdBy = userInfo.id;
         const newLanding: Landing = new Landing(landing);
         landingsArray.push(newLanding);
       });
       university.landings = landingsArray;
+      university.createdBy = userInfo.id;
       const universityObject = await this.universityRepostory.save(university);
       if (dbUser)
         manager.update(dbUser, {

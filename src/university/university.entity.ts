@@ -12,5 +12,8 @@ export class University {
   name: string;
 
   @Column()
+  createdBy: ObjectID;
+
+  @Column()
   landings: Landing[];
 }
