@@ -8,6 +8,7 @@ import { ServiceMessages } from '../utils/serviceResponse/ResponseDictionary';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
 import { CreateUserGoogleDto } from 'src/users/dto/create-user-google';
+import { Status } from 'src/users/enums/status.enum';
 
 @Injectable()
 export class AuthService {
@@ -56,6 +57,12 @@ export class AuthService {
       type: user.body.type,
       university: user.body.university,
     };
+    if (user.body.status === Status.PENDING) {
+      return {
+        serviceMessage: ServiceMessages.ACTIVATION_PENDING,
+        body: {},
+      };
+    }
     return {
       serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
       body: { access_token: this.jwtService.sign(payload) },

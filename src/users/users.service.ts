@@ -10,6 +10,9 @@ import * as bcrypt from 'bcrypt';
 import { CreateUserGoogleDto } from './dto/create-user-google';
 import { UserType } from './enums/userType.enum';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { Status } from './enums/status.enum';
+import { ConfirmationToken } from '../utils/confirmationToken';
+import * as nodemailer from 'nodemailer';
 
 const saltRounds = 10;
 
@@ -37,10 +40,55 @@ export class UsersService {
           user.password = hash;
           user.type = UserType.USER;
           user.university = null;
+          user.status = Status.PENDING;
+          user.confirmationCode = new ConfirmationToken().get();
           await this.usersRepository.save(user);
+          await this.sendConfirmationEmail(user);
         },
       );
       return ServiceMessages.RESPONSE_DEFAULT;
+    }
+  }
+
+  async sendConfirmationEmail(user: User): Promise<any> {
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.ethereal.email',
+      port: 587,
+      auth: {
+        user: 'alessandra14@ethereal.email',
+        pass: 'n8xR54bEaRPBtpWjDa',
+      },
+    });
+
+    transporter
+      .sendMail({
+        from: 'alessandra14@ethereal.email',
+        to: user.email,
+        subject: 'Please confirm your account',
+        html: `<h1>Email Confirmation</h1>
+            <h2>Hello</h2>
+            <p>Thank you for subscribing. Please confirm your email by clicking on the following link</p>
+            <a href=${process.env.URL_DOMAIN}/users/activate/?token=${user.confirmationCode}> Click here</a>
+            </div>`,
+      })
+      .catch((err) => {
+        throw new Error('Email service failed: ' + err);
+      });
+  }
+
+  async activate(token: string): Promise<string> {
+    try {
+      const user = await this.usersRepository.findOne({
+        where: { confirmationCode: { $eq: token } },
+      });
+      if (!user) {
+        return ServiceMessages.NOT_FOUND;
+      } else {
+        await this.usersRepository.update(user, { status: Status.ACTIVE });
+        return ServiceMessages.RESPONSE_DEFAULT;
+      }
+    } catch (e) {
+      return ServiceMessages.ERROR_DEFAULT;
     }
   }
 
@@ -53,6 +101,8 @@ export class UsersService {
     user.email = createUserGoogleDto.email;
     user.googleAccessToken = createUserGoogleDto.accessToken;
     user.type = UserType.USER;
+    user.status = Status.ACTIVE;
+    user.confirmationCode = new ConfirmationToken().get();
     const createdUser: User = await this.usersRepository.save(user);
     return {
       serviceMessage: ServiceMessages.RESPONSE_DEFAULT,

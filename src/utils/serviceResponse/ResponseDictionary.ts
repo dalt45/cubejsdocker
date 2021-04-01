@@ -24,6 +24,7 @@ export const enum ServiceMessages {
   BAD_REQUEST = 'BAD_REQUEST',
   RESPONSE_BODY = 'RESPONSE_BODY',
   NOT_FOUND = 'NOT_FOUND',
+  ACTIVATION_PENDING = 'ACTIVATION_PENDING',
 }
 
 export const Dictionary: { [value in ServiceMessages]: Response } = {
@@ -72,6 +73,13 @@ export const Dictionary: { [value in ServiceMessages]: Response } = {
   NOT_FOUND: {
     statusCode: httpStatusCode.NOT_FOUND,
     message: 'Not Found',
+    isError: true,
+    hasBody: false,
+    body: {},
+  },
+  ACTIVATION_PENDING: {
+    statusCode: httpStatusCode.UNAUTHORIZED,
+    message: 'Account is not activated',
     isError: true,
     hasBody: false,
     body: {},

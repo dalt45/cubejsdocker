@@ -28,6 +28,13 @@ export class UserController {
     return new ServiceResponse(response).getJSON().getControllerResponse();
   }
 
+  @Get('activate')
+  async activateUser(@Query() { token }): Promise<any> {
+    const response = await this.userService.activate(token);
+    return new ServiceResponse(response).getJSON().getControllerResponse();
+  }
+
+  @UseGuards(AuthGuard(['jwtAdmin', 'jwtUser']))
   @Get()
   async getUser(@Query() params: FindParams): Promise<any> {
     const serviceRequest = new FindUserDto();
