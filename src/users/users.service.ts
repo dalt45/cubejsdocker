@@ -52,17 +52,18 @@ export class UsersService {
 
   async sendConfirmationEmail(user: User): Promise<any> {
     const transporter = nodemailer.createTransport({
-      host: 'smtp.ethereal.email',
+      host: 'smtp.sendgrid.net',
       port: 587,
+      secure: false,
       auth: {
-        user: 'alessandra14@ethereal.email',
-        pass: 'n8xR54bEaRPBtpWjDa',
+        user: 'apikey',
+        pass: process.env.SENDGRID_KEY,
       },
     });
 
     transporter
       .sendMail({
-        from: 'alessandra14@ethereal.email',
+        from: 'daniel@crecyservices.io',
         to: user.email,
         subject: 'Please confirm your account',
         html: `<h1>Email Confirmation</h1>
