@@ -30,19 +30,10 @@ services:
     depends_on:
       - mongo
   mongo:
-    image: mongo:4.1
+    image: mongo:latest
     restart: always
     environment:
-      MONGO_INITDB_ROOT_USERNAME: user
-      MONGO_INITDB_ROOT_PASSWORD: password
       MONGO_INITDB_DATABASE: mongodb
-    volumes:
-      - './mongobi/conf:/etc/certificates/'
-    command:
-      - "--sslMode"
-      - "--sslCertificateKeyFile"
-      - "/etc/certificates/test.pem"
-  
   mongobi:
     image: daniel/mongobi
     restart: always
