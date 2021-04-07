@@ -16,14 +16,6 @@ services:
       - .env
     depends_on:
       - mongo
-  mariadb:
-    image: mariadb
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: my-secret-pw
-      MYSQL_DATABASE: beintbi
-      MYSQL_USER: user
-      MYSQL_PASSWORD: daniel123
   cube:
     image: cubejs/cube:latest
     ports:
@@ -36,12 +28,29 @@ services:
     volumes:
       - ./schema:/cube/conf/schema
     depends_on:
-      - mariadb
+      - mongo
   mongo:
-    image: mongo:latest
+    image: mongo:4.1
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: user
       MONGO_INITDB_ROOT_PASSWORD: password
-
-
+      MONGO_INITDB_DATABASE: mongodb
+    volumes:
+      - './mongobi/conf:/etc/certificates/'
+    command:
+      - "--sslMode"
+      - "--sslCertificateKeyFile"
+      - "/etc/certificates/test.pem"
+  
+  mongobi:
+    image: daniel/mongobi
+    restart: always
+    volumes:
+      # - "./schema:/home/mongobi/schema.drdl" #Uncomment if you have an schema file
+      - './mongobi/conf/mongosqld.conf:/home/mongobi/mongosqld.conf'
+      - './mongobi/logs:/logs'
+    container_name: 'mongobi'
+    hostname: 'mongobi'
+    ports:
+      - '3307:3307'
