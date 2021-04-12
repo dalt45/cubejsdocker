@@ -15,6 +15,8 @@ import { IdGuard } from './authorization/id.guard';
 import { University } from './university/university.entity';
 import { ApplicationModule } from './application/application.module';
 import { StudentApplication } from './application/application.entity';
+import { EventModule } from './events/events.module';
+import { ApplicationEvent } from './events/events.entity';
 
 // 'mongodb://user:password@mongo:27017'
 const dbHost: string = process.env.DB_HOST;
@@ -32,7 +34,14 @@ const dbName: string = process.env.DB_NAME;
       host: dbHost,
       port: dbPort,
       database: dbName,
-      entities: [User, Admin, Landing, University, StudentApplication],
+      entities: [
+        User,
+        Admin,
+        Landing,
+        University,
+        StudentApplication,
+        ApplicationEvent,
+      ],
       synchronize: true,
     }),
     AuthModule,
@@ -40,6 +49,7 @@ const dbName: string = process.env.DB_NAME;
     LandingModule,
     UniversityModule,
     ApplicationModule,
+    EventModule,
   ],
   controllers: [],
   providers: [
