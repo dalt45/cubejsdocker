@@ -1,7 +1,12 @@
 cube(`UniversityLandings`, {
   sql: `SELECT * FROM mongodb.university_landings`,
 
-  joins: {},
+  joins: {
+    University: {
+      relationship: `belongsTo`,
+      sql: `${UniversityLandings}._id = ${University}._id`,
+    },
+  },
 
   measures: {
     count: {
@@ -28,6 +33,7 @@ cube(`UniversityLandings`, {
       sql: `${CUBE}.\`landings._id\``,
       type: `string`,
       title: `Landings. Id`,
+      primaryKey: true,
     },
 
     landingsContentaboutcourseInformationcourse: {

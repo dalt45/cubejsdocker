@@ -38,7 +38,6 @@ export class LandingController {
   }
 
   @UseGuards(AuthGuard(['jwtAdmin', 'jwtUser']))
-  @Roles(Role.University, Role.Admin)
   @Get()
   async getLanding(@Query() Params: any): Promise<any> {
     const response = await this.landingService.get(Params);
