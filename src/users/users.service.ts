@@ -62,8 +62,6 @@ export class UsersService {
         pass: this.configService.get<string>('SENDGRID_KEY'),
       },
     });
-    // tslint:disable-next-line: no-console
-    console.info(this.configService.get<string>('SENDGRID_KEY'));
     transporter
       .sendMail({
         from: 'daniel@crecyservices.io',
