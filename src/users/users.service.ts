@@ -60,7 +60,8 @@ export class UsersService {
         pass: process.env.SENDGRID_KEY,
       },
     });
-
+    // tslint:disable-next-line: no-console
+    console.info(process.env.SENDGRID_KEY);
     transporter
       .sendMail({
         from: 'daniel@crecyservices.io',
