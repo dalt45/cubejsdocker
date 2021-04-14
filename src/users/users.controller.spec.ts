@@ -19,8 +19,6 @@ describe('UserController', () => {
   let userService: UsersService;
   let repositoryMock: MockType<Repository<User>>;
   let serviceResponse: ServiceResponse;
-  let controllerResponse: ControllerResponse;
-  let finalResponse: any;
 
   beforeEach(async () => {
     const repositoryMockFactory: () => MockType<Repository<any>> = jest.fn(
@@ -148,12 +146,10 @@ describe('UserController', () => {
       try {
         expect(await userController.getUser(testQuery)).toThrowError();
       } catch (e) {
-        serviceResponse = new ServiceResponse('BAD_REQUEST');
-        controllerResponse = new ControllerResponse(
-          serviceResponse.getResponse(),
-        );
-        finalResponse = controllerResponse.mockError();
-        expect(e.response).toEqual(finalResponse);
+        serviceResponse = new ServiceResponse('BAD_REQUEST')
+          .getJSON()
+          .mockError();
+        expect(e.response).toEqual(serviceResponse);
       }
     });
   });
