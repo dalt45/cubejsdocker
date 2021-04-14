@@ -33,7 +33,10 @@ const additionalProdSettings = () => {
       username: dbUsername,
       password: dbPassword,
     };
-  } else return {};
+  } else
+    return {
+      database: dbName,
+    };
 };
 
 @Module({
@@ -44,7 +47,6 @@ const additionalProdSettings = () => {
       type: 'mongodb',
       host: dbHost,
       port: dbPort,
-      database: dbName,
       ...additionalProdSettings(),
       entities: [
         User,
