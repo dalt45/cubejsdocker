@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
+import { ConfigModule } from '@nestjs/config';
 import { AdminModule } from './admin/admin.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/user.entity';
@@ -50,6 +51,7 @@ const dbPassword: string = process.env.DB_PASSWORD;
     UniversityModule,
     ApplicationModule,
     EventModule,
+    ConfigModule.forRoot({ isGlobal: true }),
   ],
   controllers: [],
   providers: [
