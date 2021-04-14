@@ -15,7 +15,7 @@ import { ConfirmationToken } from '../utils/confirmationToken';
 import * as nodemailer from 'nodemailer';
 
 const saltRounds = 10;
-
+const sengridKey = process.env.SENDGRID_KEY;
 @Injectable()
 export class UsersService {
   constructor(
@@ -57,11 +57,11 @@ export class UsersService {
       secure: false,
       auth: {
         user: 'apikey',
-        pass: process.env.SENDGRID_KEY,
+        pass: sengridKey,
       },
     });
     // tslint:disable-next-line: no-console
-    console.info(process.env.SENDGRID_KEY);
+    console.info(sengridKey);
     transporter
       .sendMail({
         from: 'daniel@crecyservices.io',
