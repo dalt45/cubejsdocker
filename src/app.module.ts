@@ -23,19 +23,6 @@ const dbHost: string = process.env.DB_HOST;
 const dbPort: number = (process.env.DB_PORT as unknown) as number;
 const dbUsername: string = process.env.DB_USERNAME;
 const dbPassword: string = process.env.DB_PASSWORD;
-const dbName: string = process.env.DB_NAME;
-
-const additionalProdSettings = () => {
-  if (process.env.URL_DOMAIN === 'http://localhost:3000') {
-    return {
-      username: dbUsername,
-      password: dbPassword,
-    };
-  } else
-    return {
-      database: dbName,
-    };
-};
 
 @Module({
   imports: [
