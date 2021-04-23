@@ -32,6 +32,11 @@ export class UniversityProfile {
   @IsString()
   @IsOptional()
   nameCountry: string;
+
+  @IsString()
+  @IsUrl()
+  @IsOptional()
+  imageHeaderPageUniversities: string;
 }
 
 // tslint:disable-next-line: max-classes-per-file
