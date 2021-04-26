@@ -7,6 +7,7 @@ import { LandingValidation } from './dto/landing-validation.dto';
 import { CreateLandingDto } from './dto/create-landing.dto';
 import { University } from '../university/university.entity';
 import { ObjectID } from 'mongodb';
+import { User } from 'src/users/user.entity';
 
 @Injectable()
 export class LandingService {
@@ -15,20 +16,29 @@ export class LandingService {
     private universityRepository: Repository<University>,
   ) {}
 
-  async create(landing: CreateLandingDto): Promise<string> {
+  async create(landing: CreateLandingDto, user: User): Promise<any> {
     try {
       const university = await this.universityRepository.findOne(
         (landing.id as unknown) as string,
       );
       const newLandingArray = landing.landing.map((item) => {
+        item.createdBy = user.id;
         return new Landing(item);
       });
       await this.universityRepository.update(university, {
         landings: [...newLandingArray, ...university.landings],
       });
-      return ServiceMessages.RESPONSE_DEFAULT;
+      return {
+        serviceMessage: ServiceMessages.RESPONSE_BODY,
+        body: newLandingArray.map((item) => ({
+          id: item._id,
+        })),
+      };
     } catch (e) {
-      return ServiceMessages.ERROR_DEFAULT;
+      return {
+        serviceMessage: ServiceMessages.ERROR_DEFAULT,
+        body: {},
+      };
     }
   }
 
@@ -44,7 +54,7 @@ export class LandingService {
     });
     if (resultLanding) {
       return {
-        serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
+        serviceMessage: ServiceMessages.RESPONSE_BODY,
         body: resultLanding,
       };
     }
@@ -57,7 +67,7 @@ export class LandingService {
       },
     });
     if (!university) {
-      return ServiceMessages.ERROR_DEFAULT;
+      return ServiceMessages.NOT_FOUND;
     }
     const landingArray = university.landings;
     for (const element in landingArray) {
@@ -80,9 +90,7 @@ export class LandingService {
       await this.universityRepository.update(universityToModify, {
         landings: [...landingArray],
       });
-      return {
-        serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
-      };
+      return ServiceMessages.RESPONSE_DEFAULT;
     } catch (e) {
       return ServiceMessages.ERROR_DEFAULT;
     }

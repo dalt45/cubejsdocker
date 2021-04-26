@@ -16,6 +16,9 @@ export class Landing {
   _id: ObjectID;
 
   @Column()
+  createdBy: ObjectID;
+
+  @Column()
   contentProfileUniversity: UniversityProfile;
 
   @Column()
@@ -91,5 +94,6 @@ export class Landing {
       constructorObject.reasonsToChooseThisProgram;
     this.courseContentInformation = constructorObject.courseContentInformation;
     this._id = new ObjectID();
+    this.createdBy = constructorObject.createdBy;
   }
 }
