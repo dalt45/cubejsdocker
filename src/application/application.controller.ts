@@ -16,6 +16,7 @@ import ServiceResponse from 'src/utils/serviceResponse/ServiceResponse';
 import { UserInfo } from 'src/utils/serviceResponse/user-info.decorator';
 import { ApplicationService } from './application.services';
 import { EditApplicationValidation } from './documents/validation-application-edit.dto';
+import { UpdateStatusValidation } from './documents/validation-application-updateStatus.dto';
 import { ApplicationValidation } from './documents/validation-application.dto';
 
 @Controller('application')
@@ -30,7 +31,10 @@ export class ApplicationController {
     @UserInfo() user: User,
   ): Promise<any> {
     const response = await this.applicationService.create(application, user);
-    return new ServiceResponse(response).getJSON().getControllerResponse();
+    return new ServiceResponse(response.serviceMessage)
+      .setBody(response.body)
+      .getJSON()
+      .getControllerResponse();
   }
 
   @UseGuards(AuthGuard(['jwtUser']))
@@ -71,5 +75,22 @@ export class ApplicationController {
   ): Promise<any> {
     const response = await this.applicationService.delete(params.id);
     return new ServiceResponse(response).getJSON().getControllerResponse();
+  }
+
+  @UseGuards(AuthGuard(['jwtUser']))
+  @Roles(Role.User)
+  @Put('status')
+  async updateStatus(
+    @Body() application: UpdateStatusValidation,
+    @Query() params: any,
+  ): Promise<any> {
+    const response = await this.applicationService.updateStatus(
+      application,
+      params.id,
+    );
+    return new ServiceResponse(response.serviceMessage)
+      .setBody(response.body)
+      .getJSON()
+      .getControllerResponse();
   }
 }

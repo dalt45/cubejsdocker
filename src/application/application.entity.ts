@@ -7,7 +7,8 @@ import { Documents } from './documents/documents.dto';
 import { Finances } from './documents/finances.dto';
 import { UserStatus } from './documents/userStatus.enum';
 import { ApplicationStatus } from './documents/applicationStatus.enum';
-import { Landing } from 'src/landing/landing.entity';
+import { Landing } from '../landing/landing.entity';
+import { DateStatus } from './documents/dateStatus.enum';
 
 @Entity()
 export class StudentApplication {
@@ -34,6 +35,12 @@ export class StudentApplication {
 
   @Column()
   dateApplicationStatus: Date;
+
+  @Column()
+  dateStatus: DateStatus;
+
+  @Column()
+  dateDateStatus: Date;
 
   @Column()
   personalData: PersonalData;
