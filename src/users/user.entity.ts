@@ -27,6 +27,9 @@ export class User {
   status: Status;
 
   @Column()
+  lastLogged: Date;
+
+  @Column()
   @Unique(['confirmationCode'])
   confirmationCode: string;
 }

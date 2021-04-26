@@ -128,7 +128,7 @@ export class UsersService {
   async get(findUserDto: FindUserDto): Promise<any> {
     let user;
     if (findUserDto.id) {
-      user = await await this.usersRepository.findByIds([findUserDto.id], {
+      user = await this.usersRepository.findByIds([findUserDto.id], {
         take: 1,
       });
       user = user[0];
@@ -149,12 +149,9 @@ export class UsersService {
       request.serviceRequest instanceof FindUserDto &&
       request.serviceRequest.id
     ) {
-      user = await await this.usersRepository.findByIds(
-        [request.serviceRequest.id],
-        {
-          take: 1,
-        },
-      );
+      user = await this.usersRepository.findByIds([request.serviceRequest.id], {
+        take: 1,
+      });
       user = user[0];
     } else {
       user = await this.usersRepository.findOne({
@@ -174,6 +171,22 @@ export class UsersService {
         serviceMessage: ServiceMessages.ERROR_DEFAULT,
         body: e,
       };
+    }
+  }
+
+  async updateLogin(user: any): Promise<boolean> {
+    try {
+      if (user.id) {
+        const userQuery = await this.usersRepository.findOne(user.id);
+        await this.usersRepository.update(userQuery, {
+          lastLogged: Date.now(),
+        });
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
     }
   }
 }

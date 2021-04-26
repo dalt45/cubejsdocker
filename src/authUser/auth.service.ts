@@ -63,6 +63,7 @@ export class AuthService {
         body: {},
       };
     }
+    this.userService.updateLogin({ id: user.body.id });
     return {
       serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
       body: { access_token: this.jwtService.sign(payload) },
@@ -94,6 +95,7 @@ export class AuthService {
         };
       }
     } else {
+      this.userService.updateLogin({ id: user.id });
       const payload = {
         email: user.email,
         type: user.type,
