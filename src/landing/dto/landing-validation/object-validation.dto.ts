@@ -149,3 +149,20 @@ class Employment {
   @IsString()
   text: string;
 }
+
+// tslint:disable-next-line: max-classes-per-file
+export class PopularProgram {
+  @IsString()
+  description: string;
+
+  @ValidateNested()
+  @ArrayNotEmpty()
+  @Type(() => Point)
+  points: Point[];
+}
+
+// tslint:disable-next-line: max-classes-per-file
+class Point {
+  @IsString()
+  text: string;
+}

@@ -24,6 +24,7 @@ const dbHost: string = process.env.DB_HOST;
 const dbPort: number = (process.env.DB_PORT as unknown) as number;
 const dbUsername: string = process.env.DB_USERNAME;
 const dbPassword: string = process.env.DB_PASSWORD;
+const dbName: string = process.env.DB_NAME;
 
 @Module({
   imports: [
@@ -33,8 +34,9 @@ const dbPassword: string = process.env.DB_PASSWORD;
       type: 'mongodb',
       host: dbHost,
       port: dbPort,
-      username: dbUsername,
-      password: dbPassword,
+      // username: dbUsername,
+      // password: dbPassword,
+      database: dbName,
       entities: [
         User,
         Admin,
