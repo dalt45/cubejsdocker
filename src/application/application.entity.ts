@@ -15,6 +15,9 @@ export class StudentApplication {
   programId: ObjectID;
 
   @Column()
+  userId: ObjectID;
+
+  @Column()
   personalData: PersonalData;
 
   @Column()

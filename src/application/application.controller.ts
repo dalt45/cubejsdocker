@@ -1,4 +1,12 @@
-import { Body, Controller, Post, Put, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Put,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Roles } from 'src/authorization/role.decorator';
 import { Role } from 'src/authorization/role.enum';
@@ -33,6 +41,20 @@ export class ApplicationController {
     @Query() params: any,
   ): Promise<any> {
     const response = await this.applicationService.edit(application, params.id);
+    return new ServiceResponse(response.serviceMessage)
+      .setBody(response.body)
+      .getJSON()
+      .getControllerResponse();
+  }
+
+  @UseGuards(AuthGuard(['jwtUser', 'jwtAdmin']))
+  @Roles(Role.User, Role.Admin, Role.University)
+  @Get()
+  async getApplication(
+    @UserInfo() user: User,
+    @Query() params: any,
+  ): Promise<any> {
+    const response = await this.applicationService.get(params.id, user);
     return new ServiceResponse(response.serviceMessage)
       .setBody(response.body)
       .getJSON()
