@@ -2,7 +2,6 @@ import { Type } from 'class-transformer';
 import {
   ArrayNotEmpty,
   IsMongoId,
-  isNotEmpty,
   IsNotEmptyObject,
   IsOptional,
   ValidateNested,
@@ -47,9 +46,9 @@ export class ApplicationValidation {
   @Type(() => ValidationDocuments)
   documents: Documents[];
 
-  @ValidateNested()
-  @ArrayNotEmpty()
+  @IsNotEmptyObject()
   @IsOptional()
+  @ValidateNested()
   @Type(() => ValidationFinances)
-  finances: Finances[];
+  finances: Finances;
 }

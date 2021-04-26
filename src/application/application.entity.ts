@@ -1,4 +1,4 @@
-import { Column, ObjectIdColumn } from 'typeorm';
+import { Column, Entity, ObjectIdColumn } from 'typeorm';
 import { ObjectID } from 'mongodb';
 import { PersonalData } from './documents/personalData.dto';
 import { Studies } from './documents/studies.dto';
@@ -6,7 +6,8 @@ import { Certificates } from './documents/certificates.dto';
 import { Documents } from './documents/documents.dto';
 import { Finances } from './documents/finances.dto';
 
-export class Application {
+@Entity()
+export class StudentApplication {
   @ObjectIdColumn()
   id: ObjectID;
 

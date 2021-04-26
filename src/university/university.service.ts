@@ -22,7 +22,7 @@ export class UniversityService {
     const dbUser = await manager.findOne({
       where: { _id: { $eq: new ObjectID(userInfo.id) } },
     });
-    if (dbUser.university) {
+    if (dbUser && dbUser.university) {
       return {
         serviceMessage: ServiceMessages.BAD_REQUEST,
       };
@@ -40,7 +40,7 @@ export class UniversityService {
           university: universityObject.id,
         });
       return {
-        serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
+        serviceMessage: ServiceMessages.RESPONSE_BODY,
         body: { id: universityObject.id },
       };
     } catch (e) {
@@ -51,7 +51,7 @@ export class UniversityService {
   }
 
   async get(Params: any): Promise<any> {
-    const university = this.universityRepostory.findOne(Params.id);
+    const university = await this.universityRepostory.findOne(Params.id);
     return {
       serviceMessage: ServiceMessages.RESPONSE_BODY,
       body: university,

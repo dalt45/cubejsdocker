@@ -13,6 +13,8 @@ import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './authorization/roles.guard';
 import { IdGuard } from './authorization/id.guard';
 import { University } from './university/university.entity';
+import { ApplicationModule } from './application/application.module';
+import { StudentApplication } from './application/application.entity';
 
 // 'mongodb://user:password@mongo:27017'
 const dbHost: string = process.env.DB_HOST;
@@ -30,13 +32,14 @@ const dbPassword: string = process.env.DB_PASSWORD;
       port: dbPort,
       username: dbUsername,
       password: dbPassword,
-      entities: [User, Admin, Landing, University],
+      entities: [User, Admin, Landing, University, StudentApplication],
       synchronize: true,
     }),
     AuthModule,
     AuthAdminModule,
     LandingModule,
     UniversityModule,
+    ApplicationModule,
   ],
   controllers: [],
   providers: [
