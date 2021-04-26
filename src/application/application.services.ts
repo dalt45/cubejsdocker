@@ -58,19 +58,6 @@ export class ApplicationService {
     }
   }
 
-  async updateUserWithApplication(user, applicationId: ObjectID) {
-    let applicationsArray = [];
-    const manager = this.connection.getMongoRepository(User);
-    const dbUser = await manager.findOne({
-      where: { _id: { $eq: new ObjectID(user.id) } },
-    });
-    applicationsArray = [
-      ...(dbUser.applications ? dbUser.applications : []),
-      applicationId,
-    ];
-    await manager.update(dbUser, { applications: applicationsArray });
-  }
-
   async edit(application: EditApplicationValidation, id: string): Promise<any> {
     const dbApplication = await this.applicationRepository.findOne({
       where: { _id: { $eq: new ObjectID(id) } },

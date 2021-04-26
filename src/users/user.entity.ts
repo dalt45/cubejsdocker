@@ -1,6 +1,7 @@
 import { ObjectID } from 'mongodb';
-import { Column, Entity, ObjectIdColumn } from 'typeorm';
+import { Column, Entity, ObjectIdColumn, Unique } from 'typeorm';
 import { UserType } from './enums/userType.enum';
+import { Status } from './enums/status.enum';
 
 @Entity()
 export class User {
@@ -23,5 +24,9 @@ export class User {
   university: ObjectID;
 
   @Column()
-  applications: ObjectID[];
+  status: Status;
+
+  @Column()
+  @Unique(['confirmationCode'])
+  confirmationCode: string;
 }

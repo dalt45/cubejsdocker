@@ -16,9 +16,32 @@ services:
       - .env
     depends_on:
       - mongo
+  cube:
+    image: cubejs/cube:latest
+    ports:
+      # 4000 is a port for Cube.js API
+      - 4000:4000
+      # 3000 is a port for Playground web server
+      # it is available only in dev mode
+      - 3001:3001
+    env_file: .env
+    volumes:
+      - ./schema:/cube/conf/schema
+    depends_on:
+      - mongo
   mongo:
-    image: mongo
+    image: mongo:latest
     restart: always
     environment:
-      MONGO_INITDB_ROOT_USERNAME: user
-      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: mongodb
+  mongobi:
+    image: daniel/mongobi
+    restart: always
+    volumes:
+      # - "./schema:/home/mongobi/schema.drdl" #Uncomment if you have an schema file
+      - './mongobi/conf/mongosqld.conf:/home/mongobi/mongosqld.conf'
+      - './mongobi/logs:/logs'
+    container_name: 'mongobi'
+    hostname: 'mongobi'
+    ports:
+      - '3307:3307'
