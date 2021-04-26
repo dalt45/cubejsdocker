@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
+import { ConfigModule } from '@nestjs/config';
 import { AdminModule } from './admin/admin.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/user.entity';
@@ -21,9 +22,8 @@ import { ApplicationEvent } from './events/events.entity';
 // 'mongodb://user:password@mongo:27017'
 const dbHost: string = process.env.DB_HOST;
 const dbPort: number = (process.env.DB_PORT as unknown) as number;
-// const dbUsername: string = process.env.DB_USERNAME;
-// const dbPassword: string = process.env.DB_PASSWORD;
-const dbName: string = process.env.DB_NAME;
+const dbUsername: string = process.env.DB_USERNAME;
+const dbPassword: string = process.env.DB_PASSWORD;
 
 @Module({
   imports: [
@@ -33,7 +33,8 @@ const dbName: string = process.env.DB_NAME;
       type: 'mongodb',
       host: dbHost,
       port: dbPort,
-      database: dbName,
+      username: dbUsername,
+      password: dbPassword,
       entities: [
         User,
         Admin,
@@ -50,6 +51,7 @@ const dbName: string = process.env.DB_NAME;
     UniversityModule,
     ApplicationModule,
     EventModule,
+    ConfigModule.forRoot({ isGlobal: true }),
   ],
   controllers: [],
   providers: [

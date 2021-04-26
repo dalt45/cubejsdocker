@@ -1,8 +1,11 @@
 cube(`University`, {
   sql: `SELECT * FROM mongodb.university`,
-
-  joins: {},
-
+  joins: {
+    UniversityLandings: {
+      relationship: `hasMany`,
+      sql: `${University}._id = ${UniversityLandings}._id`,
+    },
+  },
   measures: {
     count: {
       type: `count`,
@@ -11,6 +14,12 @@ cube(`University`, {
   },
 
   dimensions: {
+    id: {
+      sql: `${CUBE}.\`_id\``,
+      type: `string`,
+      primaryKey: true,
+      shown: true,
+    },
     createdby: {
       sql: `${CUBE}.\`createdBy\``,
       type: `string`,

@@ -13,6 +13,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Status } from './enums/status.enum';
 import { ConfirmationToken } from '../utils/confirmationToken';
 import * as nodemailer from 'nodemailer';
+import { ConfigService } from '@nestjs/config';
 
 const saltRounds = 10;
 
@@ -21,6 +22,7 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    private configService: ConfigService,
   ) {}
 
   async register(createUserDto: CreateUserDto): Promise<string> {
@@ -57,10 +59,9 @@ export class UsersService {
       secure: false,
       auth: {
         user: 'apikey',
-        pass: process.env.SENDGRID_KEY,
+        pass: this.configService.get<string>('SENDGRID_KEY'),
       },
     });
-
     transporter
       .sendMail({
         from: 'daniel@crecyservices.io',

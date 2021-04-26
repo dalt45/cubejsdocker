@@ -24,7 +24,6 @@ cube(`StudentApplication`, {
       ],
     },
   },
-
   dimensions: {
     applicationstatus: {
       sql: `${CUBE}.\`applicationStatus\``,

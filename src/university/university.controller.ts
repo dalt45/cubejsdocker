@@ -35,7 +35,6 @@ export class UniversityController {
   }
 
   @UseGuards(AuthGuard(['jwtAdmin', 'jwtUser']))
-  @Roles(Role.University, Role.Admin)
   @Get()
   async getUniversity(@Query() Params: any): Promise<any> {
     const response = await this.universityService.get(Params);
