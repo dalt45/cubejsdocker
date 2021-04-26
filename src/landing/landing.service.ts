@@ -5,7 +5,6 @@ import { Landing } from './landing.entity';
 import { ServiceMessages } from '../utils/serviceResponse/ResponseDictionary';
 import { LandingValidation } from './dto/landing-validation.dto';
 import { CreateLandingDto } from './dto/create-landing.dto';
-import { UniversityService } from 'src/university/university.service';
 import { University } from '../university/university.entity';
 import { ObjectID } from 'mongodb';
 
