@@ -22,8 +22,8 @@ import { ApplicationEvent } from './events/events.entity';
 // 'mongodb://user:password@mongo:27017'
 const dbHost: string = process.env.DB_HOST;
 const dbPort: number = (process.env.DB_PORT as unknown) as number;
-const dbUsername: string = process.env.DB_USERNAME;
-const dbPassword: string = process.env.DB_PASSWORD;
+// const dbUsername: string = process.env.DB_USERNAME;
+// const dbPassword: string = process.env.DB_PASSWORD;
 const dbName: string = process.env.DB_NAME;
 
 @Module({
