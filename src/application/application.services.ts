@@ -6,6 +6,7 @@ import { Repository, Connection } from 'typeorm';
 import { StudentApplication } from './application.entity';
 import { ApplicationValidation } from './documents/validation-application.dto';
 import { ObjectID } from 'mongodb';
+import { EditApplicationValidation } from './documents/validation-application-edit.dto';
 
 @Injectable()
 export class ApplicationService {
@@ -37,5 +38,28 @@ export class ApplicationService {
       applicationId,
     ];
     await manager.update(dbUser, { applications: applicationsArray });
+  }
+
+  async edit(application: EditApplicationValidation, id: string): Promise<any> {
+    const dbApplication = await this.applicationRepository.findOne({
+      where: { _id: { $eq: new ObjectID(id) } },
+    });
+    if (!dbApplication) {
+      return {
+        serviceMessage: ServiceMessages.BAD_REQUEST,
+      };
+    }
+    try {
+      await this.applicationRepository.update(dbApplication, {
+        ...application,
+      });
+      return {
+        serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
+      };
+    } catch (e) {
+      return {
+        serviceMessage: ServiceMessages.ERROR_DEFAULT,
+      };
+    }
   }
 }
