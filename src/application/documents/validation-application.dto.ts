@@ -44,7 +44,7 @@ export class ApplicationValidation {
   @ArrayNotEmpty()
   @IsOptional()
   @Type(() => ValidationDocuments)
-  documents: Documents[];
+  documents: Documents;
 
   @IsNotEmptyObject()
   @IsOptional()

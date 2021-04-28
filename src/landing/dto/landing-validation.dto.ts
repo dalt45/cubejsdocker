@@ -18,6 +18,7 @@ import { DegreeInformation } from '../documents/degree-information.dto';
 import { UniversityVideos } from '../documents/university-videos.dto';
 import { CourseInformation } from '../documents/course-information.dto';
 import { PopularPrograms } from '../documents/popular-programs.dto';
+import { ApplicationDocument } from '../documents/application-documents.dto';
 
 export class LandingValidation {
   // For strict validation
@@ -103,4 +104,10 @@ export class LandingValidation {
   @ValidateNested()
   @Type(() => validator.PopularProgram)
   popularPrograms: PopularPrograms;
+
+  @IsNotEmptyObject()
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => validator.ApplicationDocuments)
+  applicationDocuments: ApplicationDocument;
 }

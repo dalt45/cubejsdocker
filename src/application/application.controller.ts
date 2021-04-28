@@ -93,4 +93,18 @@ export class ApplicationController {
       .getJSON()
       .getControllerResponse();
   }
+
+  @UseGuards(AuthGuard(['jwtUser']))
+  @Roles(Role.User)
+  @Post('submit')
+  async submitApplication(
+    @UserInfo() user: User,
+    @Query() params: any,
+  ): Promise<any> {
+    const response = await this.applicationService.submit(params.id);
+    return new ServiceResponse(response.serviceMessage)
+      .setBody(response.body)
+      .getJSON()
+      .getControllerResponse();
+  }
 }

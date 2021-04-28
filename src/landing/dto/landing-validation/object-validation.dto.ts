@@ -6,6 +6,8 @@ import {
   IsString,
   IsUrl,
   ValidateNested,
+  Allow,
+  IsBoolean,
 } from 'class-validator';
 
 export class UniversityProfile {
@@ -164,5 +166,25 @@ export class PopularProgram {
 // tslint:disable-next-line: max-classes-per-file
 class Point {
   @IsString()
+  @Allow()
   text: string;
+}
+
+// tslint:disable-next-line: max-classes-per-file
+export class ApplicationDocuments {
+  @ValidateNested()
+  @ArrayNotEmpty()
+  @IsOptional()
+  @Type(() => Document)
+  institution: Document[];
+  student: Document[];
+}
+
+// tslint:disable-next-line: max-classes-per-file
+class Document {
+  @IsString()
+  name: string;
+
+  @IsBoolean()
+  isRequired: boolean;
 }

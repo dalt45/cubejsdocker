@@ -11,6 +11,7 @@ import { Reason } from './documents/reasons.dto';
 import { CourseInformation } from './documents/course-information.dto';
 import { ObjectID } from 'mongodb';
 import { PopularPrograms } from './documents/popular-programs.dto';
+import { ApplicationDocument } from './documents/application-documents.dto';
 
 export class Landing {
   @Column()
@@ -61,6 +62,12 @@ export class Landing {
   @Column()
   popularPrograms: PopularPrograms;
 
+  @Column()
+  applicationDocuments: {
+    institution: ApplicationDocument[];
+    student: ApplicationDocument[];
+  };
+
   constructor(
     /* contentProfileUniversity: UniversityProfile,
     informationUniversity: DegreeInformation,
@@ -100,5 +107,6 @@ export class Landing {
     this._id = new ObjectID();
     this.createdBy = constructorObject.createdBy;
     this.popularPrograms = constructorObject.popularPrograms;
+    this.applicationDocuments = constructorObject.applicationDocuments;
   }
 }

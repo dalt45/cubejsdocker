@@ -57,7 +57,7 @@ export class ValidationPersonalData {
   @IsOptional()
   country: string;
 
-  @IsPostalCode()
+  @IsPostalCode('MX')
   @IsOptional()
   postalCode: number;
 
