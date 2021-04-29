@@ -15,7 +15,6 @@ import { DateStatus } from './documents/dateStatus.enum';
 import { UpdateStatusValidation } from './documents/validation-application-updateStatus.dto';
 import { validate } from 'class-validator';
 import { Documents } from './documents/documents.dto';
-import { Console } from 'node:console';
 
 @Injectable()
 export class ApplicationService {
