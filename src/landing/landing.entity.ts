@@ -12,6 +12,8 @@ import { CourseInformation } from './documents/course-information.dto';
 import { ObjectID } from 'mongodb';
 import { PopularPrograms } from './documents/popular-programs.dto';
 import { ApplicationDocument } from './documents/application-documents.dto';
+import { TextRequirement } from './documents/text-requirement.dto';
+import { ScoreRequirement } from './documents/score-requirement.dto';
 
 export class Landing {
   @Column()
@@ -68,6 +70,12 @@ export class Landing {
     student: ApplicationDocument[];
   };
 
+  @Column()
+  requirements: {
+    textRequirement: TextRequirement[];
+    scoreRequirement: ScoreRequirement[];
+  };
+
   constructor(
     /* contentProfileUniversity: UniversityProfile,
     informationUniversity: DegreeInformation,
@@ -108,5 +116,6 @@ export class Landing {
     this.createdBy = constructorObject.createdBy;
     this.popularPrograms = constructorObject.popularPrograms;
     this.applicationDocuments = constructorObject.applicationDocuments;
+    this.requirements = constructorObject.requirements;
   }
 }
