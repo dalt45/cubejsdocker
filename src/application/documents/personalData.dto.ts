@@ -47,8 +47,11 @@ export class PersonalData {
   streetNumber: number;
 
   @Column()
-  city: string;
+  delegation: string;
 
   @Column()
-  region: string;
+  location: string;
+
+  @Column()
+  state: string;
 }
