@@ -38,6 +38,7 @@
     "bcrypt": "^5.0.0",
     "class-transformer": "^0.3.1",
     "class-validator": "^0.12.2",
+    "cloudinary": "^1.25.1",
     "core-util-is": "^1.0.2",
     "dotenv": "^8.2.0",
     "mongodb": "^3.6.3",

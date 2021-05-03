@@ -2,7 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectConnection, InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/user.entity';
 import { ServiceMessages } from 'src/utils/serviceResponse/ResponseDictionary';
-import { Repository, Connection } from 'typeorm';
+import {
+  Repository,
+  Connection,
+  CustomRepositoryCannotInheritRepositoryError,
+} from 'typeorm';
 import { StudentApplication } from './application.entity';
 import { ApplicationValidation } from './documents/validation-application.dto';
 import { ObjectID } from 'mongodb';
@@ -15,6 +19,8 @@ import { DateStatus } from './documents/dateStatus.enum';
 import { UpdateStatusValidation } from './documents/validation-application-updateStatus.dto';
 import { validate } from 'class-validator';
 import { Documents } from './documents/documents.dto';
+import * as cloudinary from 'cloudinary';
+import { ValidationDocuments } from './documents/validation-application/validation-documents.dto';
 
 @Injectable()
 export class ApplicationService {
@@ -82,6 +88,7 @@ export class ApplicationService {
   }
 
   async edit(application: EditApplicationValidation, id: string): Promise<any> {
+    let documentsUpdated: Documents;
     try {
       await validate(application, {
         whitelist: true,
@@ -91,6 +98,10 @@ export class ApplicationService {
         serviceMessage: ServiceMessages.BAD_REQUEST,
       };
     }
+    if (application.documents) {
+      documentsUpdated = await this.updateDocuments(application.documents);
+    }
+
     const dbApplication = await this.applicationRepository.findOne({
       where: { _id: { $eq: new ObjectID(id) } },
     });
@@ -104,6 +115,7 @@ export class ApplicationService {
     try {
       await manager.update(dbApplication, {
         ...application,
+        documents: documentsUpdated,
       });
       return {
         serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
@@ -113,6 +125,50 @@ export class ApplicationService {
         serviceMessage: ServiceMessages.ERROR_DEFAULT,
       };
     }
+  }
+
+  async updateDocuments(documents: any): Promise<Documents> {
+    const formatedDocuments = documents;
+    try {
+      await Promise.all(
+        Object.keys(documents).map((type) => {
+          return Promise.all(
+            documents[type].map(async (document, index) => {
+              if (document.file) {
+                const url = await this.uploadDocument(document.file);
+                formatedDocuments[type][index].url = url;
+                delete formatedDocuments[type][index].file;
+                return url;
+              }
+            }),
+          );
+        }),
+      );
+      return formatedDocuments;
+    } catch (e) {
+      throw new Error(e);
+    }
+  }
+
+  async uploadDocument(base64String: string): Promise<string> {
+    let url: string;
+    cloudinary.v2.config({
+      cloud_name: 'dp1c1cwfa',
+      api_key: '115896989882796',
+      api_secret: 'IRUfD9u7i6b7ioeW7E6lM6uDadA',
+    });
+    await cloudinary.v2.uploader.upload(
+      'data:application/pdf;base64,' + base64String,
+      { resource_type: 'auto', folder: 'be-international/documents/' },
+      async (error, result) => {
+        if (error) {
+          throw new Error('Upload Failed');
+        } else {
+          url = result.secure_url;
+        }
+      },
+    );
+    return url;
   }
 
   async updateStatus(
