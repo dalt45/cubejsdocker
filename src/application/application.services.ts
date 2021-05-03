@@ -2,11 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectConnection, InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/user.entity';
 import { ServiceMessages } from 'src/utils/serviceResponse/ResponseDictionary';
-import {
-  Repository,
-  Connection,
-  CustomRepositoryCannotInheritRepositoryError,
-} from 'typeorm';
+import { Repository, Connection } from 'typeorm';
 import { StudentApplication } from './application.entity';
 import { ApplicationValidation } from './documents/validation-application.dto';
 import { ObjectID } from 'mongodb';
@@ -20,7 +16,6 @@ import { UpdateStatusValidation } from './documents/validation-application-updat
 import { validate } from 'class-validator';
 import { Documents } from './documents/documents.dto';
 import * as cloudinary from 'cloudinary';
-import { ValidationDocuments } from './documents/validation-application/validation-documents.dto';
 
 @Injectable()
 export class ApplicationService {
