@@ -18,6 +18,7 @@ import { ApplicationModule } from './application/application.module';
 import { StudentApplication } from './application/application.entity';
 import { EventModule } from './events/events.module';
 import { ApplicationEvent } from './events/events.entity';
+import { CampusModule } from './campus/campus.module';
 
 // 'mongodb://user:password@mongo:27017'
 const dbHost: string = process.env.DB_HOST;
@@ -54,6 +55,7 @@ const dbName: string = process.env.DB_NAME;
     ApplicationModule,
     EventModule,
     ConfigModule.forRoot({ isGlobal: true }),
+    CampusModule,
   ],
   controllers: [],
   providers: [
