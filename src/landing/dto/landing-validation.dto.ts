@@ -1,24 +1,12 @@
-import { CourseContent } from '../documents/course-content.dto';
-import { FeaturedInformation } from '../documents/featured-information.dto';
-import * as validator from './landing-validation/object-validation.dto';
-import { ContentParagraph } from '../documents/content-paragraph.dto';
-import { GalleryCourse } from '../documents/gallery-course.dto';
-import { CourseButton } from '../documents/course-button.dto';
-import { Reason } from '../documents/reasons.dto';
 import {
   ArrayNotEmpty,
   IsNotEmptyObject,
   IsOptional,
-  IsUrl,
+  IsString,
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { UniversityProfile } from '../documents/university-profile.dto';
-import { DegreeInformation } from '../documents/degree-information.dto';
-import { UniversityVideos } from '../documents/university-videos.dto';
-import { CourseInformation } from '../documents/course-information.dto';
-import { PopularPrograms } from '../documents/popular-programs.dto';
-import { ApplicationDocument } from '../documents/application-documents.dto';
+import { Landing } from '../landing.entity';
 
 export class LandingValidation {
   // For strict validation
@@ -26,88 +14,128 @@ export class LandingValidation {
   @IsNotEmptyObject()
   @IsOptional()
   @ValidateNested()
-  @Type(() => validator.UniversityProfile)
-  contentProfileUniversity: UniversityProfile;
+  @Type(() => ContentProfileCourse)
+  contentProfileCourse: Landing['contentProfileCourse'];
+}
 
-  @IsNotEmptyObject()
+// tslint:disable-next-line: max-classes-per-file
+class ContentProfileCourse {
+  @IsString()
   @IsOptional()
-  @ValidateNested()
-  @Type(() => validator.DegreeInformation)
-  informationUniversity: DegreeInformation;
+  name: string;
 
-  @ValidateNested()
-  @IsNotEmptyObject()
+  @IsString()
   @IsOptional()
-  @Type(() => validator.UniversityVideos)
-  contentVideosUniversities: UniversityVideos;
+  courseType: string;
 
-  @IsNotEmptyObject()
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => validator.CourseContent)
-  contentAboutCourse: CourseContent;
-
+  @ArrayNotEmpty()
   @ValidateNested()
   @ArrayNotEmpty()
   @IsOptional()
-  @Type(() => validator.FeaturedInformation)
-  contentFeaturedInformation: FeaturedInformation[];
+  @Type(() => Date)
+  startDates: Date[];
+
+  @IsString()
+  @IsOptional()
+  briefAboutCourse: string;
+
+  @IsString()
+  @IsOptional()
+  paragraphCourse: string;
+
+  @IsString()
+  @IsOptional()
+  paragraphWhyStudy: string;
+
+  @IsString()
+  @IsOptional()
+  courseContent: string;
 
   @IsNotEmptyObject()
   @IsOptional()
   @ValidateNested()
-  @Type(() => validator.ContentParagraph)
-  contentParagraphUniversity: ContentParagraph;
+  @Type(() => EmploymentStatistics)
+  employmentStatistics: Landing['contentProfileCourse']['employmentStatistics'];
 
   @IsNotEmptyObject()
   @IsOptional()
   @ValidateNested()
-  @Type(() => validator.ContentParagraph)
-  contentParagraphMoreInformation: ContentParagraph;
-
-  @IsUrl()
-  @IsOptional()
-  universityLocation: string;
-
-  @ValidateNested()
-  @ArrayNotEmpty()
-  @IsOptional()
-  @Type(() => validator.GalleryCourse)
-  contentGalleryCourse: GalleryCourse[];
-
-  @ValidateNested()
-  @ArrayNotEmpty()
-  @IsOptional()
-  @Type(() => validator.CourseButton)
-  textButtonOtherCourses: CourseButton[];
+  @Type(() => Prices)
+  prices: Landing['contentProfileCourse']['prices'];
 
   @IsNotEmptyObject()
   @IsOptional()
   @ValidateNested()
-  @Type(() => validator.CourseContent)
-  contentDescriptionCourse: CourseContent;
+  @Type(() => Requirements)
+  requirements: Landing['contentProfileCourse']['requirements'];
 
-  @ValidateNested()
-  @ArrayNotEmpty()
+  @IsString()
   @IsOptional()
-  @Type(() => validator.Reason)
-  reasonsToChooseThisProgram: Reason[];
+  otherRequirements: string;
+}
 
-  @IsNotEmptyObject()
+// tslint:disable-next-line: max-classes-per-file
+class EmploymentStatistics {
+  @IsString()
   @IsOptional()
-  @ValidateNested()
-  @Type(() => validator.CourseInformation)
-  courseContentInformation: CourseInformation;
+  fourMonths: string;
 
-  @IsNotEmptyObject()
+  @IsString()
   @IsOptional()
-  @ValidateNested()
-  @Type(() => validator.PopularProgram)
-  popularPrograms: PopularPrograms;
+  internationalProjects: string;
 
   @IsNotEmptyObject()
   @IsOptional()
   @ValidateNested()
-  @Type(() => validator.ApplicationDocuments)
-  applicationDocuments: ApplicationDocument;
+  @Type(() => Percentiles)
+  percentiles: Landing['contentProfileCourse']['employmentStatistics']['percentiles'];
+}
+
+// tslint:disable-next-line: max-classes-per-file
+class Percentiles {
+  @IsString()
+  @IsOptional()
+  '1': string;
+
+  @IsString()
+  @IsOptional()
+  '2': string;
+
+  @IsString()
+  @IsOptional()
+  '3': string;
+}
+
+// tslint:disable-next-line: max-classes-per-file
+class Prices {
+  @IsString()
+  @IsOptional()
+  averageYearCost: string;
+
+  @IsString()
+  @IsOptional()
+  monthlyAccomodation: string;
+
+  @IsString()
+  @IsOptional()
+  totalTuitionCost: string;
+
+  @IsString()
+  @IsOptional()
+  beIntCost: string;
+}
+
+// tslint:disable-next-line: max-classes-per-file
+class Requirements {
+  @IsString()
+  @IsOptional()
+  IELTS: string;
+
+  @IsString()
+  @IsOptional()
+  TOEFL: string;
+
+  @IsString()
+  @IsOptional()
+  GMT: string;
 }

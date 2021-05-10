@@ -1,8 +1,8 @@
 import { Type } from 'class-transformer';
 import {
-  ArrayNotEmpty,
   IsMongoId,
   IsNotEmpty,
+  IsNotEmptyObject,
   IsOptional,
   ValidateNested,
 } from 'class-validator';
@@ -13,11 +13,11 @@ import { LandingValidation } from './landing-validation.dto';
 export class CreateLandingDto {
   @IsNotEmpty()
   @IsMongoId()
-  id: ObjectID;
+  fieldId: ObjectID;
 
-  @ValidateNested()
-  @ArrayNotEmpty()
+  @IsNotEmptyObject()
   @IsOptional()
+  @ValidateNested()
   @Type(() => LandingValidation)
-  landing: Landing[];
+  landing: Landing;
 }
