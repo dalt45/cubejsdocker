@@ -114,6 +114,7 @@ export class CampusService {
       return ServiceMessages.ERROR_DEFAULT;
     }
   }
+
   async deleteImage(id: string, url: string) {
     const university = await this.universityRepository.findOne({
       where: {
