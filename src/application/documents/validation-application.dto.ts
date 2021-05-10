@@ -40,7 +40,7 @@ export class ApplicationValidation {
   @Type(() => ValidationCertificates)
   certificates: Certificates[];
 
-  @ValidateNested()
+  @IsNotEmptyObject()
   @ValidateNested()
   @IsOptional()
   @Type(() => ValidationDocuments)

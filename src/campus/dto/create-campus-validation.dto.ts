@@ -3,6 +3,7 @@ import {
   ArrayNotEmpty,
   IsMongoId,
   IsNotEmpty,
+  IsNotEmptyObject,
   IsOptional,
   ValidateNested,
 } from 'class-validator';
@@ -16,7 +17,7 @@ export class CreateCampusDto {
   universityId: ObjectID;
 
   @ValidateNested()
-  @ArrayNotEmpty()
+  @IsNotEmptyObject()
   @IsOptional()
   @Type(() => CampusValidation)
   campus: Campus;

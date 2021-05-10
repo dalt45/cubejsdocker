@@ -37,7 +37,6 @@ export class LandingController {
       .getControllerResponse();
   }
 
-  @UseGuards(AuthGuard(['jwtAdmin', 'jwtUser']))
   @Get()
   async getLanding(@Query() Params: any): Promise<any> {
     const response = await this.landingService.get(Params);

@@ -15,6 +15,7 @@ import { Role } from 'src/authorization/role.enum';
 import { UniversityService } from './university.service';
 import { UserInfo } from 'src/utils/serviceResponse/user-info.decorator';
 import { User } from '../users/user.entity';
+import { UniversityValidation } from './dto/university-validation.dto';
 
 @Controller('university')
 export class UniversityController {
@@ -25,7 +26,7 @@ export class UniversityController {
   @Post()
   async createUniversity(
     @UserInfo() userinfo: User,
-    @Body() university: any,
+    @Body() university: UniversityValidation,
   ): Promise<any> {
     const response = await this.universityService.create(university, userinfo);
     return new ServiceResponse(response.serviceMessage)

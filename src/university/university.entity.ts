@@ -1,4 +1,4 @@
-import { Column, Entity, ObjectIdColumn, Unique } from 'typeorm';
+import { Column, Entity, ObjectIdColumn } from 'typeorm';
 import { ObjectID } from 'mongodb';
 import { Landing } from '../landing/landing.entity';
 import { Campus } from 'src/campus/campus.entity';
@@ -9,11 +9,23 @@ export class University {
   id: ObjectID;
 
   @Column()
-  @Unique(['name'])
-  name: string;
+  createdBy: ObjectID;
 
   @Column()
-  createdBy: ObjectID;
+  contentProfileUniversity: {
+    nameCity: string;
+    nameCountry: string;
+    name: string;
+    descriptionParagraph: string;
+  };
+
+  @Column()
+  images: {
+    urlImageLogo: { [url: string]: string };
+    urlCountryFlag: { [url: string]: string };
+    urlMainImage: { [url: string]: string };
+    photoGallery: [{ [url: string]: string }];
+  };
 
   @Column()
   campus: Campus[];

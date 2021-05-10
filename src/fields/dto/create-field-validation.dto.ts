@@ -16,7 +16,6 @@ export class CreateFieldDto {
   campusId: ObjectID;
 
   @IsNotEmptyObject()
-  @IsOptional()
   @ValidateNested()
   @Type(() => FieldValidation)
   field: Field;
