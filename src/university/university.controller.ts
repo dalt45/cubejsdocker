@@ -6,6 +6,7 @@ import {
   Query,
   UseGuards,
   Put,
+  Delete,
 } from '@nestjs/common';
 import ServiceResponse from '../utils/serviceResponse/ServiceResponse';
 import ControllerResponse from '../utils/serviceResponse/ControllerResponse';
@@ -51,7 +52,7 @@ export class UniversityController {
   async editLanding(
     @UserInfo() userInfo: User,
     @Query() params: any,
-    @Body() university: any,
+    @Body() university: UniversityValidation,
   ): Promise<any> {
     const response = await this.universityService.edit(
       university,
@@ -69,5 +70,16 @@ export class UniversityController {
     const successResponse = serviceResponse.getResponse();
     const controllerSuccessResponse = new ControllerResponse(successResponse);
     return controllerSuccessResponse.httpSuccess();
+  }
+
+  @Delete()
+  async deleteImage(@Query() Params: any): Promise<any> {
+    const response = await this.universityService.deleteImage(
+      Params.id,
+      Params.url,
+    );
+    return new ServiceResponse(response.serviceMessage)
+      .getJSON()
+      .getControllerResponse();
   }
 }

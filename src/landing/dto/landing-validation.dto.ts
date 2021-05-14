@@ -51,6 +51,14 @@ class ContentProfileCourse {
   @IsOptional()
   courseContent: string;
 
+  @IsString()
+  @IsOptional()
+  duration: string;
+
+  @IsString()
+  @IsOptional()
+  durationUnit: string;
+
   @IsNotEmptyObject()
   @IsOptional()
   @ValidateNested()

@@ -14,6 +14,8 @@ export class Landing {
     paragraphCourse: string;
     paragraphWhyStudy: string;
     courseContent: string;
+    duration: string;
+    durationUnit: string;
     employmentStatistics: {
       fourMonths: string;
       internationalProjects: string;
