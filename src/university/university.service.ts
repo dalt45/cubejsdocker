@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Param } from '@nestjs/common';
 import { InjectConnection, InjectRepository } from '@nestjs/typeorm';
 import { Connection, Repository } from 'typeorm';
 import { University } from './university.entity';
@@ -63,16 +63,24 @@ export class UniversityService {
 
   async get(Params: any): Promise<any> {
     try {
-      const university = await this.universityRepostory.findOne(Params.id);
-      if (!university) {
+      if (!Params.id) {
+        const results = await this.universityRepostory.find();
         return {
-          serviceMessage: ServiceMessages.NOT_FOUND,
+          serviceMessage: ServiceMessages.RESPONSE_BODY,
+          body: results,
+        };
+      } else {
+        const university = await this.universityRepostory.findOne(Params.id);
+        if (!university) {
+          return {
+            serviceMessage: ServiceMessages.NOT_FOUND,
+          };
+        }
+        return {
+          serviceMessage: ServiceMessages.RESPONSE_BODY,
+          body: university,
         };
       }
-      return {
-        serviceMessage: ServiceMessages.RESPONSE_BODY,
-        body: university,
-      };
     } catch (e) {
       return {
         serviceMessage: ServiceMessages.ERROR_DEFAULT,
