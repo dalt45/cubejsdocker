@@ -43,7 +43,7 @@ export class Landing {
   createdBy: ObjectID;
 
   constructor(constructorObject) {
-    this.contentProfileCourse = constructorObject.contentProfileCourse;
+    this.contentProfileCourse = constructorObject?.contentProfileCourse;
     this._id = new ObjectID();
   }
 }

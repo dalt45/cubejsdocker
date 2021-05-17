@@ -1,9 +1,7 @@
 import { Type } from 'class-transformer';
 import {
-  ArrayNotEmpty,
   IsMongoId,
   IsNotEmpty,
-  IsNotEmptyObject,
   IsOptional,
   ValidateNested,
 } from 'class-validator';

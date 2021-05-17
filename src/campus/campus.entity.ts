@@ -38,8 +38,8 @@ export class Campus {
   fields: Field[];
 
   constructor(constructorObject) {
-    this.contentProfileCampus = constructorObject.contentProfileCampus;
-    this.images = constructorObject.images;
+    this.contentProfileCampus = constructorObject?.contentProfileCampus;
+    this.images = constructorObject?.images;
     this.fields = [];
     this._id = new ObjectID();
   }
