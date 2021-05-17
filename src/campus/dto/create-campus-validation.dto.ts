@@ -17,7 +17,6 @@ export class CreateCampusDto {
   universityId: ObjectID;
 
   @ValidateNested()
-  @IsNotEmptyObject()
   @IsOptional()
   @Type(() => CampusValidation)
   campus: Campus;
