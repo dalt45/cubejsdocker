@@ -30,7 +30,7 @@ export class Campus {
 
   @Column()
   images: {
-    urlMainImage: { [url: string]: string };
+    mainImage: { [url: string]: string };
     photoGallery: [{ [url: string]: string }];
   };
 
