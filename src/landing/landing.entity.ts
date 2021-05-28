@@ -9,7 +9,7 @@ export class Landing {
   contentProfileCourse: {
     name: string;
     courseType: string;
-    startDates: Date[];
+    startDates: StartDate[];
     briefAboutCourse: string;
     paragraphCourse: string;
     paragraphWhyStudy: string;
@@ -46,4 +46,10 @@ export class Landing {
     this.contentProfileCourse = constructorObject?.contentProfileCourse;
     this._id = new ObjectID();
   }
+}
+
+// tslint:disable-next-line: max-classes-per-file
+class StartDate {
+  year: number;
+  month: number;
 }

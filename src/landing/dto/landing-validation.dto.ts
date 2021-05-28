@@ -32,8 +32,8 @@ class ContentProfileCourse {
   @ValidateNested()
   @ArrayNotEmpty()
   @IsOptional()
-  @Type(() => Date)
-  startDates: Date[];
+  @Type(() => StartDate)
+  startDates: Landing['contentProfileCourse']['startDates'];
 
   @IsString()
   @IsOptional()
@@ -146,4 +146,11 @@ class Requirements {
   @IsString()
   @IsOptional()
   GMT: string;
+}
+
+// tslint:disable-next-line: max-classes-per-file
+class StartDate {
+  @IsString()
+  @IsOptional()
+  year: string;
 }

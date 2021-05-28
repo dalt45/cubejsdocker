@@ -18,6 +18,7 @@ export class University {
     name: string;
     descriptionParagraph: string;
     videoUrl: string;
+    type: string;
   };
 
   @Column()

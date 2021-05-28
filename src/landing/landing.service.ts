@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, Connection } from 'typeorm';
 import { Landing } from './landing.entity';
 import { ServiceMessages } from '../utils/serviceResponse/ResponseDictionary';
 import { LandingValidation } from './dto/landing-validation.dto';
@@ -8,12 +8,14 @@ import { CreateLandingDto } from './dto/create-landing.dto';
 import { University } from '../university/university.entity';
 import { ObjectID } from 'mongodb';
 import { User } from 'src/users/user.entity';
+import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 
 @Injectable()
 export class LandingService {
   constructor(
     @InjectRepository(University)
     private universityRepository: Repository<University>,
+    private connection: Connection,
   ) {}
 
   async create(landing: CreateLandingDto, user: User): Promise<any> {
@@ -62,7 +64,145 @@ export class LandingService {
     }
   }
 
+  async getSearchUniversities(params: any): Promise<any> {
+    let queryBuild = {};
+    let secondQuery = {};
+    Object.keys(params).forEach((param) => {
+      switch (param) {
+        case 'courseType':
+          queryBuild = {
+            ...queryBuild,
+            ...{
+              'campus.fields.landings.contentProfileCourse.courseType': {
+                $regex: params[param],
+                $options: 'i',
+              },
+            },
+          };
+          break;
+        case 'area':
+          queryBuild = {
+            ...queryBuild,
+            ...{
+              'campus.fields.name': {
+                $regex: params[param],
+                $options: 'i',
+              },
+            },
+          };
+          break;
+        case 'institutionType':
+          queryBuild = {
+            ...queryBuild,
+            ...{
+              'contentProfileUniversity.type': {
+                $regex: params[param],
+                $options: 'i',
+              },
+            },
+          };
+        case 'dateMonth':
+          secondQuery = {
+            ...secondQuery,
+            ...{
+              'campus.fields.landings.contentProfileCourse.startDates.month': {
+                $in: [params[param]],
+              },
+            },
+          };
+          break;
+        case 'dateYear':
+          secondQuery = {
+            ...secondQuery,
+            ...{
+              'campus.fields.landings.contentProfileCourse.startDates.year': {
+                $in: [params[param]],
+              },
+            },
+          };
+          break;
+        case 'duration':
+          queryBuild = {
+            ...queryBuild,
+            ...{
+              'campus.fields.landings.contentProfileCourse.duration': {
+                $regex: params[param],
+                $options: 'i',
+              },
+            },
+          };
+          break;
+        case 'search':
+          secondQuery = {
+            ...secondQuery,
+            ...{
+              $or: [
+                {
+                  'contentProfileUniversity.name': {
+                    $regex: params[param],
+                    $options: 'i',
+                  },
+                },
+                {
+                  'campus.contentProfileCampus.nameCity': {
+                    $regex: params[param],
+                    $options: 'i',
+                  },
+                },
+                {
+                  'campus.fields.landings.contentProfileCourse.name': {
+                    $regex: params[param],
+                    $options: 'i',
+                  },
+                },
+              ],
+            },
+          };
+          break;
+      }
+    });
+    const manager = this.connection.getMongoRepository(University);
+    const university = await manager.aggregate([
+      { $match: { ...queryBuild } },
+      { $unwind: '$campus' },
+      { $unwind: '$campus.fields' },
+      { $unwind: '$campus.fields.landings' },
+      { $match: { ...secondQuery } },
+      {
+        $group: {
+          _id: '$campus.fields.landings._id',
+          _courseType: {
+            $first: '$campus.fields.landings',
+          },
+          area: {
+            $first: { name: '$campus.fields.name' },
+          },
+          campus: {
+            $first: {
+              contentProfileCampus: '$campus.contentProfileCampus',
+              images: '$campus.images',
+            },
+          },
+          university: {
+            $first: {
+              contentProfileUniversity: '$contentProfileUniversity',
+              images: '$images',
+            },
+          },
+        },
+      },
+    ]);
+    const result = await university.toArray();
+    return {
+      serviceMessage: ServiceMessages.RESPONSE_BODY,
+      body: result,
+    };
+  }
+
   async get(Params: any): Promise<any> {
+    if (!Params.id) {
+      return this.getSearchUniversities(Params);
+    }
     const university = await this.universityRepository.findOne({
       where: {
         'campus.fields.landings._id': { $eq: new ObjectID(Params.id) },
