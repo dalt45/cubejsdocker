@@ -8,7 +8,6 @@ import { CreateLandingDto } from './dto/create-landing.dto';
 import { University } from '../university/university.entity';
 import { ObjectID } from 'mongodb';
 import { User } from 'src/users/user.entity';
-import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 
 @Injectable()
 export class LandingService {
@@ -199,6 +198,55 @@ export class LandingService {
     };
   }
 
+  async getSearchOptions(): Promise<any> {
+    const manager = this.connection.getMongoRepository(University);
+    const university = await manager.aggregate([
+      { $unwind: '$campus' },
+      { $unwind: '$campus.fields' },
+      { $unwind: '$campus.fields.landings' },
+      {
+        $group: {
+          _id: 'options',
+          courseType: {
+            $addToSet:
+              '$campus.fields.landings.contentProfileCourse.courseType',
+          },
+          area: {
+            $addToSet: '$campus.fields.name',
+          },
+          country: {
+            $addToSet: '$campus.contentProfileCampus.nameCountry',
+          },
+          dateYear: {
+            $addToSet: {
+              $first:
+                '$campus.fields.landings.contentProfileCourse.startDates.year',
+            },
+          },
+          dateMonth: {
+            $addToSet: {
+              $first:
+                '$campus.fields.landings.contentProfileCourse.startDates.month',
+            },
+          },
+          institutionType: {
+            $addToSet: {
+              $first: '$contentProfileUniversity.type',
+            },
+          },
+          duration: {
+            $addToSet: '$campus.fields.landings.contentProfileCourse.duration',
+          },
+        },
+      },
+    ]);
+    const result = await university.toArray();
+    return {
+      serviceMessage: ServiceMessages.RESPONSE_BODY,
+      body: result,
+    };
+  }
+
   async get(Params: any): Promise<any> {
     if (!Params.id) {
       return this.getSearchUniversities(Params);
@@ -222,7 +270,9 @@ export class LandingService {
             if (landing._id.equals(Params.id)) {
               result.campus = [campus];
               result.campus[0].fields = [field];
-              result.campus[0].fields[0].landings = [landing];
+              result.campus[0].fields[0].landings = [landing].concat(
+                field.landings,
+              );
             }
           });
         });

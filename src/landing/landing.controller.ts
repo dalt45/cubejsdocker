@@ -46,6 +46,15 @@ export class LandingController {
       .getControllerResponse();
   }
 
+  @Get('options')
+  async getOptions(): Promise<any> {
+    const response = await this.landingService.getSearchOptions();
+    return new ServiceResponse(response.serviceMessage)
+      .setBody(response.body)
+      .getJSON()
+      .getControllerResponse();
+  }
+
   @UseGuards(AuthGuard(['jwtAdmin', 'jwtUser']))
   @Roles(Role.University, Role.Admin)
   @Put()
