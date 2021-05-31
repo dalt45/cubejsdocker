@@ -64,13 +64,13 @@ export class LandingService {
   }
 
   async getSearchUniversities(params: any): Promise<any> {
-    let queryBuild = {};
+    const queryBuild = {};
     let secondQuery = {};
     Object.keys(params).forEach((param) => {
       switch (param) {
         case 'courseType':
-          queryBuild = {
-            ...queryBuild,
+          secondQuery = {
+            ...secondQuery,
             ...{
               'campus.fields.landings.contentProfileCourse.courseType': {
                 $regex: params[param],
@@ -80,8 +80,8 @@ export class LandingService {
           };
           break;
         case 'area':
-          queryBuild = {
-            ...queryBuild,
+          secondQuery = {
+            ...secondQuery,
             ...{
               'campus.fields.name': {
                 $regex: params[param],
@@ -91,8 +91,8 @@ export class LandingService {
           };
           break;
         case 'institutionType':
-          queryBuild = {
-            ...queryBuild,
+          secondQuery = {
+            ...secondQuery,
             ...{
               'contentProfileUniversity.type': {
                 $regex: params[param],
@@ -121,8 +121,8 @@ export class LandingService {
           };
           break;
         case 'duration':
-          queryBuild = {
-            ...queryBuild,
+          secondQuery = {
+            ...secondQuery,
             ...{
               'campus.fields.landings.contentProfileCourse.duration': {
                 $regex: params[param],
@@ -170,7 +170,7 @@ export class LandingService {
       {
         $group: {
           _id: '$campus.fields.landings._id',
-          _courseType: {
+          course: {
             $first: '$campus.fields.landings',
           },
           area: {
