@@ -90,6 +90,17 @@ export class LandingService {
             },
           };
           break;
+        case 'country':
+          secondQuery = {
+            ...secondQuery,
+            ...{
+              'campus.contentProfileCampus.nameCountry': {
+                $regex: params[param],
+                $options: 'i',
+              },
+            },
+          };
+          break;
         case 'institutionType':
           secondQuery = {
             ...secondQuery,
@@ -100,6 +111,19 @@ export class LandingService {
               },
             },
           };
+          break;
+        case 'prices':
+          const priceArray = params[param].split('-');
+          secondQuery = {
+            ...secondQuery,
+            ...{
+              'campus.fields.landings.contentProfileCourse.prices.totalTuitionCost': {
+                $gt: priceArray[0],
+                $lt: priceArray[0],
+              },
+            },
+          };
+          break;
         case 'dateMonth':
           secondQuery = {
             ...secondQuery,
