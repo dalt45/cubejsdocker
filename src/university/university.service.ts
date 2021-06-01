@@ -39,12 +39,8 @@ export class UniversityService {
       };
     }
     try {
-      const newUniversity = new University();
+      const newUniversity = new University(university);
       newUniversity.createdBy = userInfo.id;
-      newUniversity.contentProfileUniversity =
-        university.contentProfileUniversity;
-      newUniversity.campus = [];
-      newUniversity.images = university.images;
       await this.universityRepostory.save(newUniversity);
       if (dbUser)
         manager.update(dbUser, {
