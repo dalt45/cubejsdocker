@@ -38,8 +38,36 @@ export class Campus {
   fields: Field[];
 
   constructor(constructorObject) {
-    this.contentProfileCampus = constructorObject?.contentProfileCampus;
-    this.images = constructorObject?.images;
+    this.contentProfileCampus = {
+      nameCity: constructorObject?.contentProfileCampus?.nameCity || '',
+      nameCountry: constructorObject?.contentProfileCampus?.nameCountry || '',
+      briefUniversity:
+        constructorObject?.contentProfileCampus?.briefUniversity || '',
+      briefWhyStudy:
+        constructorObject?.contentProfileCampus?.briefWhyStudy || '',
+      funfacts: constructorObject?.contentProfileCampus?.funfacts || [],
+      location: constructorObject?.contentProfileCampus?.location || '',
+      paragraphUniversity:
+        constructorObject?.contentProfileCampus?.paragraphUniversity || '',
+      paragraphHighlight:
+        constructorObject?.contentProfileCampus?.paragraphHighlight || '',
+      paragraphWhyStudy:
+        constructorObject?.contentProfileCampus?.paragraphWhyStudy || '',
+      popularProgramsParagraph:
+        constructorObject?.contentProfileCampus?.popularProgramsParagraph || '',
+      bachelorDegrees:
+        constructorObject?.contentProfileCampus?.bachelorDegrees || '',
+      masterDegrees:
+        constructorObject?.contentProfileCampus?.masterDegrees || '',
+      phdDegrees: constructorObject?.contentProfileCampus?.phdDegrees || '',
+      highlights: constructorObject?.contentProfileCampus?.highlights || [],
+      peopleHighlights:
+        constructorObject?.contentProfileCampus?.peopleHighlights || '',
+    };
+    this.images = {
+      mainImage: { ...(constructorObject?.images?.mainImage || { url: '' }) },
+      photoGallery: constructorObject?.images?.photoGallery || [],
+    };
     this.fields = [];
     this._id = new ObjectID();
   }

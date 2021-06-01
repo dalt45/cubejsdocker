@@ -248,9 +248,11 @@ export class ApplicationService {
         const uninversityQuery = await manager.findOne({
           where: { _id: { $eq: new ObjectID(user.university) } },
         });
-        const arrayQuery = uninversityQuery.landings.map((landing) => {
-          return landing._id.toHexString();
-        });
+        const arrayQuery = uninversityQuery.campus.map((campus) =>
+          campus.fields.map((field) =>
+            field.landings.map((landing) => landing._id.toHexString()),
+          ),
+        );
         applicationQuery = await this.applicationRepository.find({
           where: { 'program._id': { $in: arrayQuery } },
         });

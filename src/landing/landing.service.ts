@@ -30,7 +30,7 @@ export class LandingService {
           body: {},
         };
       }
-      const newLanding = new Landing(landing.landing);
+      const newLanding = await new Landing(landing.landing);
       newLanding.createdBy = user.id;
       const campusArray = university.campus;
       university.campus.forEach((campus, indexCampus) => {
