@@ -42,9 +42,7 @@ class ContentProfileCampus {
   @IsString()
   briefWhyStudy: string;
 
-  @ArrayNotEmpty()
   @ValidateNested()
-  @ArrayNotEmpty()
   @IsOptional()
   @Type(() => Funfacts)
   funfacts: Campus['contentProfileCampus']['funfacts'];
@@ -81,9 +79,7 @@ class ContentProfileCampus {
   @IsString()
   phdDegrees: string;
 
-  @ArrayNotEmpty()
   @ValidateNested()
-  @ArrayNotEmpty()
   @IsOptional()
   @Type(() => Funfacts)
   highlights: Campus['contentProfileCampus']['highlights'];
