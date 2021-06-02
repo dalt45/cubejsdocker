@@ -28,9 +28,7 @@ class ContentProfileCourse {
   @IsOptional()
   courseType: string;
 
-  @ArrayNotEmpty()
   @ValidateNested()
-  @ArrayNotEmpty()
   @IsOptional()
   @Type(() => StartDate)
   startDates: Landing['contentProfileCourse']['startDates'];
