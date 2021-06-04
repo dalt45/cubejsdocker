@@ -8,6 +8,7 @@ import { CreateLandingDto } from './dto/create-landing.dto';
 import { University } from '../university/university.entity';
 import { ObjectID } from 'mongodb';
 import { User } from 'src/users/user.entity';
+import { Campus } from 'src/campus/campus.entity';
 
 @Injectable()
 export class LandingService {
@@ -18,21 +19,41 @@ export class LandingService {
 
   async create(landing: CreateLandingDto, user: User): Promise<any> {
     try {
-      const university = await this.universityRepository.findOne(
-        (landing.id as unknown) as string,
-      );
-      const newLandingArray = landing.landing.map((item) => {
-        item.createdBy = user.id;
-        return new Landing(item);
+      const university = await this.universityRepository.findOne({
+        where: {
+          'campus.fields._id': { $eq: new ObjectID(landing.fieldId) },
+        },
       });
-      await this.universityRepository.update(university, {
-        landings: [...newLandingArray, ...university.landings],
+      if (!university) {
+        return {
+          serviceMessage: ServiceMessages.NOT_FOUND,
+          body: {},
+        };
+      }
+      const newLanding = new Landing(landing.landing);
+      newLanding.createdBy = user.id;
+      const campusArray = university.campus;
+      university.campus.forEach((campus, indexCampus) => {
+        campus.fields.forEach((field, indexField) => {
+          if (field._id.equals(landing.fieldId)) {
+            campusArray[indexCampus].fields[indexField].landings.push(
+              newLanding,
+            );
+          }
+        });
+      });
+
+      const universityToModify = await this.universityRepository.findOne({
+        where: {
+          'campus.fields._id': { $eq: new ObjectID(landing.fieldId) },
+        },
+      });
+      await this.universityRepository.update(universityToModify, {
+        campus: [...campusArray],
       });
       return {
         serviceMessage: ServiceMessages.RESPONSE_BODY,
-        body: newLandingArray.map((item) => ({
-          id: item._id,
-        })),
+        body: newLanding,
       };
     } catch (e) {
       return {
@@ -43,57 +64,93 @@ export class LandingService {
   }
 
   async get(Params: any): Promise<any> {
-    const university = await this.universityRepository.find({
+    const university = await this.universityRepository.findOne({
       where: {
-        'landings._id': { $eq: new ObjectID(Params.id) },
+        'campus.fields.landings._id': { $eq: new ObjectID(Params.id) },
       },
     });
-    if (university.length === 0) {
+    if (!university) {
       return {
         serviceMessage: ServiceMessages.NOT_FOUND,
+        body: {},
+      };
+    }
+    if (Params.university === '') {
+      const result = university;
+      university.campus.forEach((campus) => {
+        campus.fields.forEach((field) => {
+          field.landings.forEach((landing) => {
+            if (landing._id.equals(Params.id)) {
+              result.campus = [campus];
+              result.campus[0].fields = [field];
+              result.campus[0].fields[0].landings = [landing];
+            }
+          });
+        });
+      });
+      return {
+        serviceMessage: ServiceMessages.RESPONSE_BODY,
+        body: result,
       };
     }
     let resultLanding: Landing;
-    university[0].landings.forEach((landing) => {
-      if (landing._id.equals(Params.id)) resultLanding = landing;
+    university.campus.forEach((campus) => {
+      campus.fields.forEach((field) => {
+        field.landings.forEach((landing) => {
+          if (landing._id.equals(Params.id)) {
+            resultLanding = landing;
+          }
+        });
+      });
     });
     if (resultLanding) {
       return {
         serviceMessage: ServiceMessages.RESPONSE_BODY,
         body: resultLanding,
       };
+    } else {
+      return {
+        serviceMessage: ServiceMessages.NOT_FOUND,
+        body: {},
+      };
     }
   }
 
-  async edit(id: string, landing: LandingValidation): Promise<any> {
+  async edit(id: string, landingModify: LandingValidation): Promise<any> {
     const university = await this.universityRepository.findOne({
       where: {
-        'landings._id': { $eq: new ObjectID(id) },
+        'campus.fields.landings._id': { $eq: new ObjectID(id) },
       },
     });
     if (!university) {
       return ServiceMessages.NOT_FOUND;
     }
-    const landingArray = university.landings;
-    for (const element in landingArray) {
-      if (landingArray[element]._id.equals(id)) {
-        const toModify = landingArray[element];
-        for (const values in landing) {
-          if (toModify.hasOwnProperty(values))
-            toModify[values] = landing[values];
-        }
-        // tslint:disable-next-line: radix
-        landingArray.splice((element as unknown) as number, 1, toModify);
-      }
-    }
+    const campusArray = university.campus;
+    campusArray.forEach((campus, indexCampus) => {
+      campus.fields.forEach((field, indexField) => {
+        field.landings.forEach((landing, indexLanding) => {
+          if (landing._id.equals(id)) {
+            campusArray[indexCampus].fields[indexField].landings[
+              indexLanding
+            ] = {
+              ...campusArray[indexCampus].fields[indexField].landings[
+                indexLanding
+              ],
+              ...landingModify,
+            };
+          }
+        });
+      });
+    });
+
     try {
       const universityToModify = await this.universityRepository.findOne({
         where: {
-          'landings._id': { $eq: new ObjectID(id) },
+          'campus.fields.landings._id': { $eq: new ObjectID(id) },
         },
       });
       await this.universityRepository.update(universityToModify, {
-        landings: [...landingArray],
+        campus: [...campusArray],
       });
       return ServiceMessages.RESPONSE_DEFAULT;
     } catch (e) {
