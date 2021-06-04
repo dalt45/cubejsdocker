@@ -1,13 +1,14 @@
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import ControllerResponse from '../utils/serviceResponse/ControllerResponse';
 import ServiceResponse from '../utils/serviceResponse/ServiceResponse';
+import ControllerResponse from '../utils/serviceResponse/ControllerResponse';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import { UserController } from './users.controller';
 import { UsersService } from './users.service';
 import { FindUserDto } from './dto/find-user.dto';
 import { ObjectID } from 'mongodb';
+import { ConfigService } from '@nestjs/config';
 
 type MockType<T> = {
   // eslint-disable-next-line @typescript-eslint/ban-types
@@ -19,6 +20,8 @@ describe('UserController', () => {
   let userService: UsersService;
   let repositoryMock: MockType<Repository<User>>;
   let serviceResponse: ServiceResponse;
+  let controllerResponse: ControllerResponse;
+  let finalResponse: any;
 
   beforeEach(async () => {
     const repositoryMockFactory: () => MockType<Repository<any>> = jest.fn(
@@ -33,6 +36,7 @@ describe('UserController', () => {
       controllers: [UserController],
       providers: [
         UsersService,
+        ConfigService,
         {
           provide: getRepositoryToken(User),
           useFactory: repositoryMockFactory,
@@ -146,10 +150,12 @@ describe('UserController', () => {
       try {
         expect(await userController.getUser(testQuery)).toThrowError();
       } catch (e) {
-        serviceResponse = new ServiceResponse('BAD_REQUEST')
-          .getJSON()
-          .mockError();
-        expect(e.response).toEqual(serviceResponse);
+        serviceResponse = new ServiceResponse('BAD_REQUEST');
+        controllerResponse = new ControllerResponse(
+          serviceResponse.getResponse(),
+        );
+        finalResponse = controllerResponse.mockError();
+        expect(e.response).toEqual(finalResponse);
       }
     });
   });

@@ -18,4 +18,7 @@ export class UniversityProfile {
 
   @Column()
   nameCountry: string;
+
+  @Column()
+  imageHeaderPageUniversities: string;
 }
