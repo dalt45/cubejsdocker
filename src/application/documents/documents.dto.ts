@@ -1,12 +1,10 @@
 import { Column } from 'typeorm';
+import { SingleDocument } from './singleDocument.dto';
 
 export class Documents {
   @Column()
-  name: string;
+  student: SingleDocument[];
 
   @Column()
-  url: string;
-
-  @Column()
-  status: string;
+  institution: SingleDocument[];
 }

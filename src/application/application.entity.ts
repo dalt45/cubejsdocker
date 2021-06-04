@@ -52,8 +52,11 @@ export class StudentApplication {
   certificates: Certificates[];
 
   @Column()
-  documents: Documents[];
+  documents: Documents;
 
   @Column()
   finances: Finances;
+
+  @Column()
+  isSubmitted: boolean;
 }

@@ -10,6 +10,8 @@ import { CourseButton } from './documents/course-button.dto';
 import { Reason } from './documents/reasons.dto';
 import { CourseInformation } from './documents/course-information.dto';
 import { ObjectID } from 'mongodb';
+import { PopularPrograms } from './documents/popular-programs.dto';
+import { ApplicationDocument } from './documents/application-documents.dto';
 
 export class Landing {
   @Column()
@@ -57,6 +59,15 @@ export class Landing {
   @Column()
   courseContentInformation: CourseInformation;
 
+  @Column()
+  popularPrograms: PopularPrograms;
+
+  @Column()
+  applicationDocuments: {
+    institution: ApplicationDocument[];
+    student: ApplicationDocument[];
+  };
+
   constructor(
     /* contentProfileUniversity: UniversityProfile,
     informationUniversity: DegreeInformation,
@@ -95,5 +106,7 @@ export class Landing {
     this.courseContentInformation = constructorObject.courseContentInformation;
     this._id = new ObjectID();
     this.createdBy = constructorObject.createdBy;
+    this.popularPrograms = constructorObject.popularPrograms;
+    this.applicationDocuments = constructorObject.applicationDocuments;
   }
 }

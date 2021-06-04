@@ -13,6 +13,9 @@ import { ApplicationStatus } from './documents/applicationStatus.enum';
 import { LandingService } from 'src/landing/landing.service';
 import { DateStatus } from './documents/dateStatus.enum';
 import { UpdateStatusValidation } from './documents/validation-application-updateStatus.dto';
+import { validate } from 'class-validator';
+import { Documents } from './documents/documents.dto';
+import { Console } from 'node:console';
 
 @Injectable()
 export class ApplicationService {
@@ -35,16 +38,21 @@ export class ApplicationService {
         dateStatus: DateStatus.DOCUMENTS,
         dateDateStatus: Date.now(),
         startDate: Date.now(),
+        isSubmitted: false,
       };
       const landing = await this.landingService.get({
         id: application.programId,
       });
+      const requiredDocuments = this.createDocumentArray(
+        landing.body.applicationDocuments,
+      );
       delete application.programId;
       const newApplication = await this.applicationRepository.save({
         ...application,
         ...defaultObject,
         userId: user.id,
         program: landing.body,
+        documents: requiredDocuments,
       });
       return {
         serviceMessage: ServiceMessages.RESPONSE_BODY,
@@ -58,10 +66,36 @@ export class ApplicationService {
     }
   }
 
+  createDocumentArray(applicationDocuments: {
+    [key: string]: any;
+  }): { [key: string]: any } {
+    const documentObject = {};
+    Object.keys(applicationDocuments).forEach((documentType) => {
+      const formatedArray = applicationDocuments[documentType].map((array) => {
+        return {
+          ...array,
+          url: '',
+        };
+      });
+      documentObject[documentType] = formatedArray;
+    });
+    return documentObject;
+  }
+
   async edit(application: EditApplicationValidation, id: string): Promise<any> {
+    try {
+      await validate(application, {
+        whitelist: true,
+      });
+    } catch (e) {
+      return {
+        serviceMessage: ServiceMessages.BAD_REQUEST,
+      };
+    }
     const dbApplication = await this.applicationRepository.findOne({
       where: { _id: { $eq: new ObjectID(id) } },
     });
+
     if (!dbApplication) {
       return {
         serviceMessage: ServiceMessages.NOT_FOUND,
@@ -241,5 +275,47 @@ export class ApplicationService {
     } catch (e) {
       return ServiceMessages.ERROR_DEFAULT;
     }
+  }
+
+  async submit(params: any): Promise<any> {
+    const dbApplication = await this.applicationRepository.findOne({
+      where: { _id: { $eq: new ObjectID(params) } },
+    });
+    if (!dbApplication) {
+      return {
+        serviceMessage: ServiceMessages.NOT_FOUND,
+      };
+    }
+    const documentCheck = this.checkDocuments(dbApplication.documents);
+    if (!documentCheck) {
+      return {
+        serviceMessage: ServiceMessages.BAD_REQUEST,
+        body: { message: 'Missing Documents' },
+      };
+    } else {
+      const manager = this.connection.getMongoRepository(StudentApplication);
+      try {
+        await manager.update(dbApplication, {
+          isSubmitted: true,
+        });
+        return {
+          serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
+        };
+      } catch (e) {
+        return {
+          serviceMessage: ServiceMessages.ERROR_DEFAULT,
+        };
+      }
+    }
+  }
+
+  checkDocuments(documents: Documents): any {
+    return Object.keys(documents).every((documentType) => {
+      return documents[documentType].every((document) => {
+        if (document.isRequired && document.url === '') {
+          return false;
+        } else return true;
+      });
+    });
   }
 }

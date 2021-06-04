@@ -48,6 +48,11 @@ export class LandingService {
         'landings._id': { $eq: new ObjectID(Params.id) },
       },
     });
+    if (university.length === 0) {
+      return {
+        serviceMessage: ServiceMessages.NOT_FOUND,
+      };
+    }
     let resultLanding: Landing;
     university[0].landings.forEach((landing) => {
       if (landing._id.equals(Params.id)) resultLanding = landing;
