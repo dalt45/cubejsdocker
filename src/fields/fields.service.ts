@@ -22,6 +22,12 @@ export class FieldService {
         'campus._id': { $eq: new ObjectID(fieldCreate.campusId) },
       },
     });
+    if (!university) {
+      return {
+        serviceMessage: ServiceMessages.NOT_FOUND,
+        body: {},
+      };
+    }
     const newField = new Field(fieldCreate.field);
     newField.createdBy = user.id;
 

@@ -50,6 +50,11 @@ class ContentProfileUniversity {
   @IsString()
   @IsOptional()
   descriptionParagraph: string;
+
+  @IsString()
+  @IsOptional()
+  @IsUrl()
+  videoUrl: string;
 }
 
 // tslint:disable-next-line: max-classes-per-file

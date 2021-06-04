@@ -1,9 +1,7 @@
 import { Type } from 'class-transformer';
 import {
-  ArrayNotEmpty,
   IsMongoId,
   IsNotEmpty,
-  IsNotEmptyObject,
   IsOptional,
   ValidateNested,
 } from 'class-validator';
@@ -17,7 +15,6 @@ export class CreateCampusDto {
   universityId: ObjectID;
 
   @ValidateNested()
-  @IsNotEmptyObject()
   @IsOptional()
   @Type(() => CampusValidation)
   campus: Campus;

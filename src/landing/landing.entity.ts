@@ -14,6 +14,8 @@ export class Landing {
     paragraphCourse: string;
     paragraphWhyStudy: string;
     courseContent: string;
+    duration: string;
+    durationUnit: string;
     employmentStatistics: {
       fourMonths: string;
       internationalProjects: string;
@@ -41,7 +43,7 @@ export class Landing {
   createdBy: ObjectID;
 
   constructor(constructorObject) {
-    this.contentProfileCourse = constructorObject.contentProfileCourse;
+    this.contentProfileCourse = constructorObject?.contentProfileCourse;
     this._id = new ObjectID();
   }
 }

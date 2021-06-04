@@ -17,7 +17,7 @@ export class Field {
 
   constructor(constructorObject) {
     this._id = new ObjectID();
-    this.name = constructorObject.name;
+    this.name = constructorObject?.name;
     this.landings = [];
   }
 }

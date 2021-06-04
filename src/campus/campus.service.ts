@@ -24,9 +24,14 @@ export class CampusService {
       const university = await this.universityRepository.findOne(
         (campus.universityId as unknown) as string,
       );
-      const newCampus = new Campus(campus.campus);
+      if (!university) {
+        return {
+          serviceMessage: ServiceMessages.NOT_FOUND,
+          body: {},
+        };
+      }
+      const newCampus = new Campus(campus?.campus);
       newCampus.createdBy = user.id;
-
       await this.universityRepository.update(university, {
         campus: [...university.campus, newCampus],
       });
