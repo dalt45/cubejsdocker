@@ -71,9 +71,13 @@ export class ValidationPersonalData {
 
   @IsString()
   @IsOptional()
-  city: string;
+  delegation: string;
 
   @IsString()
   @IsOptional()
-  region: string;
+  location: string;
+
+  @IsString()
+  @IsOptional()
+  state: string;
 }
