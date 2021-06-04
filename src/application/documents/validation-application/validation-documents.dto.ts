@@ -1,8 +1,9 @@
 import {
   ArrayNotEmpty,
+  IsBase64,
+  IsBoolean,
   IsOptional,
   IsString,
-  IsUrl,
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
@@ -28,10 +29,10 @@ export class ValidationSingleDocuments {
   name: string;
 
   @IsOptional()
-  @IsUrl()
-  url: string;
+  @IsBase64()
+  file: string;
 
   @IsOptional()
-  @IsString()
-  status: string;
+  @IsBoolean()
+  isRequired: boolean;
 }

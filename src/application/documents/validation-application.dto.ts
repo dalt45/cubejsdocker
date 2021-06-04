@@ -41,7 +41,7 @@ export class ApplicationValidation {
   certificates: Certificates[];
 
   @ValidateNested()
-  @ArrayNotEmpty()
+  @ValidateNested()
   @IsOptional()
   @Type(() => ValidationDocuments)
   documents: Documents;
