@@ -4,9 +4,9 @@ import { Connection, Repository } from 'typeorm';
 import { University } from './university.entity';
 import { ServiceMessages } from '../utils/serviceResponse/ResponseDictionary';
 import { UniversityValidation } from './dto/university-validation.dto';
-import { Landing } from 'src/landing/landing.entity';
 import { User } from '../users/user.entity';
 import { ObjectID } from 'mongodb';
+import { validate } from 'class-validator';
 
 @Injectable()
 export class UniversityService {
@@ -28,22 +28,29 @@ export class UniversityService {
       };
     }
     try {
-      const landingsArray = [];
-      university.landings.forEach((landing) => {
-        landing.createdBy = userInfo.id;
-        const newLanding: Landing = new Landing(landing);
-        landingsArray.push(newLanding);
+      await validate(university, {
+        whitelist: true,
       });
-      university.landings = landingsArray;
-      university.createdBy = userInfo.id;
-      const universityObject = await this.universityRepostory.save(university);
+    } catch (e) {
+      return {
+        serviceMessage: ServiceMessages.BAD_REQUEST,
+      };
+    }
+    try {
+      const newUniversity = new University();
+      newUniversity.createdBy = userInfo.id;
+      newUniversity.contentProfileUniversity =
+        university.contentProfileUniversity;
+      newUniversity.campus = [];
+      newUniversity.images = university.images;
+      await this.universityRepostory.save(newUniversity);
       if (dbUser)
         manager.update(dbUser, {
-          university: universityObject.id,
+          university: newUniversity.id,
         });
       return {
         serviceMessage: ServiceMessages.RESPONSE_BODY,
-        body: { id: universityObject.id },
+        body: { id: newUniversity.id },
       };
     } catch (e) {
       return {

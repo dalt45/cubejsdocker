@@ -8,7 +8,6 @@ import { CreateLandingDto } from './dto/create-landing.dto';
 import { University } from '../university/university.entity';
 import { ObjectID } from 'mongodb';
 import { User } from 'src/users/user.entity';
-import { Campus } from 'src/campus/campus.entity';
 
 @Injectable()
 export class LandingService {
