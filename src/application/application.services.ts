@@ -17,6 +17,38 @@ import { validate } from 'class-validator';
 import { Documents } from './documents/documents.dto';
 import * as cloudinary from 'cloudinary';
 
+const documentTemplate = {
+  student: {
+    passport: {
+      required: false,
+      url: '',
+    },
+    recommendationLetter: {
+      required: false,
+      url: '',
+    },
+    englishTest: {
+      required: false,
+      url: '',
+    },
+    cv: {
+      required: false,
+      url: '',
+    },
+  },
+  institution: {
+    acceptanceLetter: {
+      required: false,
+      url: '',
+    },
+    finantialTest: {
+      required: false,
+      url: '',
+    },
+  },
+  additionalDocuments: [],
+};
+
 @Injectable()
 export class ApplicationService {
   constructor(
@@ -43,9 +75,13 @@ export class ApplicationService {
       const landing = await this.landingService.get({
         id: application.programId,
       });
-      const requiredDocuments = this.createDocumentArray(
-        landing.body.applicationDocuments,
-      );
+      if (Object.keys(landing.body).length === 0) {
+        return {
+          serviceMessage: ServiceMessages.NOT_FOUND,
+          body: {},
+        };
+      }
+      const requiredDocuments = documentTemplate;
       delete application.programId;
       const newApplication = await this.applicationRepository.save({
         ...application,
@@ -64,22 +100,6 @@ export class ApplicationService {
         body: {},
       };
     }
-  }
-
-  createDocumentArray(applicationDocuments: {
-    [key: string]: any;
-  }): { [key: string]: any } {
-    const documentObject = {};
-    Object.keys(applicationDocuments).forEach((documentType) => {
-      const formatedArray = applicationDocuments[documentType].map((array) => {
-        return {
-          ...array,
-          url: '',
-        };
-      });
-      documentObject[documentType] = formatedArray;
-    });
-    return documentObject;
   }
 
   async edit(application: EditApplicationValidation, id: string): Promise<any> {
@@ -126,13 +146,15 @@ export class ApplicationService {
     const formatedDocuments = documents;
     try {
       await Promise.all(
-        Object.keys(documents).map((type) => {
+        Object.keys(documents)?.map((type) => {
           return Promise.all(
-            documents[type].map(async (document, index) => {
-              if (document.file) {
-                const url = await this.uploadDocument(document.file);
-                formatedDocuments[type][index].url = url;
-                delete formatedDocuments[type][index].file;
+            Object.keys(documents[type]).map(async (concept) => {
+              if (documents[type][concept].file) {
+                const url = await this.uploadDocument(
+                  documents[type][concept].file,
+                );
+                formatedDocuments[type][concept].url = url;
+                delete formatedDocuments[type][concept].file;
                 return url;
               }
             }),
