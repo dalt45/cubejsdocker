@@ -70,7 +70,7 @@ export class UsersService {
         html: `<h1>Email Confirmation</h1>
             <h2>Hello</h2>
             <p>Thank you for subscribing. Please confirm your email by clicking on the following link</p>
-            <a href=${process.env.URL_DOMAIN}/users/activate/?token=${user.confirmationCode}> Click here</a>
+            <a href=${process.env.URL_DOMAIN}/email-confirmation?token=${user.confirmationCode}> Click here</a>
             </div>`,
       })
       .catch((err) => {
