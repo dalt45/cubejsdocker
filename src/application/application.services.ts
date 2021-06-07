@@ -14,7 +14,6 @@ import { LandingService } from 'src/landing/landing.service';
 import { DateStatus } from './documents/dateStatus.enum';
 import { UpdateStatusValidation } from './documents/validation-application-updateStatus.dto';
 import { validate } from 'class-validator';
-import { Documents } from './documents/documents.dto';
 import * as cloudinary from 'cloudinary';
 
 const documentTemplate = {
@@ -258,6 +257,17 @@ export class ApplicationService {
         applicationQuery = await this.applicationRepository.find({
           where: { 'program._id': { $in: arrayQuery } },
         });
+        if (params.id) {
+          applicationQuery = await this.applicationRepository.findOne({
+            where: { id: { $eq: new ObjectID(params.id) } },
+          });
+          if (!applicationQuery) {
+            return {
+              serviceMessage: ServiceMessages.NOT_FOUND,
+              body: applicationQuery,
+            };
+          }
+        }
         return {
           serviceMessage: ServiceMessages.RESPONSE_BODY,
           body: applicationQuery,
