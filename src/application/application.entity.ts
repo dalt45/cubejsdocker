@@ -3,7 +3,6 @@ import { ObjectID } from 'mongodb';
 import { PersonalData } from './documents/personalData.dto';
 import { Studies } from './documents/studies.dto';
 import { Certificates } from './documents/certificates.dto';
-import { Documents } from './documents/documents.dto';
 import { Finances } from './documents/finances.dto';
 import { UserStatus } from './documents/userStatus.enum';
 import { ApplicationStatus } from './documents/applicationStatus.enum';

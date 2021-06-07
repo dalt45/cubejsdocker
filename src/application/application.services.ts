@@ -103,7 +103,7 @@ export class ApplicationService {
   }
 
   async edit(application: EditApplicationValidation, id: string): Promise<any> {
-    let documentsUpdated: Documents;
+    let documentsUpdated: StudentApplication['documents'];
     try {
       await validate(application, {
         whitelist: true,
@@ -142,7 +142,9 @@ export class ApplicationService {
     }
   }
 
-  async updateDocuments(documents: any): Promise<Documents> {
+  async updateDocuments(
+    documents: any,
+  ): Promise<StudentApplication['documents']> {
     const formatedDocuments = documents;
     try {
       await Promise.all(
