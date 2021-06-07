@@ -385,7 +385,7 @@ export class ApplicationService {
     }
   }
 
-  checkDocuments(documents: Documents): any {
+  checkDocuments(documents: StudentApplication['documents']): any {
     return Object.keys(documents).every((documentType) => {
       return documents[documentType].every((document) => {
         if (document.isRequired && document.url === '') {
