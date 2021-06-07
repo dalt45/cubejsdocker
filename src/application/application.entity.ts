@@ -52,7 +52,13 @@ export class StudentApplication {
   certificates: Certificates[];
 
   @Column()
-  documents: Documents;
+  documents: {
+    student: { [key: string]: { required: boolean; url: string } };
+    institution: { [key: string]: { required: boolean; url: string } };
+    additionalDocuments: [
+      { [key: string]: { required: boolean; url: string } },
+    ];
+  };
 
   @Column()
   finances: Finances;
