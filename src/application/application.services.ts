@@ -229,63 +229,68 @@ export class ApplicationService {
 
   async get(params: any, user: User): Promise<any> {
     let applicationQuery;
-    switch (user.type) {
-      case 'user':
-        applicationQuery = await this.applicationRepository.find({
-          where: { userId: { $eq: user.id } },
-        });
+    if (params.id) {
+      applicationQuery = await this.applicationRepository.find({
+        where: { _id: { $eq: new ObjectID(params.id) } },
+      });
+      if (!applicationQuery) {
         return {
-          serviceMessage: ServiceMessages.RESPONSE_BODY,
+          serviceMessage: ServiceMessages.NOT_FOUND,
           body: applicationQuery,
         };
-      case 'university':
-        if (!user.university) {
+      }
+      return {
+        serviceMessage: ServiceMessages.RESPONSE_BODY,
+        body: applicationQuery,
+      };
+    } else {
+      switch (user.type) {
+        case 'user':
+          applicationQuery = await this.applicationRepository.find({
+            where: { userId: { $eq: user.id } },
+          });
           return {
             serviceMessage: ServiceMessages.RESPONSE_BODY,
-            body: {},
+            body: applicationQuery,
           };
-        }
-        const manager = this.connection.getMongoRepository(University);
-        const uninversityQuery = await manager.findOne({
-          where: { _id: { $eq: new ObjectID(user.university) } },
-        });
-        const arrayQuery = uninversityQuery.campus.map((campus) =>
-          campus.fields.map((field) =>
-            field.landings.map((landing) => landing._id.toHexString()),
-          ),
-        );
-        applicationQuery = await this.applicationRepository.find({
-          where: { 'program._id': { $in: arrayQuery } },
-        });
-        if (params.id) {
-          applicationQuery = await this.applicationRepository.findOne({
-            where: { id: { $eq: new ObjectID(params.id) } },
-          });
-          if (!applicationQuery) {
+        case 'university':
+          if (!user.university) {
             return {
-              serviceMessage: ServiceMessages.NOT_FOUND,
-              body: applicationQuery,
+              serviceMessage: ServiceMessages.RESPONSE_BODY,
+              body: {},
             };
           }
-        }
-        return {
-          serviceMessage: ServiceMessages.RESPONSE_BODY,
-          body: applicationQuery,
-        };
-      default:
-        applicationQuery = await this.applicationRepository.find({
-          where: {
-            ...this.countryQuery(params.country),
-            ...this.dateQuery(params.start, params.end),
-            ...this.universityQuery(params.university),
-            ...this.userStatusQuery(params.userStatus),
-            ...this.applicationStatusQuery(params.applicationStatus),
-          },
-        });
-        return {
-          serviceMessage: ServiceMessages.RESPONSE_BODY,
-          body: applicationQuery,
-        };
+          const manager = this.connection.getMongoRepository(University);
+          const uninversityQuery = await manager.findOne({
+            where: { _id: { $eq: new ObjectID(user.university) } },
+          });
+          const arrayQuery = uninversityQuery.campus.map((campus) =>
+            campus.fields.map((field) =>
+              field.landings.map((landing) => landing._id.toHexString()),
+            ),
+          );
+          applicationQuery = await this.applicationRepository.find({
+            where: { 'program._id': { $in: arrayQuery } },
+          });
+          return {
+            serviceMessage: ServiceMessages.RESPONSE_BODY,
+            body: applicationQuery,
+          };
+        default:
+          applicationQuery = await this.applicationRepository.find({
+            where: {
+              ...this.countryQuery(params.country),
+              ...this.dateQuery(params.start, params.end),
+              ...this.universityQuery(params.university),
+              ...this.userStatusQuery(params.userStatus),
+              ...this.applicationStatusQuery(params.applicationStatus),
+            },
+          });
+          return {
+            serviceMessage: ServiceMessages.RESPONSE_BODY,
+            body: applicationQuery,
+          };
+      }
     }
   }
 
