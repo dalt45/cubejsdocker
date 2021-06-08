@@ -13,8 +13,6 @@ import { ValidationPersonalData } from './validation-application/validation-pers
 import { ValidationStudies } from './validation-application/validation-studies.dto';
 import { ValidationCertificates } from './validation-application/validation-certificates.dto';
 import { Certificates } from './certificates.dto';
-import { ValidationDocuments } from './validation-application/validation-documents.dto';
-import { Documents } from './documents.dto';
 import { ValidationFinances } from './validation-application/validation-finances.dto';
 import { Finances } from './finances.dto';
 import { StudentApplication } from '../application.entity';

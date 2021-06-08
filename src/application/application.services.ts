@@ -13,7 +13,6 @@ import { ApplicationStatus } from './documents/applicationStatus.enum';
 import { LandingService } from 'src/landing/landing.service';
 import { DateStatus } from './documents/dateStatus.enum';
 import { UpdateStatusValidation } from './documents/validation-application-updateStatus.dto';
-import { validate } from 'class-validator';
 import * as cloudinary from 'cloudinary';
 
 const documentTemplate = {
