@@ -21,29 +21,24 @@ export class ApplicationValidation {
   @IsMongoId()
   programId: ObjectID;
 
-  @IsNotEmptyObject()
   @IsOptional()
   @ValidateNested()
   @Type(() => ValidationPersonalData)
   personalData: PersonalData;
 
   @ValidateNested()
-  @ArrayNotEmpty()
   @IsOptional()
   @Type(() => ValidationStudies)
   studies: Studies[];
 
   @ValidateNested()
-  @ArrayNotEmpty()
   @IsOptional()
   @Type(() => ValidationCertificates)
   certificates: Certificates[];
 
-  @IsNotEmptyObject()
   @IsOptional()
   documents: StudentApplication['documents'];
 
-  @IsNotEmptyObject()
   @IsOptional()
   @ValidateNested()
   @Type(() => ValidationFinances)
