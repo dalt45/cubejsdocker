@@ -17,6 +17,7 @@ import { ValidationDocuments } from './validation-application/validation-documen
 import { Documents } from './documents.dto';
 import { ValidationFinances } from './validation-application/validation-finances.dto';
 import { Finances } from './finances.dto';
+import { StudentApplication } from '../application.entity';
 
 export class ApplicationValidation {
   @IsMongoId()
@@ -41,10 +42,8 @@ export class ApplicationValidation {
   certificates: Certificates[];
 
   @IsNotEmptyObject()
-  @ValidateNested()
   @IsOptional()
-  @Type(() => ValidationDocuments)
-  documents: Documents;
+  documents: StudentApplication['documents'];
 
   @IsNotEmptyObject()
   @IsOptional()

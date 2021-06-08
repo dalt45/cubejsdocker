@@ -103,15 +103,6 @@ export class ApplicationService {
 
   async edit(application: EditApplicationValidation, id: string): Promise<any> {
     let documentsUpdated: StudentApplication['documents'];
-    try {
-      await validate(application, {
-        whitelist: true,
-      });
-    } catch (e) {
-      return {
-        serviceMessage: ServiceMessages.BAD_REQUEST,
-      };
-    }
     if (application.documents) {
       documentsUpdated = await this.updateDocuments(application.documents);
     }
@@ -125,12 +116,25 @@ export class ApplicationService {
         serviceMessage: ServiceMessages.NOT_FOUND,
       };
     }
+    const updatedApplication = {
+      ...application,
+      documents: {
+        student: {
+          ...dbApplication.documents.student,
+          ...documentsUpdated?.student,
+        },
+        institution: {
+          ...dbApplication.documents.institution,
+          ...documentsUpdated?.institution,
+        },
+      },
+    };
     const manager = this.connection.getMongoRepository(StudentApplication);
+    const applicationToUpdate = await manager.findOne({
+      where: { _id: { $eq: new ObjectID(id) } },
+    });
     try {
-      await manager.update(dbApplication, {
-        ...application,
-        documents: documentsUpdated,
-      });
+      await manager.update(applicationToUpdate, { ...updatedApplication });
       return {
         serviceMessage: ServiceMessages.RESPONSE_DEFAULT,
       };
