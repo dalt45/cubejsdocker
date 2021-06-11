@@ -31,7 +31,10 @@ export class UserController {
   @Get('activate')
   async activateUser(@Query() { token }): Promise<any> {
     const response = await this.userService.activate(token);
-    return new ServiceResponse(response).getJSON().getControllerResponse();
+    return new ServiceResponse(response.serviceMessage)
+      .setBody(response.body)
+      .getJSON()
+      .getControllerResponse();
   }
 
   @UseGuards(AuthGuard(['jwtAdmin', 'jwtUser']))

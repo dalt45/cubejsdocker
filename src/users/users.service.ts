@@ -14,6 +14,10 @@ import { Status } from './enums/status.enum';
 import { ConfirmationToken } from '../utils/confirmationToken';
 import * as nodemailer from 'nodemailer';
 import { ConfigService } from '@nestjs/config';
+import {
+  CatchEnum,
+  OperationCatcher,
+} from 'src/utils/operationCatcher/operationCatcher';
 
 const saltRounds = 10;
 
@@ -78,19 +82,26 @@ export class UsersService {
       });
   }
 
-  async activate(token: string): Promise<string> {
+  async activate(token: string): Promise<any> {
     try {
-      const user = await this.usersRepository.findOne({
-        where: { confirmationCode: { $eq: token } },
-      });
-      if (!user) {
-        return ServiceMessages.NOT_FOUND;
+      const user = new OperationCatcher(
+        () =>
+          this.usersRepository.findOne({
+            where: { confirmationCode: { $eq: token } },
+          }),
+        CatchEnum.find,
+      );
+      const result = await user.result;
+      if (result.shouldReturn) {
+        return result.returnValue();
       } else {
-        await this.usersRepository.update(user, { status: Status.ACTIVE });
-        return ServiceMessages.RESPONSE_DEFAULT;
+        await this.usersRepository.update(await result.returnValue(), {
+          status: Status.ACTIVE,
+        });
+        return { serviceMessage: ServiceMessages.RESPONSE_DEFAULT, body: {} };
       }
     } catch (e) {
-      return ServiceMessages.ERROR_DEFAULT;
+      return { serviceMessage: ServiceMessages.ERROR_DEFAULT, body: {} };
     }
   }
 
@@ -127,18 +138,32 @@ export class UsersService {
   }
 
   async get(findUserDto: FindUserDto): Promise<any> {
-    let user;
+    let userResult;
     if (findUserDto.id) {
-      user = await this.usersRepository.findByIds([findUserDto.id], {
-        take: 1,
-      });
-      user = user[0];
+      const user = new OperationCatcher(
+        () =>
+          this.usersRepository.findOne({
+            where: { _id: { $eq: findUserDto.id } },
+          }),
+        CatchEnum.find,
+      );
+      const result = await user.result;
+      if (result.shouldReturn) {
+        return result.returnValue();
+      } else userResult = result.returnValue();
     } else {
-      user = await this.usersRepository.findOne({ email: findUserDto.email });
+      const user = new OperationCatcher(
+        () => this.usersRepository.findOne({ email: findUserDto.email }),
+        CatchEnum.find,
+      );
+      const result = await user.result;
+      if (result.shouldReturn) {
+        return result.returnValue();
+      } else userResult = result.returnValue();
     }
     return {
       serviceMessage: ServiceMessages.RESPONSE_BODY,
-      body: user ? user : {},
+      body: userResult ? userResult : {},
     };
   }
 
@@ -150,10 +175,9 @@ export class UsersService {
       request.serviceRequest instanceof FindUserDto &&
       request.serviceRequest.id
     ) {
-      user = await this.usersRepository.findByIds([request.serviceRequest.id], {
-        take: 1,
+      user = await this.usersRepository.findOne({
+        where: { _id: { $eq: request.serviceRequest.id } },
       });
-      user = user[0];
     } else {
       user = await this.usersRepository.findOne({
         email: request.serviceRequest.email,

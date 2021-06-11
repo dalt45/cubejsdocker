@@ -38,8 +38,11 @@ export class UniversityController {
 
   @UseGuards(AuthGuard(['jwtAdmin', 'jwtUser']))
   @Get()
-  async getUniversity(@Query() Params: any): Promise<any> {
-    const response = await this.universityService.get(Params);
+  async getUniversity(
+    @UserInfo() userinfo: User,
+    @Query() Params: any,
+  ): Promise<any> {
+    const response = await this.universityService.get(Params, userinfo);
     return new ServiceResponse(response.serviceMessage)
       .setBody(response.body)
       .getJSON()

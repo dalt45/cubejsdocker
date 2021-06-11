@@ -9,6 +9,10 @@ import { ObjectID } from 'mongodb';
 import { validate } from 'class-validator';
 import { mergeObject } from 'src/utils/merge';
 import * as cloudinary from 'cloudinary';
+import {
+  CatchEnum,
+  OperationCatcher,
+} from 'src/utils/operationCatcher/operationCatcher';
 
 @Injectable()
 export class UniversityService {
@@ -27,6 +31,7 @@ export class UniversityService {
     if (dbUser && dbUser.university) {
       return {
         serviceMessage: ServiceMessages.BAD_REQUEST,
+        body: { message: `You're not allowed to query this university` },
       };
     }
     try {
@@ -57,7 +62,7 @@ export class UniversityService {
     }
   }
 
-  async get(Params: any): Promise<any> {
+  async get(Params: any, userInfo: User): Promise<any> {
     try {
       if (!Params.id) {
         const results = await this.universityRepostory.find();
@@ -66,15 +71,17 @@ export class UniversityService {
           body: results,
         };
       } else {
-        const university = await this.universityRepostory.findOne(Params.id);
-        if (!university) {
-          return {
-            serviceMessage: ServiceMessages.NOT_FOUND,
-          };
+        const university = new OperationCatcher(
+          () => this.universityRepostory.findOne(Params.id),
+          CatchEnum.find,
+        );
+        const result = await university.result;
+        if (result.shouldReturn) {
+          return result.returnValue();
         }
         return {
           serviceMessage: ServiceMessages.RESPONSE_BODY,
-          body: university,
+          body: result.returnValue(),
         };
       }
     } catch (e) {
