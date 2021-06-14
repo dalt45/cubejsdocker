@@ -1,21 +1,6 @@
 version: '3.7'
 
 services:
-  backend:
-    container_name: backend
-    build:
-      context: .
-      target: development
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
-    ports:
-      - 3000:3000
-    command: npm run start:dev --watch
-    env_file:
-      - .env
-    depends_on:
-      - mongo
   cube:
     image: cubejs/cube:latest
     ports:
@@ -28,15 +13,9 @@ services:
     volumes:
       - ./schema:/cube/conf/schema
       - ./cube.js:/cube/conf/cube.js
-    depends_on:
-      - mongo
-  mongo:
-    image: mongo:latest
-    restart: always
-    environment:
-      MONGO_INITDB_DATABASE: mongodb
+    depends_on: [mongobi]
   mongobi:
-    image: daniel/mongobi
+    image: test/mongobi
     restart: always
     volumes:
       # - "./schema:/home/mongobi/schema.drdl" #Uncomment if you have an schema file
