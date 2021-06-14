@@ -13,15 +13,18 @@ services:
     volumes:
       - ./schema:/cube/conf/schema
       - ./cube.js:/cube/conf/cube.js
+      - ./certificate.pem:/home/certificate.pem
+      - ./key.pem:/home/key.pem
     depends_on: [mongobi]
   mongobi:
     image: test/mongobi
     restart: always
     volumes:
       # - "./schema:/home/mongobi/schema.drdl" #Uncomment if you have an schema file
-      - './mongobi/conf/mongosqld.conf:/home/mongobi/mongosqld.conf'
-      - './mongobi/logs:/logs'
+      - ./mongobi/conf/mongosqld.conf:/home/mongobi/mongosqld.conf
+      - ./mongobi/conf/mongo.pem:/home/mongobi/mongo.pem
+      - ./mongobi/logs:/logs
     container_name: 'mongobi'
     hostname: 'mongobi'
     ports:
-      - '3307:3307'
+      - 3307:3307

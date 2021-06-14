@@ -1,11 +1,5 @@
 import { Type } from 'class-transformer';
-import {
-  ArrayNotEmpty,
-  IsMongoId,
-  IsNotEmptyObject,
-  IsOptional,
-  ValidateNested,
-} from 'class-validator';
+import { IsMongoId, IsOptional, ValidateNested } from 'class-validator';
 import { ObjectID } from 'mongodb';
 import { PersonalData } from './personalData.dto';
 import { Studies } from './studies.dto';

@@ -1,5 +1,4 @@
 import { ServiceMessages } from '../serviceResponse/ResponseDictionary';
-import ServiceResponse from '../serviceResponse/ServiceResponse';
 
 export const enum CatchEnum {
   find = 'find',
