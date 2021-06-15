@@ -13,8 +13,7 @@ services:
     volumes:
       - ./schema:/cube/conf/schema
       - ./cube.js:/cube/conf/cube.js
-      - ./certificate.pem:/home/certificate.pem
-      - ./key.pem:/home/key.pem
+      - ./certificateRequest.pem:/home/certificateRequest.pem
     depends_on: [mongobi]
   mongobi:
     image: test/mongobi

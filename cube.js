@@ -12,22 +12,26 @@ module.exports = {
           if (adminErr) {
             throw new Error('Could not authenticate');
           } else {
+            console.log(auth);
             req.securityContext = {
+              ...req.securityContext,
               ...adminDecoded,
               isAdmin: true,
             };
           }
         });
-        return;
+        return req;
       }
       if (!decoded.university) {
         throw new Error('As user youre not able to use this API');
       }
+      console.log(req);
       req.securityContext = {
+        ...req.securityContext,
         ...decoded,
         isAdmin: false,
       };
-      return;
+      return req;
     });
   },
 };
