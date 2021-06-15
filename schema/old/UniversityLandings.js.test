@@ -1,5 +1,5 @@
 cube(`UniversityLandings`, {
-  sql: `SELECT * FROM mongodb.university_landings`,
+  sql: `SELECT * FROM backenddb.university_landings`,
 
   joins: {
     University: {

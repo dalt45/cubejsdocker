@@ -40,6 +40,10 @@ cube(`User`, {
       sql: `university`,
       type: `string`,
     },
+    lastLogged: {
+      sql: `lastLogged`,
+      type: `time`,
+    },
   },
 
   dataSource: `default`,

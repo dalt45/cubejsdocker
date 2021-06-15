@@ -1,5 +1,5 @@
 cube(`ApplicationEvent`, {
-  sql: `SELECT * FROM mongodb.application_event`,
+  sql: `SELECT * FROM backenddb.application_event`,
 
   joins: {},
 

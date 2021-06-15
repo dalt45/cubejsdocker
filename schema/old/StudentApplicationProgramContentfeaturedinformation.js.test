@@ -1,5 +1,5 @@
 cube(`StudentApplicationProgramContentfeaturedinformation`, {
-  sql: `SELECT * FROM mongodb.\`student_application_program_contentFeaturedInformation\``,
+  sql: `SELECT * FROM backenddb.\`student_application_program_contentFeaturedInformation\``,
 
   joins: {},
 
